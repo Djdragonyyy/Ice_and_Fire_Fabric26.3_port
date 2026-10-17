@@ -1,0 +1,6 @@
+{
+  "textures": {
+    "layer0": "iceandfire:item/dragon_meal"
+  },
+  "parent": "minecraft:item/generated"
+}

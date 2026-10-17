@@ -1,0 +1,85 @@
+package com.github.alexthe666.iceandfire.fabric;
+
+import com.github.alexthe666.iceandfire.fabric.dragon.FireDragon;
+import com.github.alexthe666.iceandfire.fabric.dragon.FireDragonEgg;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
+import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.context.UseOnContext;
+
+public final class IafContent {
+    public static final EntityType<FireDragon> FIRE_DRAGON = registerDragon();
+    public static final EntityType<FireDragonEgg> DRAGON_EGG = registerEgg();
+    public static final Item DRAGON_MEAL = registerItem("dragon_meal", properties("dragon_meal"));
+    public static final Item[] FIRE_EGGS = {
+            registerEggItem("dragonegg_red", 0), registerEggItem("dragonegg_green", 1),
+            registerEggItem("dragonegg_bronze", 2), registerEggItem("dragonegg_gray", 3)
+    };
+
+    private IafContent() {}
+    public static Identifier id(String path) { return Identifier.fromNamespaceAndPath(IceAndFireFabric.MOD_ID, path); }
+
+    private static EntityType<FireDragon> registerDragon() {
+        var key = ResourceKey.create(Registries.ENTITY_TYPE, id("fire_dragon"));
+        return Registry.register(BuiltInRegistries.ENTITY_TYPE, key,
+                EntityType.Builder.of(FireDragon::new, MobCategory.CREATURE)
+                        .sized(0.78F, 1.2F).fireImmune().clientTrackingRange(16).updateInterval(1).build(key));
+    }
+
+    private static EntityType<FireDragonEgg> registerEgg() {
+        var key = ResourceKey.create(Registries.ENTITY_TYPE, id("dragon_egg"));
+        return Registry.register(BuiltInRegistries.ENTITY_TYPE, key,
+                EntityType.Builder.of(FireDragonEgg::new, MobCategory.MISC)
+                        .sized(0.45F, 0.55F).fireImmune().clientTrackingRange(10).build(key));
+    }
+
+    private static Item.Properties properties(String name) {
+        return new Item.Properties().setId(ResourceKey.create(Registries.ITEM, id(name)));
+    }
+
+    private static Item registerItem(String name, Item.Properties properties) {
+        return Registry.register(BuiltInRegistries.ITEM, id(name), new Item(properties));
+    }
+
+    private static Item registerEggItem(String name, int variant) {
+        return Registry.register(BuiltInRegistries.ITEM, id(name), new Item(properties(name).stacksTo(1)) {
+            @Override public InteractionResult useOn(UseOnContext context) {
+                if (!(context.getLevel() instanceof ServerLevel server)) return InteractionResult.SUCCESS;
+                if (context.getPlayer() == null) return InteractionResult.PASS;
+                var pos = context.getClickedPos().relative(context.getClickedFace());
+                FireDragonEgg egg = DRAGON_EGG.create(server, EntitySpawnReason.SPAWN_ITEM_USE);
+                if (egg == null) return InteractionResult.FAIL;
+                egg.setVariant(variant);
+                egg.setOwner(context.getPlayer());
+                egg.setCustomName(context.getItemInHand().get(DataComponents.CUSTOM_NAME));
+                egg.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+                if (!server.noCollision(egg, egg.getBoundingBox())) return InteractionResult.FAIL;
+                if (!server.addFreshEntity(egg)) return InteractionResult.FAIL;
+                context.getItemInHand().consume(1, context.getPlayer());
+                return InteractionResult.SUCCESS;
+            }
+        });
+    }
+
+    public static void initialize() {
+        FabricDefaultAttributeRegistry.register(FIRE_DRAGON, FireDragon.attributes());
+        FabricDefaultAttributeRegistry.register(DRAGON_EGG, FireDragonEgg.attributes());
+        CreativeModeTabEvents.modifyOutputEvent(ResourceKey.create(Registries.CREATIVE_MODE_TAB,
+                Identifier.withDefaultNamespace("spawn_eggs"))).register(output -> {
+            for (Item egg : FIRE_EGGS) output.accept(egg);
+        });
+        CreativeModeTabEvents.modifyOutputEvent(ResourceKey.create(Registries.CREATIVE_MODE_TAB,
+                Identifier.withDefaultNamespace("ingredients"))).register(output -> output.accept(DRAGON_MEAL));
+    }
+}

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "iceandfire",
+  "version": "${version}",
+  "name": "Ice and Fire — Fabric port (in development)",
+  "description": "Work in progress port of Ice and Fire. Not a playable milestone release yet.",
+  "authors": ["Raptorfarian", "Alexthe666", "Fabric port contributors"],
+  "contact": {
+    "sources": "https://github.com/albertofiocco24-star/Ice_and_Fire_Fabric26.3_port",
+    "homepage": "https://github.com/AlexModGuy/Ice_and_Fire"
+  },
+  "license": "LGPL-3.0",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["com.github.alexthe666.iceandfire.fabric.IceAndFireFabric"],
+    "client": ["com.github.alexthe666.iceandfire.fabric.client.IceAndFireFabricClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "26.3",
+    "java": ">=25",
+    "fabric-api": ">=0.163.0"
+  }
+}

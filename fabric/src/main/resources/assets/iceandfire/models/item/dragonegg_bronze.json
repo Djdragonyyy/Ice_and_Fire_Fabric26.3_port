@@ -1,0 +1,6 @@
+{
+  "textures": {
+    "layer0": "iceandfire:item/dragonegg_bronze"
+  },
+  "parent": "minecraft:item/generated"
+}
