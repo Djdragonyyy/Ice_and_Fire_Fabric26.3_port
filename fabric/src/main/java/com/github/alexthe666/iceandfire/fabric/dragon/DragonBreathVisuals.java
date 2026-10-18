@@ -9,6 +9,10 @@ public final class DragonBreathVisuals {
         return t * t * (3 - 2 * t);
     }
     public static float extension(int fireTicks) { return smooth((fireTicks - 20) / 20F); }
+    public static float opacity(float age, float remainingDistance, float size) {
+        return 0.8F * smooth(age / 2F) * smooth(remainingDistance / Math.max(0.1F, size * 3))
+                * smooth((30 - age) / 6F);
+    }
     public static int count(float renderSize, float extension) {
         return Math.max(1, Math.round((12 + size(renderSize) * 10) * extension));
     }

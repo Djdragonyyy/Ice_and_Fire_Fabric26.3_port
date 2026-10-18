@@ -2,7 +2,14 @@
 
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
-Versione corrente: **0.1.9-stage1-dev**. Soffio progressivo con fiamma originale,
+Versione corrente: **0.1.10-stage1-dev**. Getto con 16 fotogrammi di flame.png originale
+e dissolvenza; anteprima GUI senza riduzione aggiuntiva degli adulti; draghetti di
+stadio 1 in spalla (mano vuota, massimo tre; Maiusc per rilasciare). Conservati
+salvataggio indipendente e unica seduta adulta. 45 JUnit e 9 GameTest della mod
+passati, client avviato; resa in mondo ancora da provare. [TEST-0.1.10.md](TEST-0.1.10.md).
+Tappa 1 incompleta, punte grigie aperte e dorso ghast rimosso.
+
+Versione precedente: **0.1.9-stage1-dev**. Soffio progressivo con fiamma originale,
 dimensione/densità crescenti con il drago e posa meno invasiva per il pilota in prima
 persona. Migrati terreno carbonizzato, distruzione dell'area da proiettile e inventario
 originale a cinque slot con armature. Apertura: Maiusc + clic destro a mano vuota.

@@ -37,6 +37,9 @@ public final class FireDragon extends TamableAnimal {
     private static final EntityDataAccessor<Integer> ATTACK = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> ATTACK_TICK = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> ARMOR_PARTS = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> SHOULDER_CARRIER = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> SHOULDER_SLOT = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.INT);
+    private Player shoulderPlayer;
     public final net.minecraft.world.SimpleContainer dragonInventory = new net.minecraft.world.SimpleContainer(5) {
         @Override public void setChanged() {
             super.setChanged();
@@ -62,6 +65,7 @@ public final class FireDragon extends TamableAnimal {
     public float prevFlyProgress;
     public float sitProgress;
     public float prevSitProgress;
+    public float shoulderProgress, prevShoulderProgress;
 
     public FireDragon(EntityType<? extends FireDragon> type, Level level) {
         super(type, level);
@@ -91,6 +95,8 @@ public final class FireDragon extends TamableAnimal {
         builder.define(ATTACK, DragonCombatState.NONE);
         builder.define(ATTACK_TICK, 0);
         builder.define(ARMOR_PARTS, 0);
+        builder.define(SHOULDER_CARRIER, -1);
+        builder.define(SHOULDER_SLOT, 0);
     }
 
     @Override protected void registerGoals() {
@@ -113,6 +119,18 @@ public final class FireDragon extends TamableAnimal {
     public int attackAnimation() { return entityData.get(ATTACK); }
     public int attackAnimationTick() { return entityData.get(ATTACK_TICK); }
     public int armorParts() { return entityData.get(ARMOR_PARTS); }
+    public int shoulderSlot() { return entityData.get(SHOULDER_SLOT); }
+    public Player shoulderCarrier() {
+        if (!level().isClientSide()) return shoulderPlayer;
+        return level().getEntity(entityData.get(SHOULDER_CARRIER)) instanceof Player player ? player : null;
+    }
+    public void releaseShoulder() {
+        shoulderPlayer = null;
+        entityData.set(SHOULDER_CARRIER, -1);
+        noPhysics = false;
+        setNoGravity(flying());
+        setDeltaMovement(Vec3.ZERO);
+    }
     public float flightPitch(float partialTick) {
         return previousFlightPitch + (flightPitch - previousFlightPitch) * partialTick;
     }
@@ -146,6 +164,15 @@ public final class FireDragon extends TamableAnimal {
     }
 
     @Override public void tick() {
+        Player carrier = shoulderCarrier();
+        if (!level().isClientSide() && carrier != null && (!carrier.isAlive() || carrier.isRemoved()
+                || carrier.level() != level() || !isAlive() || !isOwnedBy(carrier)
+                || !DragonShoulderLayout.canBeCarried(ageDays()) || isPassenger()
+                || (!carrier.isPassenger() && (carrier.isShiftKeyDown() || carrier.isFallFlying())))) {
+            releaseShoulder();
+            carrier = null;
+        }
+        noPhysics = carrier != null;
         previousFlightPitch = flightPitch;
         if (!level().isClientSide()) {
             boolean hasRider = getControllingPassenger() != null;
@@ -161,13 +188,15 @@ public final class FireDragon extends TamableAnimal {
             }
         }
         // Flight must be active before vanilla processes this tick's ridden movement.
-        setNoGravity(flying());
+        setNoGravity(flying() || carrier != null);
         super.tick();
         if (level() instanceof ServerLevel server) tickCombat(server);
         prevBreathProgress = breathProgress;
         breathProgress = Math.clamp(breathProgress + (entityData.get(BREATHING) ? 0.5F : -0.5F), 0, 10);
         prevFlyProgress = flyProgress;
         prevSitProgress = sitProgress;
+        prevShoulderProgress = shoulderProgress;
+        shoulderProgress = Math.clamp(shoulderProgress + (carrier != null ? 0.5F : -0.5F), 0, 20);
         flyProgress = Math.clamp(flyProgress + (flying() ? 0.5F : -2F), 0, 20);
         sitProgress = Math.clamp(sitProgress + (isOrderedToSit() ? 0.5F : -0.5F), 0, 20);
         if (level().isClientSide()) walkCycle = walkCycle < 39 ? walkCycle + 1 : 0;
@@ -185,7 +214,15 @@ public final class FireDragon extends TamableAnimal {
                 }
             }
         }
-        setNoGravity(flying());
+        setNoGravity(flying() || carrier != null);
+        if (carrier != null) {
+            setDeltaMovement(Vec3.ZERO);
+            setPos(carrier.position().add(DragonShoulderLayout.offset(shoulderSlot(), carrier.yBodyRot,
+                    carrier.isShiftKeyDown(), carrier.getScale())));
+            setYRot(carrier.yHeadRot);
+            yBodyRot = yHeadRot = carrier.yHeadRot;
+            setXRot(0);
+        }
         if (!level().isClientSide() || isLocalInstanceAuthoritative()) {
             Vec3 movement = lastFlightPosition == null ? Vec3.ZERO : position().subtract(lastFlightPosition);
             flightPitch = DragonFlightMotion.nextPitch(flightPitch, movement.y,
@@ -294,6 +331,7 @@ public final class FireDragon extends TamableAnimal {
     }
 
     @Override public void travel(Vec3 input) {
+        if (isPassenger() || shoulderCarrier() != null) { setDeltaMovement(Vec3.ZERO); return; }
         if (!flying()) { launchPending = false; super.travel(input); return; }
         LivingEntity rider = getControllingPassenger();
         if (isLocalInstanceAuthoritative()) {
@@ -399,6 +437,26 @@ public final class FireDragon extends TamableAnimal {
                 }
                 return InteractionResult.SUCCESS;
             }
+            if (stack.isEmpty() && !player.isShiftKeyDown() && DragonShoulderLayout.canBeCarried(ageDays())) {
+                if (isPassenger() || shoulderCarrier() != null || !isAlive()) return InteractionResult.FAIL;
+                if (level() instanceof ServerLevel server) {
+                    boolean[] occupied = new boolean[DragonShoulderLayout.CAPACITY];
+                    for (Entity entity : server.getAllEntities()) {
+                        if (entity instanceof FireDragon baby && baby.shoulderCarrier() == player)
+                            occupied[baby.shoulderSlot()] = true;
+                    }
+                    int slot = 0;
+                    while (slot < occupied.length && occupied[slot]) slot++;
+                    if (slot == occupied.length) return InteractionResult.FAIL;
+                    shoulderPlayer = player;
+                    entityData.set(SHOULDER_CARRIER, player.getId());
+                    entityData.set(SHOULDER_SLOT, slot);
+                    setOrderedToSit(false);
+                    getNavigation().stop();
+                    setPos(player.position().add(DragonShoulderLayout.offset(slot, player.yBodyRot, false, player.getScale())));
+                }
+                return InteractionResult.SUCCESS;
+            }
         }
         return super.mobInteract(player, hand);
     }
@@ -419,6 +477,8 @@ public final class FireDragon extends TamableAnimal {
 
     @Override protected void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
+        // Carried babies remain independently saved world entities; loading releases them.
+        releaseShoulder();
         entityData.set(AGE_TICKS, Math.max(0, input.getIntOr("AgeTicks", 0)));
         setVariant(input.getIntOr("Variant", 0));
         setHunger(input.getIntOr("Hunger", 50));

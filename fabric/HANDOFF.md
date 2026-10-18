@@ -1,5 +1,48 @@
 # Prompt completo per continuare il porting su un altro PC
 
+## Aggiornamento 0.1.10 — fuoco, anteprima e spalle
+
+Utente conferma funzionante quanto già implementato e chiede getto meno sgradevole,
+anteprima adulta corretta e piccoli in spalla. Versione 0.1.10-stage1-dev: texture
+originale flame.png 32x32 copiata senza modifiche; UV selezionano 16 celle 8x8 lungo
+il viaggio, con fase casuale e dissolvenza ai due estremi. Sostituisce lo sprite
+statico dragon_flame.png. Non dichiarare identico al renderer Forge o modificati
+il fuoco vanilla sul terreno/proiettile. Conservati scala/stadio e protezione POV.
+
+GUI: nella 26.3 InventoryScreen normalizza state.scale=1 prima del disegno. Rimosso
+il vecchio 23/getScale che riduceva ulteriormente l'adulto; ora 23 pixel/unità costanti,
+senza cambiare stadio, texture o armatura del render state.
+
+Spalle: solo proprietario, mano vuota, stadio 1 (<25 giorni), tre piccoli come
+nell'originale; due spalle e testa, posa originale sitting_shoulder. Maiusc/elitre
+rilasciano quando il proprietario non è già passeggero; rilascio anche per morte,
+logout, cambio dimensione, crescita e caricamento. Niente dorso ghast o altri posti
+sul drago adulto. Le posizioni usano radianti coerenti per due spalle simmetriche,
+correggendo il mix di gradi/radianti nell'originale, e rispettano la scala del giocatore.
+Aggancio client interpolato; se il giocatore cavalca un adulto segue la seduta animata.
+
+Il primo GameTest ha dimostrato che Entity.startRiding della 26.3 rifiuta veicoli con
+EntityType.canSerialize=false, incluso PLAYER, anche con force. Evitato un mixin
+per aggirare il vincolo: i piccoli sono entità del mondo indipendenti, agganciate
+tramite due dati sincronizzati (carrier entity ID e slot). Stato spalla transitorio,
+non salvato: al caricamento vengono rilasciati; proprietà/posizione/inventario normali
+restano salvati. Nessun nuovo payload client autorevole. Fisica e viaggio sospesi
+soltanto mentre trasportati, ripristinati al rilascio.
+
+Build ordinaria riuscita, 45 JUnit e 9 GameTest della mod superati, oltre al baseline
+vanilla. Test runtime: tre piccoli/quarto rifiutato, movimento e rilascio Maiusc,
+proprietario e crescita, seduta adulta unica, salvataggio indipendente, ricaricamento,
+logout e ripristino fisica. L'asserzione proprietario del mock dopo load è stata
+corretta per controllare UUID persistito: il mock offline non è nel lookup del mondo.
+Skill review-agent applicata in sola lettura senza delega; corretto fuori revisione
+l'aggancio dei piccoli al cavaliere animato, nessun ulteriore finding.
+Client avviato separatamente, grafica/audio/atlanti caricati; nessuna verifica visiva
+in mondo o multiplayer reale. Vedere TEST-0.1.10.md e REVIEW.md.
+
+Lette le skill skill-installer e plugin-management richieste dall'utente; nessuna
+skill da installare necessaria, ricerca Blockbench/Minecraft senza risultati.
+Tappa 1 incompleta, punte grigie ancora aperte: mantenere queste limitazioni.
+
 ## Aggiornamento 0.1.9 — soffio progressivo, terreno e inventario
 
 Riscontro utente: 0.1.8 funziona, ma soffio poco progressivo, piccolo negli stadi

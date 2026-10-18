@@ -32,6 +32,7 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
         int attack;
         float attackTick;
         float breathProgress;
+        float shoulderProgress;
         boolean firstPersonPilot;
         int armor;
     }
@@ -58,6 +59,24 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
         state.attack = dragon.attackAnimation();
         state.attackTick = dragon.attackAnimationTick() + partialTick;
         state.breathProgress = dragon.prevBreathProgress + (dragon.breathProgress - dragon.prevBreathProgress) * partialTick;
+        state.shoulderProgress = dragon.prevShoulderProgress + (dragon.shoulderProgress - dragon.prevShoulderProgress) * partialTick;
+        var player = dragon.shoulderCarrier();
+        if (player != null) {
+            float yaw = net.minecraft.util.Mth.rotLerp(partialTick, player.yBodyRotO, player.yBodyRot);
+            Vec3 carrierPosition = player.getPosition(partialTick);
+            if (player.getVehicle() instanceof FireDragon mount && mount.getControllingPassenger() == player
+                    && Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(mount) instanceof FireDragonRenderer renderer) {
+                carrierPosition = renderer.riderRenderPosition(mount, partialTick, player.getScale());
+            }
+            Vec3 position = carrierPosition.add(
+                    com.github.alexthe666.iceandfire.fabric.dragon.DragonShoulderLayout.offset(
+                            dragon.shoulderSlot(), yaw, player.isShiftKeyDown(), player.getScale()));
+            state.x = position.x; state.y = position.y; state.z = position.z;
+            state.passengerOffset = null;
+            state.walkAnimationSpeed = 0;
+            state.bodyRot = net.minecraft.util.Mth.rotLerp(partialTick, player.yHeadRotO, player.yHeadRot);
+            state.yRot = state.xRot = 0;
+        }
         var client = Minecraft.getInstance();
         boolean firstPersonRider = client.player != null && client.getCameraEntity() == client.player
                 && dragon.getControllingPassenger() == client.player && client.options.getCameraType().isFirstPerson();

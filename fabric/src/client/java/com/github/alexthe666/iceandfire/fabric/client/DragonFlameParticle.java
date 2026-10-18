@@ -10,22 +10,31 @@ import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.phys.Vec3;
 
-/** Original dragon_flame sprite, scale and accelerated travel; adapted from ParticleDragonFlame (LGPL-3.0). */
+/** Animated original flame.png sheet; travel adapted from ParticleDragonFlame (LGPL-3.0). */
 final class DragonFlameParticle extends SingleQuadParticle {
     private final Vec3 acceleration;
     private final Vec3 target;
     private final float fullSize;
+    private final double totalDistance;
+    private final int frameOffset;
+    private int frame;
 
     DragonFlameParticle(ClientLevel level, double x, double y, double z, Vec3 travel, float size, TextureAtlasSprite sprite) {
         super(level, x, y, z, sprite);
         this.target = new Vec3(x, y, z).add(travel);
         acceleration = travel.scale(0.015 + random.nextFloat() * 0.015);
         fullSize = size;
+        totalDistance = travel.length();
+        frameOffset = random.nextInt(3);
+        frame = frameOffset;
         quadSize = size * 0.25F;
         lifetime = 30;
         friction = 1;
         hasPhysics = true;
-        xd = yd = zd = 0;
+        // Sub-tick phase keeps each server emission from forming a synchronized ring.
+        double phase = random.nextDouble();
+        xd = acceleration.x * phase; yd = acceleration.y * phase; zd = acceleration.z * phase;
+        alpha = 0;
     }
 
     @Override public void tick() {
@@ -35,8 +44,17 @@ final class DragonFlameParticle extends SingleQuadParticle {
         xd = step.x; yd = step.y; zd = step.z;
         super.tick();
         quadSize = fullSize * (0.25F + 0.75F * DragonBreathVisuals.smooth(age / 6F));
-        alpha = Math.clamp((lifetime - age) / 6F, 0, 1);
+        double distance = target.distanceTo(new Vec3(x, y, z));
+        float progress = (float) Math.clamp(1 - distance / totalDistance, 0, 1);
+        frame = Math.min(15, frameOffset + (int) (progress * (16 - frameOffset)));
+        alpha = DragonBreathVisuals.opacity(age, (float) distance, fullSize);
     }
+
+    // Each cell is 8x8 in the original 32x32 sheet. Keep UVs inside that cell.
+    @Override protected float getU0() { return super.getU0() + (super.getU1() - super.getU0()) * ((frame % 4) / 4F); }
+    @Override protected float getU1() { return super.getU0() + (super.getU1() - super.getU0()) * ((frame % 4 + 1) / 4F); }
+    @Override protected float getV0() { return super.getV0() + (super.getV1() - super.getV0()) * ((frame / 4) / 4F); }
+    @Override protected float getV1() { return super.getV0() + (super.getV1() - super.getV0()) * ((frame / 4 + 1) / 4F); }
 
     @Override public float getQuadSize(float partialTick) {
         var client = Minecraft.getInstance();

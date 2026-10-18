@@ -9,6 +9,39 @@ import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FireDragonPoseModelTest {
+    @Test void carriedDragonUsesOriginalFoldedPoseAndResetsAfterRelease() throws IOException {
+        var model = model();
+        var state = new FireDragonRenderer.State();
+        model.setupAnim(state);
+        float[] ground = rotations(model);
+        state.shoulderProgress = 20;
+        model.setupAnim(state);
+        Path file = Path.of(System.getProperty("iceandfire.legacyResources"),
+                "assets/iceandfire/models/tabula/firedragon/firedragon_sitting_shoulder.tbl");
+        try (var input = Files.newInputStream(file)) {
+            var original = TabulaLoader.parse(input);
+            for (String name : new String[]{"armR1", "armL1", "ThighR", "ThighL", "BodyUpper"}) {
+                // Compare named parts through the same ground hierarchy, independent of atlas/render scale.
+                var actual = find(model.root(), name);
+                var expected = original.parts().get(name);
+                assertNotNull(actual);
+                assertEquals(Math.cos(expected.xRot), Math.cos(actual.xRot), 0.00001);
+                assertEquals(Math.sin(expected.zRot), Math.sin(actual.zRot), 0.00001);
+            }
+        }
+        var shoulder = rotations(model);
+        model.setupAnim(state);
+        assertArrayEquals(shoulder, rotations(model), 0.00001F);
+        state.shoulderProgress = 0;
+        model.setupAnim(state);
+        assertArrayEquals(ground, rotations(model), 0.00001F);
+    }
+
+    private static ModelPart find(ModelPart root, String name) {
+        if (root.hasChild(name)) return root.getChild(name);
+        for (var part : root.getAllParts()) if (part.hasChild(name)) return part.getChild(name);
+        return null;
+    }
     @Test void firstPersonFireCannotLiftOrMovePilotsNeckAnchor() {
         var model = model();
         var state = new FireDragonRenderer.State();

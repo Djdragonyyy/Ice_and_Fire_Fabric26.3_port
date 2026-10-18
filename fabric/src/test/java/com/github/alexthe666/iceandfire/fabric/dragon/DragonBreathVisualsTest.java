@@ -4,6 +4,19 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DragonBreathVisualsTest {
+    @Test void flameFadesAtBothEndsOfItsTravelWithoutAnOpaqueMouthFlash() {
+        assertEquals(0, DragonBreathVisuals.opacity(0, 30, 3));
+        assertEquals(0, DragonBreathVisuals.opacity(8, 0, 3));
+        assertEquals(0, DragonBreathVisuals.opacity(30, 10, 3));
+        assertEquals(0.8F, DragonBreathVisuals.opacity(3, 30, 3));
+        float previous = 0;
+        for (float distance = 0; distance <= 9; distance += 0.05F) {
+            float alpha = DragonBreathVisuals.opacity(8, distance, 3);
+            assertTrue(alpha >= previous);
+            assertTrue(alpha - previous < 0.01F);
+            previous = alpha;
+        }
+    }
     @Test void grownDragonFlameIsWiderAndDenserThanJuvenileFlame() {
         float small = DragonGrowth.renderSize(25);
         float large = DragonGrowth.renderSize(125);

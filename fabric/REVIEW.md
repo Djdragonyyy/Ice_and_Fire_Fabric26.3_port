@@ -1,5 +1,33 @@
 # Revisione del port Fabric
 
+## Fuoco, anteprima e spalle 0.1.10 — 18 ottobre 2026
+
+Skill review-agent applicata al diff completo da 237f00e83 in sola lettura, senza
+delega. Finding P2 corretto fuori dalla fase di revisione: il piccolo portato mentre
+il giocatore cavalca un adulto usava la posizione fisica del giocatore anziché la
+seduta animata. Ora ricava la stessa trasformazione del mixin cavaliere. Riletto il
+percorso finale senza ulteriori difetti concreti: No findings.
+
+Confrontati EntityDragonBase.updateRiding, interazioni e ridingProgress, posa originale
+sitting_shoulder e DragonTabulaModelAnimator; controllati proprietà, stadio, capacità,
+rilascio, dati sincronizzati e conservazione delle entità nel salvataggio del mondo.
+La 26.3 non permette Entity.startRiding su PLAYER: verificato con GameTest e bytecode.
+Aggancio indipendente con stato transitorio evita di bypassare questo vincolo e di
+affidare il salvataggio dei piccoli ai passeggeri del giocatore. Ricaricamento rilascia
+i piccoli, conservandone posizione/proprietario/inventario. Nessun mixin nuovo.
+
+Flame.png originale byte-identica; celle UV 8x8 sulla griglia 4x4. Verificata la chiamata
+virtuale a getU0/U1/V0/V1 nel renderer SingleQuadParticle della 26.3. Opacità graduale
+all'emissione e all'arrivo; invariati danni/portata e rete del soffio. InventoryScreen
+azzera la scala del render state: rimossa la divisione ridondante nella GUI.
+
+Build finale e 45 JUnit passati, 9 GameTest della mod passati (baseline vanilla escluso).
+Coperti persistenza e logout con veri registri Fabric, tre piccoli e quarto rifiutato,
+proprietario, crescita e rilascio, ripristino della fisica, posa e reset senza accumulo.
+Client avviato con risorse/grafica/audio/atlanti caricati. Resa visiva di getto, anteprima,
+spalle e trasporto durante cavalcatura non verificata dall'agente in mondo; multiplayer
+con due veri client ancora da provare. Tappa 1 e punte grigie restano aperte.
+
 ## Soffio, terreno e inventario 0.1.9 — 18 ottobre 2026
 
 Skill review-agent applicata in sola lettura, senza delega, al diff completo dalla

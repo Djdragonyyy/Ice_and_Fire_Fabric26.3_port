@@ -34,7 +34,7 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
                     (cube.minX + cube.maxX) / 32F, cube.minY / 16F, cube.maxZ / 16F);
         });
         if (!Float.isFinite(seatSurface.y)) throw new IllegalStateException("Missing neck seat geometry");
-        for (String name : List.of("base_male", "base_female", "flying", "sitting", "walk1", "walk2", "walk3", "walk4",
+        for (String name : List.of("base_male", "base_female", "flying", "sitting", "sitting_shoulder", "walk1", "walk2", "walk3", "walk4",
                 "flight1", "flight2", "flight3", "flight4", "flight5", "flight6",
                 "bite1", "bite2", "bite3", "attack_blast_charge1", "attack_blast_charge2", "attack_blast_charge3", "attack_stream_breath")) {
             poses.put(name, loader.apply(name));
@@ -95,6 +95,15 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
         }
         applySecondaryMotion(state, walking);
         applyCombat(state);
+        if (state.shoulderProgress > 0) {
+            float weight = state.shoulderProgress / 20F;
+            for (var entry : parts.entrySet()) {
+                if (entry.getKey().contains("Horn")) continue;
+                ModelPart shoulder = poses.get("sitting_shoulder").parts().get(entry.getKey());
+                if (shoulder != null) rotateTo(entry.getValue(), shoulder, weight);
+            }
+            parts.get("BodyUpper").z -= 12F * weight;
+        }
         for (String name : List.of("Neck1", "Neck2", "Neck3", "Head")) {
             ModelPart neck = parts.get(name);
             if (neck != null) {
