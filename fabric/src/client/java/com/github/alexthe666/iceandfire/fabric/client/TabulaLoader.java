@@ -33,7 +33,7 @@ final class TabulaLoader {
         return parse(input).root();
     }
 
-    private static Model parse(InputStream input) throws IOException {
+    static Model parse(InputStream input) throws IOException {
         try (ZipInputStream zip = new ZipInputStream(input)) {
             for (ZipEntry entry; (entry = zip.getNextEntry()) != null;) {
                 if (!entry.getName().equals("model.json")) continue;

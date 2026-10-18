@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.phys.Vec3;
 
 /** Uses the original Tabula geometry, poses and stage/variant textures. */
 public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragonRenderer.State, EntityModel<FireDragonRenderer.State>> {
@@ -50,5 +51,25 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
 
     @Override public Identifier getTextureLocation(State state) {
         return IafContent.id("textures/models/firedragon/" + COLORS[state.variant] + "_" + state.stage + ".png");
+    }
+
+    /** Visual rider follows the animated neck; physical seat retains the original POV offsets. */
+    public Vec3 riderRenderPosition(FireDragon dragon, float partialTick) {
+        State state = new State();
+        extractRenderState(dragon, state, partialTick);
+        FireDragonPoseModel pose = (FireDragonPoseModel) getModel();
+        pose.setupAnim(state);
+        var anchor = pose.riderAnchor();
+        return riderRenderPosition(state, anchor);
+    }
+
+    static Vec3 riderRenderPosition(State state, org.joml.Vector3f anchor) {
+        double yaw = Math.toRadians(state.bodyRot);
+        double right = anchor.x * state.scale;
+        double forward = -anchor.z * state.scale;
+        return new Vec3(
+                state.x - forward * Math.sin(yaw) + right * Math.cos(yaw),
+                state.y + (1.501 - anchor.y) * state.scale - 0.25,
+                state.z + forward * Math.cos(yaw) + right * Math.sin(yaw));
     }
 }

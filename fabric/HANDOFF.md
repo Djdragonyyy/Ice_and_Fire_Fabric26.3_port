@@ -1,0 +1,223 @@
+# Prompt completo per continuare il porting su un altro PC
+
+Riprendi questo progetto nella stessa repository e sul ramo indicato sotto. Comunica in italiano.
+Leggi prima gli eventuali AGENTS.md applicabili, questo file, fabric/README.md e fabric/REVIEW.md.
+Controlla stato Git, commit e sorgenti effettivi: questo documento descrive il punto di passaggio
+del 18 ottobre 2026 e non sostituisce la verifica del checkout. Non ripartire da zero e non
+sovrascrivere modifiche dell'utente. Il porting è ancora una prova parziale della tappa 1.
+
+## Repository, base e organizzazione
+
+- Origin personale: https://github.com/albertofiocco24-star/Ice_and_Fire_Fabric26.3_port.git
+- Upstream: https://github.com/AlexModGuy/Ice_and_Fire.git
+- Ramo di lavoro: port/fabric-26.3.
+- Base originale: ramo upstream 1.20, Minecraft 1.20.1,
+  commit 0526aad94119b705a86207623481b087c4d052ca.
+- Il codice Forge originale è conservato nella cartella principale src/.
+- Il port Fabric è un progetto Gradle indipendente in fabric/, con src/main e src/client separati.
+  Non tentare di compilare il port usando per errore il Gradle Forge nella radice.
+- Commit precedenti: 7c0f9cd50, primo checkpoint; d0a80e73f, correzione keybinds 0.1.1.
+  Le modifiche 0.1.2 sono incluse nel commit che aggiunge questo documento.
+
+## Obiettivo e vincoli permanenti
+
+Portare completamente Ice and Fire a Minecraft Java 26.3 con Fabric, per tappe, mantenendo
+modelli, texture, animazioni, statistiche, identificatori e meccaniche originali dove possibile.
+Non introdurre deliberatamente modifiche al gameplay. Usare mondi nuovi; nessuna conversione
+di salvataggi Forge. Conservare storia Git, licenza LGPL e attribuzioni originali.
+
+Confrontare sempre le funzionalità migrate con il codice originale presente in src/.
+Verificare l'eventuale disponibilità di Citadel compatibile prima di riutilizzarlo; attualmente
+non è dipendenza del progetto Fabric. Le funzioni necessarie vengono migrate conservando
+provenienza/licenze, senza sostituire automaticamente modelli e animazioni con un altro sistema.
+Separare codice client/comune e migrare registrazioni, eventi, rete, configurazioni,
+persistenza, rendering e accessi interni. Preferire API disponibili; mixin soltanto quando mancano.
+
+Lavorare e fare commit comprensibili su port/fabric-26.3, con push all'origin personale.
+Non creare release pubbliche e non unire il ramo principale. Spiegare i comandi Git in italiano.
+L'utente non vuole condividere la sua email nella chat: non chiederla o stamparla; usare il
+proprio autore Git già configurato o una noreply GitHub verificata, senza cambiare config globali.
+Le skill e le integrazioni locali del vecchio PC non vengono trasferite tramite Git: scoprirle
+nel nuovo ambiente. Non dichiarare usata una skill assente o una connessione non verificata.
+
+## Tappe concordate: fermarsi al completamento di ciascuna
+
+1. Drago di fuoco giocabile: uovo, schiusa, crescita, persistenza; modelli, varianti, texture e
+   animazioni originali; terra, volo, combattimento e soffio; addomesticamento, interazioni,
+   cavalcatura e volo controllato; oggetti, controlli, interfacce e sincronizzazione necessari.
+   Elementi di prova disponibili in creativo o con comandi, senza richiedere generazione naturale.
+   Compilare o avere un'entità incompleta NON conclude la tappa.
+2. Draghi di ghiaccio e fulmine con attacchi, inventari, equipaggiamenti e sistemi collegati,
+   incluse le funzioni del drago di fuoco rimaste fuori dalla prima tappa.
+3. Altre creature con IA e interazioni, poi blocchi, oggetti, macchinari, bestiario, ricette,
+   bottini e progressione. Inventariare i contenuti originali per controllarne la copertura.
+4. Strutture, tane, risorse, comparsa naturale e integrazione finale. Segnalare le integrazioni
+   accessorie prive di equivalente verificato per Fabric 26.3 e collaudare il ciclo di gioco.
+
+Fermarsi alla fine di ogni tappa, consegnare JAR di prova identificabile, dipendenze esatte,
+istruzioni e risultati dei test/revisione, attendere il riscontro dell'utente e correggere i
+problemi prima della successiva. Le prove visive e di interazione dell'utente sono necessarie.
+
+## Toolchain fissata nel progetto
+
+Minecraft 26.3; JDK 25; Fabric Loader 0.19.5; Fabric API 0.163.0+26.3;
+Loom 1.18.4; Gradle Wrapper 9.7.1; JUnit Jupiter 5.13.4.
+fabric.loom.disableObfuscation=true è intenzionale. Non sostituire versioni senza verificarle.
+Versione corrente della mod: 0.1.2-stage1-dev.
+
+Sul nuovo PC installare/selezionare JDK 25, verificare java -version e JAVA_HOME.
+La cache Gradle e il JDK scaricato sul vecchio PC non sono inclusi nella repository.
+Da PowerShell nella radice:
+
+```powershell
+& "$env:JAVA_HOME\bin\java.exe" -version
+.\fabric\gradlew.bat -p fabric build --console=plain
+```
+
+JAR installabile in fabric/build/libs/, senza suffisso -sources.
+Aprire fabric/ come progetto Gradle nell'IDE. Conservare il vecchio progetto Forge come riferimento.
+
+## Implementato nel primo checkpoint
+
+Registrazioni Fabric di fire_dragon, dragon_egg, quattro varianti di uova e dragon_meal;
+incubazione nel fuoco, trasferimento del proprietario e del nome alla schiusa, crescita e
+statistiche di base, fame, salvataggio dei primi stati, pasto che fa crescere di un giorno,
+monta dal terzo stadio (50 giorni), controlli iniziali di terra/volo e rete con controllo del
+proprietario. Asset Tabula e texture originali caricati da un lettore dedicato; pose iniziali
+di camminata, volo, seduta e sesso. Non equivale alla migrazione completa delle animazioni Citadel.
+
+File principali: IafContent, DragonGrowth, FireDragonEgg, FireDragon, DragonControlPayload,
+TabulaLoader, FireDragonPoseModel, FireDragonRenderer, DragonKeyMappings, sotto fabric/src/.
+
+## Prove effettivamente fatte e riscontro dell'utente
+
+- Build Forge originale fallita in createMcpToSrg per mapping/archivi e problemi ZIP nel sandbox;
+  non è stato dimostrato un difetto della repository originale. Problema separato dal porting.
+- Build Fabric standard nel sandbox Windows del vecchio PC bloccata da Java ZipFS:
+  Files.isWritable=false e ReadOnlyFileSystemException anche su ZIP nuovi scrivibili con altre API.
+- Build diagnostiche riuscite con cache Minecraft preparata localmente e init script descritto sotto.
+  La build ordinaria fuori dal sandbox non è stata ancora verificata: provarla prima sul nuovo PC.
+- Client di sviluppo avviato: mod, renderer, grafica, audio e atlanti caricati. Nessuna prova
+  di gameplay in un mondo eseguita dall'agente. L'ultimo avvio verificava il nuovo mixin;
+  dopo quell'avvio sono state apportate piccole correzioni matematiche, ricompilate e testate.
+- Server eseguito soltanto con runServer --args=--initSettings: generazione configurazione e
+  inizializzazione, NON avvio di un mondo/server multiplayer. EULA non accettata automaticamente.
+- L'utente usa CurseForge e ha installato Fabric API 0.163.0+26.3. La precedente 0.161.0+26.3
+  era incompatibile con il requisito del JAR: non abbassare il requisito per aggirare il problema.
+- L'utente ha confermato avvio, schiusa e, dopo 0.1.1, discesa corretta del drago.
+  L'incubazione originale richiede oltre 7200 tick nel fuoco; i contatori crescevano correttamente.
+- Ultima build: 16 test JUnit superati, nessun fallimento. Comprendono crescita/statistiche,
+  incubazione, caricamento Tabula, keybind/rimappatura, continuità di tutti i confini dei cicli
+  camminata/volo, aggancio alla posa senza accumulo, trasformazione del cavaliere confrontata
+  con la matrice vanilla a varie scale/rotazioni, seduta e distanza camera con crescita.
+  Un test verifica tutte le 22 punte dorsali: sei facce e UV finite/in intervallo per ciascuna.
+  Questo NON dimostra che il difetto visivo delle punte sia risolto.
+
+## Correzione 0.1.1 già consegnata e provata dall'utente
+
+I keybind usavano interi GLFW della 1.20.1 invece dei codici SDL della 26.3.
+Ora usano InputConstants.KEY_X/KEY_R/KEY_G, categoria Ice and Fire, traduzioni italiane e
+identificatori nuovi key.iceandfire.* per evitare il riutilizzo dei vecchi default errati.
+Salto sale; X scende ed è riassegnabile. R/G sono trasmessi ma gli attacchi NON sono implementati.
+L'utente ha confermato che la discesa funziona.
+
+## Ultime segnalazioni dell'utente e modifiche 0.1.2 salvate
+
+Segnalazioni: punte grigie che scompaiono/si vedono solo da alcuni lati; animazione errata o
+a scatti; cavaliere non agganciato alla seduta alle varie dimensioni; visuale ostruita,
+soprattutto allo stadio 5, in prima e terza persona.
+
+Modifiche 0.1.2 implementate e compilate, ma NON ancora consegnate né provate dall'utente:
+
+- Interpolazione continua anche quando il ciclo è zero e ai confini delle pose;
+  fattore corretto di due unità/tick per il volo; eliminato il salto quando una posa di volo
+  coincide con la posa di riferimento; transizione proporzionata al progresso di volo.
+- Ripristinati alcuni movimenti secondari originali di corpo e coda; rimosso l'azzeramento
+  dell'interpolazione di yaw del drago cavalcato. Nessuna misura FPS o promessa di eliminare ogni lag.
+- DragonRiderLayout migra le curve originali di altezza/distanza della seduta e gli offset
+  per volo, cammino e sguardo. La seduta segue la dimensione visiva anche quando la scala
+  della collisione si ferma a 7 nello stadio 5; non applicare due volte la scala fisica.
+- L'attributo nativo CAMERA_DISTANCE adatta la terza persona: distanza totale 4 + renderSize,
+  usando ancora la collisione vanilla della camera contro i blocchi. F5 resta il selettore vanilla.
+  Nessuna prova visiva confermata per la prima persona dopo questo intervento.
+- La posizione renderizzata del cavaliere segue BodyUpper -> Neck1 animati, come il layer
+  originale; gli offset fisici/POV conservano la logica originale. Un mixin SOLO client su
+  EntityRenderer.extractRenderState applica la posizione. Non era disponibile un callback
+  Fabric equivalente per sostituire la posizione di rendering di un passeggero esistente.
+- La posizione usa le coordinate interpolate del render state del drago, non xo/yo/zo.
+  Corretto anche il segno laterale della trasformazione; il test la confronta con la matrice
+  effettiva vanilla, compreso l'offset verticale 1.501.
+
+Punte grigie: NON risolte. Verificati asset originali, cubi/UV e materiale già senza culling.
+Non dichiarare che basti disattivare il culling. Il nuovo test geometrico è solo diagnostico.
+Sono utili due screenshot dello stesso drago da lati diversi, con stadio/variante ed eventuali
+shader/resource pack/mod di rendering. Non cambiare modello o texture originali alla cieca.
+Ricerca plugin Blockbench sul vecchio ambiente: nessun risultato; nessun MCP Blockbench usato.
+Verificare nuovamente sul nuovo PC se disponibile, senza affermare che sia collegato.
+
+## Revisione e test richiesti alla ripresa
+
+La skill review-agent è stata applicata al primo checkpoint e alla correzione 0.1.1.
+Durante la revisione delle ultime modifiche sono stati individuati/corretti problemi di
+interpolazione e trasformazione laterale; l'ultimo test aggiunto li copre. Prima di consegnare
+0.1.2, completare una revisione finale in sola lettura di TUTTO il diff rispetto a d0a80e73f,
+inclusi i nuovi file e il mixin, e aggiornare fabric/REVIEW.md. Quel documento attualmente
+descrive soprattutto i checkpoint precedenti; non interpretarne i conteggi storici come attuali.
+Usare la skill review-agent se presente; se manca, cercarla e segnalare l'assenza, senza
+dichiararla applicata. Nessuna delega durante la revisione se la skill la vieta.
+Segnalare tutti i difetti concreti introdotti in ordine P0/P1/P2/P3; correggerli fuori dalla
+fase di revisione e rieseguire i controlli pertinenti. Non inventare difetti di stile.
+
+Azioni immediate, in ordine:
+
+1. Verificare checkout e toolchain, compilare con il comando standard sul nuovo PC.
+2. Completare la revisione finale 0.1.2, correggere problemi e ripetere i controlli interessati.
+3. Preparare JAR 0.1.2 chiaramente marcato prova parziale, checksum, dipendenze e istruzioni.
+   I JAR/build/log locali del vecchio PC e outputs/ NON sono trasferiti dal clone della repository:
+   ricostruirli. Non consegnare il JAR -sources e non lasciare più versioni della mod in mods/.
+4. Far provare all'utente camminata, virate, decollo, discesa X, atterraggio, aggancio del
+   cavaliere e F5/visuale prima-terza persona a 50, 75, 100 e 125 giorni, a terra e in volo.
+   Non allargare la monta allo stadio 2: nella base originale è dal terzo stadio.
+5. Raccogliere le immagini necessarie e riprodurre il difetto delle punte, correggerlo con
+   confronto al modello originale e prova visiva, senza dichiararlo risolto dal solo test geometrico.
+6. Continuare la tappa 1, senza iniziare la tappa 2.
+
+Restano da migrare: combattimento, soffio e proiettili/effetti sui blocchi; IA e volo autonomo;
+comportamento acqua/lava; inventario/interfacce e interazioni complete; alimentazione e comandi;
+gestione dell'uovo danneggiato; animazioni di attacco e altre animazioni secondarie, occhi,
+differenze visive complete maschio/femmina, suoni e particelle; configurazioni originali.
+Verificare anche dismontaggio sicuro, salvataggio/riapertura e sincronizzazione in veri mondi.
+La tappa 1 è incompleta anche se i problemi visivi segnalati venissero corretti.
+
+Procedura finale riproducibile della tappa 1: mondo nuovo, quattro varianti di uova, schiusa
+nel fuoco, crescita, proprietà/addomesticamento, cavalcatura, decollo, volo, atterraggio, soffio,
+combattimento, salvataggio/riapertura anche durante incubazione/volo, server dedicato con due
+client e verifica che un non proprietario non controlli il drago. Confrontare resa e gameplay
+con l'originale; distinguere sempre prove automatiche, avvio, test in mondo e conferma dell'utente.
+
+## Nota ambiente diagnostico precedente: solo se il problema si ripresenta
+
+Sul vecchio PC il JDK era in work/toolchains/jdk-25.0.4.1+1 e GRADLE_USER_HOME in
+work/gradle-home, fuori dalla repository. Non copiare questi percorsi assoluti sul nuovo PC.
+L'init script locale work/public-api-only.gradle conteneva:
+
+```groovy
+gradle.beforeProject { project ->
+    project.pluginManager.withPlugin('net.fabricmc.fabric-loom') {
+        project.loom.enableTransitiveAccessWideners.set(false)
+        project.loom.interfaceInjection.enableDependencyInterfaceInjection.set(false)
+        project.loom.enableModProvidedJavadoc.set(false)
+    }
+}
+```
+
+Veniva passato con -I e percorso assoluto al Gradle Fabric. Erano stati preparati anche gli
+archivi Minecraft separati nella cache locale tramite .NET ZIP. Questo script da solo NON
+ricrea quella preparazione. Non applicare automaticamente il workaround sul nuovo PC e non
+commetterlo come configurazione di produzione. Diagnosticare eventuali errori reali prima.
+
+Il push dall'ambiente dell'agente sul vecchio PC falliva nel gestore credenziali Git/MSYS
+con NtCreateDirectoryObject 0xC0000022, prima dell'autenticazione GitHub. Provare il normale
+terminale PowerShell/VS Code dell'utente o il client Git autenticato; non estrarre credenziali
+e non aggirare i controlli. Verificare che il commit di questo handoff sia effettivamente remoto
+prima di cambiare PC: senza push riuscito il nuovo clone non contiene queste modifiche.

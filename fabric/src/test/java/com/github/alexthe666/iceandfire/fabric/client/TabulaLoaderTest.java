@@ -11,6 +11,27 @@ import java.util.zip.ZipFile;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TabulaLoaderTest {
+    @Test void dorsalSpikesRetainAllFacesAndFiniteTextureCoordinates() throws Exception {
+        try (var stream = Files.newInputStream(modelDirectory().resolve("firedragon_ground.tbl"))) {
+            ModelPart root = TabulaLoader.load(stream);
+            java.util.concurrent.atomic.AtomicInteger count = new java.util.concurrent.atomic.AtomicInteger();
+            root.visit(new com.mojang.blaze3d.vertex.PoseStack(), (pose, path, index, cube) -> {
+                if (!path.substring(path.lastIndexOf('/') + 1).startsWith("spike")) return;
+                count.incrementAndGet();
+                assertEquals(6, cube.polygons.length, path);
+                assertTrue(cube.maxX > cube.minX && cube.maxY > cube.minY && cube.maxZ > cube.minZ, path);
+                for (var face : cube.polygons) {
+                    assertEquals(4, face.vertices().length);
+                    for (var vertex : face.vertices()) {
+                        assertTrue(Float.isFinite(vertex.u()) && Float.isFinite(vertex.v()), path);
+                        assertTrue(vertex.u() >= 0 && vertex.u() <= 1 && vertex.v() >= 0 && vertex.v() <= 1, path);
+                    }
+                }
+            });
+            assertEquals(22, count.get(), "Every original dorsal spike must be present");
+        }
+    }
+
     private static Path modelDirectory() {
         return Path.of(System.getProperty("iceandfire.legacyResources"), "assets/iceandfire/models/tabula/firedragon");
     }

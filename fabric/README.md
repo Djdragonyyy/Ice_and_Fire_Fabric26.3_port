@@ -2,6 +2,9 @@
 
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
+Per lo stato aggiornato della 0.1.2, i 16 test superati e la ripresa su un altro PC,
+leggere [HANDOFF.md](HANDOFF.md). I risultati del primo checkpoint riportati sotto sono storici.
+
 Base originale: ramo `1.20`, commit `0526aad94119b705a86207623481b087c4d052ca`, Minecraft 1.20.1.
 La cartella `src/` della repository conserva il codice originale. Questo progetto Gradle indipendente
 usa esclusivamente i sorgenti in `fabric/src/` e include soltanto le risorse originali selezionate.

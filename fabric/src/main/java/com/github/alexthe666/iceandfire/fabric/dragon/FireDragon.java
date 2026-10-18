@@ -35,6 +35,7 @@ public final class FireDragon extends TamableAnimal {
     private int takeoffTicks;
     private int flightTicks;
     private float glidingSpeedBonus;
+    private float riderWalkingLift;
     public int walkCycle;
     public int flightCycle;
     public float flyProgress;
@@ -53,6 +54,7 @@ public final class FireDragon extends TamableAnimal {
                 .add(Attributes.ATTACK_DAMAGE, 1)
                 .add(Attributes.MOVEMENT_SPEED, 0.15F)
                 .add(Attributes.FOLLOW_RANGE, 128)
+                .add(Attributes.CAMERA_DISTANCE, 4)
                 .add(Attributes.ARMOR, 1);
     }
 
@@ -104,6 +106,7 @@ public final class FireDragon extends TamableAnimal {
         getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(DragonGrowth.movementSpeed(appliedAge));
         getAttribute(Attributes.ARMOR).setBaseValue(1 + 19 / 125F * appliedAge);
         getAttribute(Attributes.SCALE).setBaseValue(DragonGrowth.scale(appliedAge));
+        getAttribute(Attributes.CAMERA_DISTANCE).setBaseValue(DragonRiderLayout.cameraDistance(appliedAge));
     }
 
     @Override public void tick() {
@@ -135,6 +138,10 @@ public final class FireDragon extends TamableAnimal {
             }
         }
         setNoGravity(flying());
+        LivingEntity rider = getControllingPassenger();
+        riderWalkingLift = !flying() && rider != null && rider.zza > 0
+                ? Math.min(DragonRiderLayout.walkingLiftLimit(ageDays()), riderWalkingLift + 0.1F)
+                : Math.max(0, riderWalkingLift - 0.15F);
     }
 
     @Override public void travel(Vec3 input) {
@@ -185,7 +192,6 @@ public final class FireDragon extends TamableAnimal {
         super.tickRidden(player, input);
         setYRot(player.getYRot());
         setXRot(player.getXRot() * 0.5F);
-        yRotO = getYRot();
         yBodyRot = getYRot();
         yHeadRot = getYRot();
     }
@@ -196,6 +202,14 @@ public final class FireDragon extends TamableAnimal {
 
     @Override protected Vec3 getRiddenInput(Player player, Vec3 input) {
         return new Vec3(player.xxa * 0.5F, 0, player.zza < 0 ? player.zza * 0.25F : player.zza);
+    }
+
+    @Override protected Vec3 getPassengerAttachmentPoint(Entity passenger, EntityDimensions dimensions, float scale) {
+        if (passenger != getControllingPassenger()) return super.getPassengerAttachmentPoint(passenger, dimensions, scale);
+        // The default positionRider subtracts the passenger's vehicle attachment afterwards.
+        // Return the seat in world units; physical SCALE is capped and must not scale it again.
+        return DragonRiderLayout.offset(ageDays(), getYRot(), flying(), riderWalkingLift,
+                passenger.getXRot(), passenger.getBbHeight()).add(passenger.getVehicleAttachmentPoint(this));
     }
 
     @Override public InteractionResult mobInteract(Player player, InteractionHand hand) {
