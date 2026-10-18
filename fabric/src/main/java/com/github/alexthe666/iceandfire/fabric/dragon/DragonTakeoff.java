@@ -18,7 +18,7 @@ public final class DragonTakeoff {
         takeoffDown = false;
     }
 
-    public boolean tick(boolean canCarryRider, boolean flying, boolean blocked, boolean up, boolean down) {
+    public boolean tick(boolean canCarryRider, boolean flying, boolean up, boolean down) {
         if (!canCarryRider || flying || down) {
             heldTicks = requestedTicks = 0;
             return false;
@@ -26,7 +26,7 @@ public final class DragonTakeoff {
         heldTicks = up ? Math.min(21, heldTicks + 1) : 0;
         boolean ready = requestedTicks > 0 || heldTicks > 20;
         if (requestedTicks > 0) requestedTicks--;
-        if (!ready || blocked) return false;
+        if (!ready) return false;
         heldTicks = requestedTicks = 0;
         return true;
     }

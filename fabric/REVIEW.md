@@ -1,5 +1,20 @@
 # Revisione del port Fabric
 
+## Rimozione funzione ghast 0.1.7 — 18 ottobre 2026
+
+Revisione del diff rispetto alla 0.1.6: rimossi tutti i collegamenti alla piattaforma
+del dorso in definizione dati, tick, travel, tickRidden, decollo e dismontaggio.
+Eliminati helper e due test geometrici, oltre al test di decollo con dorso occupato.
+I tre test rimanenti di DragonTakeoff conservano le verifiche di pressione breve,
+spazio tenuto, mancato rilancio automatico e invalidazione dei comandi.
+Unica seduta, aggancio grafico, camera, tilt e controlli non modificati. Dismontaggio
+e collisione tornano ereditati da vanilla. Nessun dato persistente della piattaforma
+richiede conversione: BACK_OCCUPIED era solo sincronizzato, non scritto in NBT.
+
+Build clean build riuscita, 27 test senza errori. Controllo del JAR per escludere la
+classe eliminata. Nessuna prova interattiva eseguita; istruzioni TEST-0.1.7.md.
+Nessun ulteriore difetto individuato nella rilettura. Tappa 1 incompleta, punte aperte.
+
 ## Un solo passeggero 0.1.6 — 18 ottobre 2026
 
 Difetto trovato: mobInteract usava startRiding(this, true, true), saltando il controllo

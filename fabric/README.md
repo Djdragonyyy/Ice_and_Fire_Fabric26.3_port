@@ -2,10 +2,12 @@
 
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
-Versione corrente: **0.1.5-stage1-dev**. Dismontaggio sul centro del dorso solido,
-con arresto immediato del drago come sul ghast felice, azzeramento dell'inerzia e
-della distanza di caduta. Build ordinaria e 29 test superati. Prova in gioco ancora
-necessaria. Istruzioni: [TEST-0.1.5.md](TEST-0.1.5.md).
+Versione corrente: **0.1.7-stage1-dev**. Rimossa completamente su richiesta la funzione
+del dorso solido derivata dal ghast felice, insieme a rilevamento del giocatore sopra,
+pausa e dismontaggio personalizzato. Rimane una sola seduta principale del drago.
+Build pulita e 27 test superati; prova in gioco ancora necessaria.
+Istruzioni: [TEST-0.1.7.md](TEST-0.1.7.md). I paragrafi seguenti descrivono versioni storiche;
+la funzione del dorso solido citata sotto non è più presente.
 
 Versione 0.1.4 (precedente): tilt in discesa attenuato vicino ai blocchi;
 tilt nascosto soltanto al pilota in prima persona. Nuovo comando **V: decolla**,

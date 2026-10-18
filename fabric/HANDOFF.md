@@ -1,5 +1,21 @@
 # Prompt completo per continuare il porting su un altro PC
 
+## Aggiornamento 0.1.7 — funzione ghast rimossa su richiesta
+
+L'utente revoca la richiesta del dorso solido: rimuovere completamente la funzione
+derivata dal ghast felice e continuare il porting originale. Questo stato prevale
+sulle indicazioni storiche 0.1.3–0.1.6 sotto. Eliminati collisione solida aggiuntiva,
+BACK_OCCUPIED, scansione dei giocatori, pausa sul dorso/dismount, posizione personalizzata
+di dismontaggio, helper DragonBackPlatform e relativi test. Tolti i blocchi di movimento,
+rotazione e decollo dipendenti dal dorso occupato e il parametro blocked di DragonTakeoff.
+Conservati seduta principale unica, camera, tilt e controlli di volo originali del port.
+Build pulita 0.1.7-stage1-dev: 27 test superati (tre test della funzione eliminati).
+Nessuna prova interattiva svolta per questa versione: vedere TEST-0.1.7.md.
+La tappa 1 resta incompleta, punte grigie aperte. Riprendere combattimento e soffio
+originali, non la tappa 2; non reintrodurre il dorso solido. Origin aggiornato dopo
+il cambio username comunicato dall'utente:
+https://github.com/Djdragonyyy/Ice_and_Fire_Fabric26.3_port.git
+
 ## Aggiornamento 0.1.6 — un solo passeggero
 
 L'utente vuole esclusivamente il posto principale del drago e la superficie solida

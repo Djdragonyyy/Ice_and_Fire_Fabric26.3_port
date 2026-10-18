@@ -32,7 +32,6 @@ public final class FireDragon extends TamableAnimal {
     private static final EntityDataAccessor<Boolean> AGING_DISABLED = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> FLYING = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Float> FLIGHT_PITCH = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.FLOAT);
-    private static final EntityDataAccessor<Boolean> BACK_OCCUPIED = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.BOOLEAN);
     private int appliedAge = -1;
     private int riderControls;
     private long controlsReceivedAt;
@@ -44,7 +43,6 @@ public final class FireDragon extends TamableAnimal {
     private Vec3 lastFlightPosition;
     private float flightPitch;
     private float previousFlightPitch;
-    private int backStillTicks;
     public int walkCycle;
     public int flightCycle;
     public float flyProgress;
@@ -76,7 +74,6 @@ public final class FireDragon extends TamableAnimal {
         builder.define(AGING_DISABLED, false);
         builder.define(FLYING, false);
         builder.define(FLIGHT_PITCH, 0F);
-        builder.define(BACK_OCCUPIED, false);
     }
 
     @Override protected void registerGoals() {
@@ -102,44 +99,6 @@ public final class FireDragon extends TamableAnimal {
 
     @Override public boolean isFlyingVehicle() { return flying(); }
 
-    @Override public boolean canBeCollidedWith(Entity other) {
-        // EntitySelector also queries collisions with no requesting entity.
-        return isAlive() && (other == null || !isPassengerOfSameVehicle(other));
-    }
-
-    @Override protected void removePassenger(Entity passenger) {
-        super.removePassenger(passenger);
-        if (passenger instanceof Player && isAlive() && !isRemoved()) {
-            // HappyGhast pauses immediately at dismount, before the next top-of-back scan.
-            // Predict the same stop on the client while the server sends the dismount position.
-            backStillTicks = 10;
-            entityData.set(BACK_OCCUPIED, true);
-            getNavigation().stop();
-            setDeltaMovement(Vec3.ZERO);
-            riderControls = 0;
-            takeoff.reset();
-            launchPending = false;
-            glidingSpeedBonus = 0;
-        }
-    }
-
-    @Override public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
-        if (!isAlive() || isRemoved()) return super.getDismountLocationForPassenger(passenger);
-        // Feet go on the solid collision surface, not at the animated saddle in front of it.
-        passenger.setDeltaMovement(Vec3.ZERO);
-        passenger.resetFallDistance();
-        return DragonBackPlatform.dismountPosition(getBoundingBox());
-    }
-
-    private void updateBackPlatform() {
-        if (level().isClientSide()) return;
-        boolean occupied = level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(0.1, 2, 0.1),
-                player -> !player.isSpectator() && !player.noPhysics && !player.isPassenger()
-                        && DragonBackPlatform.isOnBack(getBoundingBox(), player.getBoundingBox())).size() > 0;
-        backStillTicks = occupied ? 10 : Math.max(0, backStillTicks - 1);
-        entityData.set(BACK_OCCUPIED, backStillTicks > 0);
-        if (backStillTicks > 0) getNavigation().stop();
-    }
     public void setRiderControls(int flags) {
         takeoff.acceptControls(flags);
         riderControls = flags & DragonControlPayload.ALL;
@@ -167,7 +126,6 @@ public final class FireDragon extends TamableAnimal {
 
     @Override public void tick() {
         previousFlightPitch = flightPitch;
-        updateBackPlatform();
         if (!level().isClientSide()) {
             boolean hasRider = getControllingPassenger() != null;
             if (!hasRider || level().getGameTime() - controlsReceivedAt > 10) {
@@ -175,7 +133,7 @@ public final class FireDragon extends TamableAnimal {
                 takeoff.reset();
             }
             if (hasRider && takeoff.tick(DragonGrowth.canCarryRider(ageDays()), flying(),
-                    entityData.get(BACK_OCCUPIED), control(DragonControlPayload.UP), control(DragonControlPayload.DOWN))) {
+                    control(DragonControlPayload.UP), control(DragonControlPayload.DOWN))) {
                 entityData.set(FLYING, true);
                 flightTicks = 0;
                 launchPending = true;
@@ -247,10 +205,6 @@ public final class FireDragon extends TamableAnimal {
     }
 
     @Override public void travel(Vec3 input) {
-        if (entityData.get(BACK_OCCUPIED)) {
-            setDeltaMovement(Vec3.ZERO);
-            return;
-        }
         if (!flying()) { launchPending = false; super.travel(input); return; }
         LivingEntity rider = getControllingPassenger();
         if (isLocalInstanceAuthoritative()) {
@@ -301,7 +255,7 @@ public final class FireDragon extends TamableAnimal {
 
     @Override protected boolean couldAcceptPassenger() {
         // Unlike canAddPassenger, vanilla checks this even for forced mounts and NBT loading.
-        // The solid back is a standing surface, never an additional passenger seat.
+        // Dragons have only one passenger seat: the pilot's saddle.
         return !isVehicle();
     }
 
@@ -312,7 +266,6 @@ public final class FireDragon extends TamableAnimal {
 
     @Override protected void tickRidden(Player player, Vec3 input) {
         super.tickRidden(player, input);
-        if (entityData.get(BACK_OCCUPIED)) return;
         setYRot(player.getYRot());
         setXRot(player.getXRot() * 0.5F);
         yBodyRot = getYRot();
