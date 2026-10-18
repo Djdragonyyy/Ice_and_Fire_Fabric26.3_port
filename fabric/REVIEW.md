@@ -1,5 +1,38 @@
 # Revisione del port Fabric
 
+## Soffio, terreno e inventario 0.1.9 — 18 ottobre 2026
+
+Skill review-agent applicata in sola lettura, senza delega, al diff completo dalla
+0.1.8 (3267d64f8), inclusi nuovi sorgenti, risorse generate, Gradle e test. No findings.
+Confrontati ParticleDragonFlame, ContainerDragon/GuiDragon, ItemDragonArmor,
+BlockReturningState/BlockCharedPath, IafBlockRegistry e IafDragonDestructionManager.
+
+Controllati percorso server del danno e payload solo visuale, osservatori/pilota,
+scala e crescita della fiamma, soppressione locale del movimento del collo durante
+il fuoco, reset della posa, raggio di trasformazione e blocchi protetti. La particella
+usa PNG originale non modificata. La revisione numerica della crescita non sostituisce
+il confronto visivo del getto originale o la prova di comfort in prima persona.
+
+Inventario: cinque slot originali, convalida degli oggetti sul server, controllo di
+proprietà e distanza, trasferimenti, aggiornamento armatura/overlay, NBT con componenti
+e rilascio alla morte. Registri e asset delle 32 armature e dei sette blocchi controllati;
+39 definizioni item risolte e 32 overlay presenti nel JAR. Testmod esclusa dalla consegna.
+Il layer dello stendardo resta da migrare, pur essendo conservato correttamente nello slot.
+
+Verifiche finali: 41 test JUnit, zero fallimenti/errori; 5 GameTest della mod nel
+runtime Fabric, tutti superati. Il report contiene anche minecraft:always_pass, che
+non è conteggiato fra i cinque test della mod. GameTest coprono registrazione/slot,
+salvataggio e ricarica di un vero FireDragon, componenti ItemStack, accesso proprietario,
+shift-click senza duplicazioni e chiusura a distanza, trasformazioni/loot/revert,
+blocco del griefing e protezione casse/bedrock. Il bootstrap JUnit da solo non poteva
+registrare gli item Fabric: i test relativi sono stati trasferiti al runner corretto.
+
+Client di sviluppo avviato con grafica/audio/atlanti e nuove risorse caricate.
+Nessuna verifica visiva in mondo della GUI, del getto o delle armature eseguita
+dall'agente; nessun test di rete con due veri client. GameTest non coprono tutta
+l'IA o gli effetti opzionali. DragonForge/esplosioni opzionali e altre funzioni
+della tappa 1 rimangono da migrare; punte grigie ancora aperte.
+
 ## Combattimento controllato 0.1.8 — 18 ottobre 2026
 
 Skill locale review-agent applicata in sola lettura e senza delega al diff completo

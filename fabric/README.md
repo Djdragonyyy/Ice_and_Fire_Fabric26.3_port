@@ -2,12 +2,12 @@
 
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
-Versione corrente: **0.1.8-stage1-dev**. Primo passaggio di combattimento controllato:
-G morso e R soffio, con palle di fuoco casuali, danno server, pose e suono originali.
-Il getto usa per ora particelle vanilla e accensione base: conversioni del terreno,
-distruzione dell'area da proiettile e IA originale devono ancora essere migrate.
-Build e 38 test superati; prova in gioco ancora necessaria.
-Istruzioni: [TEST-0.1.8.md](TEST-0.1.8.md). Unica seduta e nessun dorso solido.
+Versione corrente: **0.1.9-stage1-dev**. Soffio progressivo con fiamma originale,
+dimensione/densità crescenti con il drago e posa meno invasiva per il pilota in prima
+persona. Migrati terreno carbonizzato, distruzione dell'area da proiettile e inventario
+originale a cinque slot con armature. Apertura: Maiusc + clic destro a mano vuota.
+Build, 41 test JUnit e 5 GameTest della mod superati; resa visiva ancora da provare.
+Istruzioni: [TEST-0.1.9.md](TEST-0.1.9.md). Unica seduta e nessun dorso solido.
 I paragrafi seguenti descrivono versioni storiche; la funzione ghast citata sotto è rimossa.
 
 Versione 0.1.4 (precedente): tilt in discesa attenuato vicino ai blocchi;
@@ -100,10 +100,11 @@ modelli/texture originali e interpolazione iniziale delle pose di movimento.
 Da completare prima di chiudere la tappa 1:
 
 - Completare il combattimento originale oltre al primo passaggio R/G: altri attacchi,
-  IA autonoma, particella DragonFire originale, conversioni in blocchi carbonizzati,
-  distruzione dell'area da proiettile, DragonForge ed esplosioni opzionali.
+  IA autonoma, DragonForge ed esplosioni opzionali; verificare in gioco la fiamma originale,
+  le conversioni in blocchi carbonizzati e la distruzione dell'area da proiettile della 0.1.9.
 - IA originale e volo autonomo, comportamento in acqua/lava, posizione del cavaliere e discesa sicura.
-- Inventario/interfaccia e interazioni necessarie; alimentazione completa, comandi e gestione dell'uovo danneggiato.
+- Completare le interazioni oltre all'inventario 0.1.9; layer dello stendardo, alimentazione
+  completa, comandi e gestione dell'uovo danneggiato.
 - Animazioni di attacco, animazioni secondarie, occhi, differenze visive maschio/femmina, suoni e particelle.
 - Configurazione originale: questo checkpoint usa ancora i valori predefiniti per le regole estratte.
 - Test di persistenza e rete in un vero mondo/server e verifica visiva di animazioni e cavalcatura.

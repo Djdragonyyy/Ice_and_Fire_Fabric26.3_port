@@ -42,4 +42,5 @@ public final class DragonCombatState {
     public boolean breathing() { return breathing; }
     public boolean emitting() { return breathing && fireTicks > 20; }
     public float burnProgress() { return Math.min(40, fireTicks) / 40F; }
+    public float streamProgress() { return DragonBreathVisuals.extension(fireTicks); }
 }

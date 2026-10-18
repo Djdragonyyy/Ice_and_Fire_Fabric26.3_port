@@ -32,10 +32,13 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
         int attack;
         float attackTick;
         float breathProgress;
+        boolean firstPersonPilot;
+        int armor;
     }
 
     public FireDragonRenderer(EntityRendererProvider.Context context) {
         super(context, new FireDragonPoseModel(context.getResourceManager()), 1F);
+        addLayer(new DragonArmorLayer(this));
     }
 
     @Override public State createRenderState() { return new State(); }
@@ -43,6 +46,7 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
     @Override public void extractRenderState(FireDragon dragon, State state, float partialTick) {
         super.extractRenderState(dragon, state, partialTick);
         state.variant = dragon.variant();
+        state.armor = dragon.armorParts();
         state.stage = dragon.stage();
         state.flying = dragon.flying();
         state.male = dragon.male();
@@ -57,6 +61,7 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
         var client = Minecraft.getInstance();
         boolean firstPersonRider = client.player != null && client.getCameraEntity() == client.player
                 && dragon.getControllingPassenger() == client.player && client.options.getCameraType().isFirstPerson();
+        state.firstPersonPilot = firstPersonRider;
         state.flightPitch = viewPitch(dragon.flightPitch(partialTick), firstPersonRider);
         // The legacy renderer used renderSize / 3; the entity's bounding-box
         // scale is separately capped at seven in the original implementation.

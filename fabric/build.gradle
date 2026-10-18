@@ -16,6 +16,28 @@ loom {
     }
 }
 
+// Integration tests run with Fabric's real registries, outside the distributable mod JAR.
+sourceSets {
+    gametest {
+        compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+        runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath
+    }
+}
+loom {
+    mods {
+        iceandfire_gametest { sourceSet sourceSets.gametest }
+    }
+    runs {
+        gametest {
+            server()
+            source sourceSets.gametest
+            runDir 'run/0.1.9-gametest'
+            vmArg '-Dfabric-api.gametest'
+            vmArg "-Dfabric-api.gametest.report-file=${file('build/gametest-results.xml').absolutePath}"
+        }
+    }
+}
+
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
     implementation "net.fabricmc:fabric-loader:${loader_version}"
@@ -47,11 +69,21 @@ processResources {
         include 'assets/iceandfire/textures/models/firedragon/**'
         include 'assets/iceandfire/sounds/mobs/dragon/fire/breath.ogg'
         include 'data/iceandfire/damage_type/dragon_fire.json'
+        include 'assets/iceandfire/blockstates/chared_*.json', 'assets/iceandfire/blockstates/ash.json'
+        include 'assets/iceandfire/models/block/chared_*.json', 'assets/iceandfire/models/block/ash.json'
+        include 'assets/iceandfire/models/item/chared_*.json', 'assets/iceandfire/models/item/ash.json'
+        include 'assets/iceandfire/textures/block/chared_*.png', 'assets/iceandfire/textures/block/ash.png'
+        include 'assets/iceandfire/models/item/dragonarmor_*.json', 'assets/iceandfire/textures/item/dragonarmor_*.png'
+        include 'assets/iceandfire/textures/gui/dragon.png'
         include 'assets/iceandfire/textures/item/dragon_meal.png'
         include 'assets/iceandfire/textures/item/dragonegg_red.png'
         include 'assets/iceandfire/textures/item/dragonegg_green.png'
         include 'assets/iceandfire/textures/item/dragonegg_bronze.png'
         include 'assets/iceandfire/textures/item/dragonegg_gray.png'
+    }
+    from('../src/main/resources/assets/iceandfire/textures/particles') {
+        include 'dragon_flame.png'
+        into 'assets/iceandfire/textures/particle'
     }
 }
 jar { from('../LICENSE') { rename { 'LICENSE_iceandfire' } } }

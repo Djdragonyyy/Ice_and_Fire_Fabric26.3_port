@@ -123,7 +123,7 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
     }
 
     private void applyCombat(FireDragonRenderer.State state) {
-        if (state.attack != DragonCombatState.NONE) {
+        if (state.attack != DragonCombatState.NONE && !(state.firstPersonPilot && state.attack == DragonCombatState.CHARGE)) {
             AttackFrame frame = attackFrame(state.attack, state.attackTick);
             for (var entry : parts.entrySet()) {
                 ModelPart part = entry.getValue();
@@ -134,12 +134,11 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
             }
         }
         if (state.breathProgress > 0) {
-            float charge = Math.clamp(state.breathProgress / 5, 0, 1);
-            float stream = Math.clamp((state.breathProgress - 5) / 5, 0, 1);
+            float stream = com.github.alexthe666.iceandfire.fabric.dragon.DragonBreathVisuals.smooth(state.breathProgress / 10);
             for (var entry : parts.entrySet()) {
                 String name = entry.getKey();
+                if (state.firstPersonPilot && !name.equals("Jaw")) continue;
                 if (name.contains("Finger") || name.startsWith("arm") || name.startsWith("Wing")) continue;
-                addPoseDelta(entry.getValue(), poses.get("attack_blast_charge3").parts().get(name), charge * (1 - stream), false);
                 addPoseDelta(entry.getValue(), poses.get("attack_stream_breath").parts().get(name), stream, false);
             }
         }

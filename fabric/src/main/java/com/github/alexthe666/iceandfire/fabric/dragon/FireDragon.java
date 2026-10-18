@@ -36,6 +36,13 @@ public final class FireDragon extends TamableAnimal {
     private static final EntityDataAccessor<Boolean> BREATHING = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> ATTACK = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> ATTACK_TICK = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> ARMOR_PARTS = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.INT);
+    public final net.minecraft.world.SimpleContainer dragonInventory = new net.minecraft.world.SimpleContainer(5) {
+        @Override public void setChanged() {
+            super.setChanged();
+            if (FireDragon.this.dragonInventory != null) updateArmor();
+        }
+    };
     private final DragonCombatState combat = new DragonCombatState();
     public float breathProgress, prevBreathProgress;
     private int appliedAge = -1;
@@ -83,6 +90,7 @@ public final class FireDragon extends TamableAnimal {
         builder.define(BREATHING, false);
         builder.define(ATTACK, DragonCombatState.NONE);
         builder.define(ATTACK_TICK, 0);
+        builder.define(ARMOR_PARTS, 0);
     }
 
     @Override protected void registerGoals() {
@@ -104,6 +112,7 @@ public final class FireDragon extends TamableAnimal {
     public boolean flying() { return entityData.get(FLYING); }
     public int attackAnimation() { return entityData.get(ATTACK); }
     public int attackAnimationTick() { return entityData.get(ATTACK_TICK); }
+    public int armorParts() { return entityData.get(ARMOR_PARTS); }
     public float flightPitch(float partialTick) {
         return previousFlightPitch + (flightPitch - previousFlightPitch) * partialTick;
     }
@@ -131,6 +140,7 @@ public final class FireDragon extends TamableAnimal {
         getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DragonGrowth.attackDamage(appliedAge, 17));
         getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(DragonGrowth.movementSpeed(appliedAge));
         getAttribute(Attributes.ARMOR).setBaseValue(1 + 19 / 125F * appliedAge);
+        updateArmor();
         getAttribute(Attributes.SCALE).setBaseValue(DragonGrowth.scale(appliedAge));
         getAttribute(Attributes.CAMERA_DISTANCE).setBaseValue(DragonRiderLayout.cameraDistance(appliedAge));
     }
@@ -218,6 +228,25 @@ public final class FireDragon extends TamableAnimal {
                 getYRot(), flightPitch, flyProgress, sitProgress));
     }
 
+    private void updateArmor() {
+        if (level().isClientSide()) return;
+        int packed = 0;
+        double bonus = 1;
+        for (int slot = 0; slot < 4; slot++) {
+            ItemStack stack = dragonInventory.getItem(slot + 1);
+            int ordinal = DragonArmorItem.fits(stack, slot + 1) ? DragonArmorItem.ordinal(stack) : 0;
+            packed |= ordinal << (slot * 4);
+            bonus += DragonArmorItem.bonus(ordinal);
+        }
+        entityData.set(ARMOR_PARTS, packed);
+        getAttribute(Attributes.ARMOR).setBaseValue(1 + 19 / 125F * ageDays() + bonus);
+    }
+
+    @Override protected void dropCustomDeathLoot(ServerLevel server, net.minecraft.world.damagesource.DamageSource source, boolean recentlyHit) {
+        super.dropCustomDeathLoot(server, source, recentlyHit);
+        for (ItemStack stack : dragonInventory.removeAllItems()) if (!stack.isEmpty()) spawnAtLocation(server, stack);
+    }
+
     private void tickCombat(ServerLevel server) {
         LivingEntity rider = getControllingPassenger();
         boolean active = isAlive() && rider != null && DragonGrowth.canCarryRider(ageDays()) && !isInWater();
@@ -247,9 +276,10 @@ public final class FireDragon extends TamableAnimal {
                     }
                     playSound(IafContent.FIRE_BREATH, 4, 1);
                 }
-            } else if (combat.emitting()) {
+            }
+            if (combat.emitting()) {
                 Vec3 head = DragonFireCombat.clip(this, getEyePosition(), headPosition());
-                DragonFireCombat.breath(server, this, head, DragonFireCombat.aim(this, rider, 10 * stage()), combat.burnProgress());
+                DragonFireCombat.breath(server, this, head, DragonFireCombat.aim(this, rider, 10 * stage()), combat.streamProgress());
                 if (tickCount % 5 == 0) playSound(IafContent.FIRE_BREATH, 4, 1);
             }
         }
@@ -350,6 +380,10 @@ public final class FireDragon extends TamableAnimal {
     @Override public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (isOwnedBy(player)) {
+            if (stack.isEmpty() && player.isShiftKeyDown()) {
+                if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) DragonMenu.open(serverPlayer, this);
+                return InteractionResult.SUCCESS;
+            }
             if (stack.is(IafContent.DRAGON_MEAL)) {
                 if (!level().isClientSide()) {
                     growOneDay();
@@ -380,6 +414,7 @@ public final class FireDragon extends TamableAnimal {
         output.putBoolean("Gender", male());
         output.putBoolean("AgingDisabled", entityData.get(AGING_DISABLED));
         output.putBoolean("Flying", flying());
+        net.minecraft.world.ContainerHelper.saveAllItems(output.child("DragonInventory"), dragonInventory.getItems());
     }
 
     @Override protected void readAdditionalSaveData(ValueInput input) {
@@ -390,7 +425,14 @@ public final class FireDragon extends TamableAnimal {
         setMale(input.getBooleanOr("Gender", false));
         entityData.set(AGING_DISABLED, input.getBooleanOr("AgingDisabled", false));
         entityData.set(FLYING, input.getBooleanOr("Flying", false) && DragonGrowth.canCarryRider(ageDays()));
+        dragonInventory.clearContent();
+        net.minecraft.world.ContainerHelper.loadAllItems(input.childOrEmpty("DragonInventory"), dragonInventory.getItems());
+        for (int slot = 0; slot < 5; slot++) {
+            ItemStack stack = dragonInventory.getItem(slot);
+            if (!stack.isEmpty() && !DragonArmorItem.fits(stack, slot)) dragonInventory.setItem(slot, ItemStack.EMPTY);
+        }
         appliedAge = -1;
         updateGrowth();
+        updateArmor();
     }
 }

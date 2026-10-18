@@ -21,6 +21,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
 
 public final class IafContent {
+    public static final net.minecraft.world.inventory.MenuType<com.github.alexthe666.iceandfire.fabric.dragon.DragonMenu> DRAGON_MENU =
+            Registry.register(BuiltInRegistries.MENU, id("dragon"), new net.fabricmc.fabric.api.menu.v1.ExtendedMenuType<>(
+                    com.github.alexthe666.iceandfire.fabric.dragon.DragonMenu::new, net.minecraft.network.codec.ByteBufCodecs.VAR_INT));
+    public static final net.minecraft.core.particles.ParticleType<com.github.alexthe666.iceandfire.fabric.dragon.DragonFlameOptions> DRAGON_FLAME =
+            Registry.register(BuiltInRegistries.PARTICLE_TYPE, id("dragon_flame"), new net.minecraft.core.particles.ParticleType<>(false) {
+                @Override public com.mojang.serialization.MapCodec<com.github.alexthe666.iceandfire.fabric.dragon.DragonFlameOptions> codec() { return com.github.alexthe666.iceandfire.fabric.dragon.DragonFlameOptions.CODEC; }
+                @Override public net.minecraft.network.codec.StreamCodec<? super net.minecraft.network.RegistryFriendlyByteBuf, com.github.alexthe666.iceandfire.fabric.dragon.DragonFlameOptions> streamCodec() { return com.github.alexthe666.iceandfire.fabric.dragon.DragonFlameOptions.STREAM_CODEC; }
+            });
     public static final EntityType<FireDragon> FIRE_DRAGON = registerDragon();
     public static final EntityType<FireDragonEgg> DRAGON_EGG = registerEgg();
     public static final EntityType<DragonFireCharge> FIRE_DRAGON_CHARGE = registerCharge();
@@ -85,6 +93,8 @@ public final class IafContent {
     }
 
     public static void initialize() {
+        IafTerrain.initialize();
+        com.github.alexthe666.iceandfire.fabric.dragon.DragonArmorItem.initialize();
         FabricDefaultAttributeRegistry.register(FIRE_DRAGON, FireDragon.attributes());
         FabricDefaultAttributeRegistry.register(DRAGON_EGG, FireDragonEgg.attributes());
         CreativeModeTabEvents.modifyOutputEvent(ResourceKey.create(Registries.CREATIVE_MODE_TAB,
@@ -93,5 +103,9 @@ public final class IafContent {
         });
         CreativeModeTabEvents.modifyOutputEvent(ResourceKey.create(Registries.CREATIVE_MODE_TAB,
                 Identifier.withDefaultNamespace("ingredients"))).register(output -> output.accept(DRAGON_MEAL));
+        CreativeModeTabEvents.modifyOutputEvent(ResourceKey.create(Registries.CREATIVE_MODE_TAB,
+                Identifier.withDefaultNamespace("building_blocks"))).register(output -> IafTerrain.ITEMS.forEach(output::accept));
+        CreativeModeTabEvents.modifyOutputEvent(ResourceKey.create(Registries.CREATIVE_MODE_TAB,
+                Identifier.withDefaultNamespace("combat"))).register(output -> com.github.alexthe666.iceandfire.fabric.dragon.DragonArmorItem.ITEMS.forEach(output::accept));
     }
 }

@@ -9,6 +9,24 @@ import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FireDragonPoseModelTest {
+    @Test void firstPersonFireCannotLiftOrMovePilotsNeckAnchor() {
+        var model = model();
+        var state = new FireDragonRenderer.State();
+        state.firstPersonPilot = true;
+        model.setupAnim(state);
+        var anchor = model.riderAnchor();
+        for (float progress : new float[]{0, 1, 5, 10}) for (float tick : new float[]{0, 10, 20, 25, 29.9F}) {
+            state.breathProgress = progress;
+            state.attack = 2;
+            state.attackTick = tick;
+            model.setupAnim(state);
+            assertEquals(anchor, model.riderAnchor(), "Fire must not push the animated neck into the first-person camera");
+        }
+        state.firstPersonPilot = false;
+        state.attackTick = 20;
+        model.setupAnim(state);
+        assertNotEquals(anchor, model.riderAnchor(), "Other views keep the original body animation");
+    }
     @Test void attackKeyframesKeepOriginalPoseOrderAndDurations() {
         int bite = com.github.alexthe666.iceandfire.fabric.dragon.DragonCombatState.BITE;
         int charge = com.github.alexthe666.iceandfire.fabric.dragon.DragonCombatState.CHARGE;

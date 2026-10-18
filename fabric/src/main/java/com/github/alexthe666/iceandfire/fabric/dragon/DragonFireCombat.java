@@ -3,7 +3,6 @@ package com.github.alexthe666.iceandfire.fabric.dragon;
 import com.github.alexthe666.iceandfire.fabric.IafContent;
 import com.github.alexthe666.iceandfire.fabric.DragonCombatConfig;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
@@ -69,12 +68,7 @@ public final class DragonFireCombat {
         Vec3 requestedEnd = head.lerp(aim, progress);
         Vec3 end = clip(dragon, head, requestedEnd);
         boolean obstructed = end.distanceToSqr(requestedEnd) > 0.01;
-        // A bounded particle path: visual only. Damage is computed exclusively below on the server.
-        int samples = Math.min(24, Math.max(1, (int) head.distanceTo(end)));
-        for (int i = 0; i <= samples; i++) {
-            Vec3 point = head.lerp(end, i / (double) samples);
-            level.sendParticles(ParticleTypes.FLAME, point.x, point.y, point.z, 1, 0.12, 0.12, 0.12, 0.01);
-        }
+        DragonBreathPayload.send(dragon, head, end, progress);
         BlockPos center = BlockPos.containing(end);
         // Original damage radius and fire duration; damage happens when the stream reaches its target.
         if (progress >= 1 || obstructed) {
@@ -82,7 +76,7 @@ public final class DragonFireCombat {
             double radius = stage <= 3 ? 3.5 : 2.5 + (stage == 4 ? 2.498 : 3.497) * 1.2;
             Vec3 impact = end.add(head.subtract(end).normalize().scale(0.01));
             damageArea(level, dragon, impact, radius, (float) DragonCombatConfig.current.dragonAttackDamageFire * stage, 5 + stage * 5, dragon);
-            ignite(level, dragon, center);
+            DragonFireTerrain.breath(level, center, dragon);
         }
     }
 
@@ -90,7 +84,7 @@ public final class DragonFireCombat {
         int stage = dragon.stage();
         double radius = stage <= 3 ? 2 : (stage == 4 ? 3 : 4);
         damageArea(level, dragon, point, radius, Math.max(1, stage - 1) * 2F, 15, charge);
-        ignite(level, dragon, BlockPos.containing(point));
+        DragonFireTerrain.charge(level, BlockPos.containing(point), dragon);
     }
 
     private static void damageArea(ServerLevel level, FireDragon dragon, Vec3 center, double radius,
@@ -105,15 +99,4 @@ public final class DragonFireCombat {
         }
     }
 
-    private static void ignite(ServerLevel level, FireDragon dragon, BlockPos center) {
-        if (!level.getGameRules().get(GameRules.MOB_GRIEFING) || !level.hasChunkAt(center)
-                || DragonCombatConfig.current.dragonGriefing >= 2
-                || dragon.isTame() && !DragonCombatConfig.current.tamedDragonGriefing) return;
-        for (BlockPos pos : new BlockPos[]{center, center.above()}) {
-            if (level.isEmptyBlock(pos)) {
-                var fire = BaseFireBlock.getState(level, pos);
-                if (fire.canSurvive(level, pos)) level.setBlockAndUpdate(pos, fire);
-            }
-        }
-    }
 }

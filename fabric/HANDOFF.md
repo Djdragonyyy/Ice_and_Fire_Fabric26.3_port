@@ -1,5 +1,52 @@
 # Prompt completo per continuare il porting su un altro PC
 
+## Aggiornamento 0.1.9 — soffio progressivo, terreno e inventario
+
+Riscontro utente: 0.1.8 funziona, ma soffio poco progressivo, piccolo negli stadi
+adulti e posa iniziale fastidiosa in prima persona. Rimosso il salto iniziale del
+getto: estensione smoothstep da zero dopo i 20 tick di carica, completa a 40 tick.
+La scelta casuale del proiettile non salta più i tick del getto. Ripristinata texture
+originale dragon_flame, identica byte per byte, su atlas particelle 26.3; scala originale
+clamp(renderSize*0.08, 0.55, 3), densità crescente con dimensione ed estensione.
+Un solo payload visuale per tick per osservatore, particelle generate sul client:
+nessuna nuova autorità client su mira/danni. Fiamme accelerate verso il punto raggiunto,
+crescita iniziale, collisione e rimozione all'arrivo. In prima persona del solo pilota
+la posa di fuoco muove la mandibola senza spostare collo/seduta; particelle troppo vicine
+alla sua camera non vengono disegnate. Altre viste conservano le animazioni originali.
+
+Migrati sette blocchi originali chared_dirt/grass/stone/cobblestone/gravel/dirt_path e ash,
+con PNG/modelli originali, blocchi cadenti per ghiaia/cenere, forma del sentiero e flag
+revert. Per il ritorno al terreno originale il codice usa randomTick (nell'originale
+era dichiarato randomTicks ma il callback era tick). Corretta anche la condizione
+irraggiungibile gravel && tag sand della conversione originale. Soffio con area per
+stadio e proiettile con distruzione/conversione probabilistica dell'area; rispettati
+mob_griefing, config, resistenza e blacklist casse/end_stone/iron_bars. Nessun caricamento
+esplicito di chunk mancanti nel ciclo di trasformazione. Esplosioni opzionali e DragonForge
+non ancora migrati: non dichiarare parità totale degli effetti originali.
+
+Maiusc + clic destro a mano vuota sul drago di proprietà apre DragonMenu, cinque slot
+originali: stendardo, testa, collo, corpo, coda. Texture GUI originale, anteprima e
+statistiche. Registrate 32 armature dei materiali originali per il drago di fuoco,
+disponibili in creativo; bonus originali e quattro overlay originali sincronizzati.
+Controlli proprietario/distanza, shift-click, salvataggio componenti ItemStack e drop
+alla morte. Lo stendardo è conservato nello slot; il suo layer visivo non è ancora migrato.
+Non sono stati aggiunti draghi di ghiaccio/fulmine, ricette o generazione naturale.
+Non reintrodurre il dorso ghast. Punte grigie ancora aperte.
+
+Build 0.1.9-stage1-dev: 41 test JUnit passati, 5 GameTest della mod passati in vero
+runtime Fabric e mondo temporaneo (oltre al baseline vanilla always_pass, da non contare
+come test della mod). Verificati tutti i materiali/slot, NBT di un drago a 125 giorni
+con componenti degli oggetti, autorizzazione, trasferimenti senza duplicazioni,
+terreno/loot/revert, griefing e protezione casse/bedrock. Il tentativo iniziale di far
+girare la registrazione in JUnit falliva senza i mixin Fabric: spostato correttamente
+in src/gametest; nessuna manomissione dei registri. Testmod separata, esclusa dal JAR.
+Comando riproducibile: .\fabric\gradlew.bat -p fabric build runGametest --console=plain.
+Skill review-agent applicata al diff completo in sola lettura, senza delega: No findings.
+Client 0.1.9 avviato in directory separata, risorse/grafica/audio/atlanti caricati; non
+verificata visivamente la nuova GUI o il getto in un mondo dall'agente. Prova utente
+richiesta in TEST-0.1.9.md. Restano IA autonoma, altri attacchi/interazioni/animazioni,
+alimentazione completa e le altre lacune della tappa 1: non avviare la tappa 2.
+
 ## Aggiornamento 0.1.8 — combattimento controllato, primo passaggio
 
 Ripresa tappa 1 su richiesta dell'utente. Migrati i percorsi del cavaliere:
