@@ -299,6 +299,17 @@ public final class FireDragon extends TamableAnimal {
         return getFirstPassenger() instanceof Player player && isOwnedBy(player) ? player : null;
     }
 
+    @Override protected boolean couldAcceptPassenger() {
+        // Unlike canAddPassenger, vanilla checks this even for forced mounts and NBT loading.
+        // The solid back is a standing surface, never an additional passenger seat.
+        return !isVehicle();
+    }
+
+    @Override protected boolean canAddPassenger(Entity passenger) {
+        return couldAcceptPassenger() && passenger instanceof Player player
+                && isOwnedBy(player) && DragonGrowth.canCarryRider(ageDays());
+    }
+
     @Override protected void tickRidden(Player player, Vec3 input) {
         super.tickRidden(player, input);
         if (entityData.get(BACK_OCCUPIED)) return;
@@ -337,9 +348,8 @@ public final class FireDragon extends TamableAnimal {
                 return InteractionResult.SUCCESS;
             }
             if (stack.isEmpty() && !player.isShiftKeyDown() && DragonGrowth.canCarryRider(ageDays())) {
-                if (!level().isClientSide()) {
+                if (!level().isClientSide() && canAddPassenger(player) && player.startRiding(this)) {
                     setOrderedToSit(false);
-                    player.startRiding(this, true, true);
                 }
                 return InteractionResult.SUCCESS;
             }

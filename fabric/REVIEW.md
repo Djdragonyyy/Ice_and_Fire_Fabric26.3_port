@@ -1,5 +1,19 @@
 # Revisione del port Fabric
 
+## Un solo passeggero 0.1.6 — 18 ottobre 2026
+
+Difetto trovato: mobInteract usava startRiding(this, true, true), saltando il controllo
+vanilla canAddPassenger. Corretto usando la monta ordinaria, con verifica esplicita
+di posto libero/proprietario/stadio. Aggiunto couldAcceptPassenger per impedire più
+di un passeggero anche nei percorsi force e caricamento NBT. Nel bytecode Entity 26.3,
+startRiding controlla couldAcceptPassenger prima di verificare force: il controllo non
+viene saltato. Nessun nuovo posto, offset di seduta o comportamento HappyGhast importato.
+
+Rilettura del diff, dei percorsi interazione/passeggeri e dell'aggancio grafico: nessun
+ulteriore difetto individuato. Collisione e dismontaggio conservati. Build e 30 test
+riusciti; nessun nuovo collaudo interattivo. Verificare con due giocatori, comando ride,
+rimonta dopo dismount e mondo salvato con passeggeri multipli: TEST-0.1.6.md.
+
 ## Diagnostica UV delle punte — 18 ottobre 2026
 
 Nuovo test `everySpikeVertexKeepsOriginalTabulaFaceOrientationAndUv`: confronto dei

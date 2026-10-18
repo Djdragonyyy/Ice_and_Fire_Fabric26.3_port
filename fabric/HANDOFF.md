@@ -1,5 +1,18 @@
 # Prompt completo per continuare il porting su un altro PC
 
+## Aggiornamento 0.1.6 — un solo passeggero
+
+L'utente vuole esclusivamente il posto principale del drago e la superficie solida
+per stare in piedi; nessuna seduta aggiuntiva del ghast felice. Individuata la monta
+forzata startRiding(this, true, true), che bypassava canAddPassenger. Sostituita con
+startRiding(this) e controllo proprietario/stadio/posto libero. Aggiunto override
+couldAcceptPassenger con !isVehicle(): il bytecode vanilla lo controlla prima del
+ramo force, quindi il limite vale anche per monta forzata e passeggeri caricati da NBT.
+Non aggiunta alcuna disposizione di posti del ghast. Collisione sul dorso, dismontaggio,
+seduta principale, camera, tilt e volo conservati. Versione 0.1.6-stage1-dev;
+build riuscita, suite 30 test superati. Prova in gioco con due giocatori ancora da fare,
+vedere TEST-0.1.6.md. Punte grigie aperte e tappa 1 incompleta.
+
 ## Diagnosi punte grigie — screenshot utente del 18 ottobre 2026
 
 L'utente segnala il problema in ogni modello/stadio e fornisce una vista ravvicinata
@@ -19,8 +32,14 @@ solo Ice and Fire e Fabric API: non attribuirlo alla prima persona o a shader es
 Controllata anche la composizione originale ArrayLayeredTexture: overlay maschile
 trasparente sui campioni delle punte. PNG base con alpha 0/255, salvo un texel quasi
 trasparente; pipeline vanilla entityCutout con soglia 0.1 e culling disattivato.
-Serve ancora un'immagine laterale ravvicinata dello stesso drago per confrontare
-la forma delle facce con quella prevista dagli asset; non spostare UV alla cieca.
+Ricevute altre tre immagini dello stesso drago: vista laterale dall'alto, longitudinale
+da dietro e frontale. Le punte dorsali appaiono come piccoli parallelepipedi, con vuoti
+particolarmente visibili da dietro. Non chiedere nuovamente queste viste all'utente.
+La geometria cuboidale e l'alpha originale sono compatibili con questo aspetto, ma
+non dimostrano da soli se esista una differenza rispetto alla resa originale in gioco.
+Prima di cambiare UV/geometria serve un confronto visivo equivalente con l'originale
+o una riproduzione isolata della punta: non spostare UV alla cieca, non riempire tutti
+i pixel trasparenti (la loro distribuzione cambia anche con lo stadio).
 Restano validi i JAR 0.1.5, difetto visivo ancora aperto.
 
 ## Aggiornamento 0.1.5 — dismontaggio sul dorso
