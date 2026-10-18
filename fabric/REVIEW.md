@@ -1,5 +1,36 @@
 # Revisione del port Fabric
 
+## Alimentazione e comandi 0.1.11 — 18 ottobre 2026
+
+Review-agent applicata in sola lettura al diff completo da 0be657b51, inclusi nuovi
+file/test/risorse, senza delega. Due P2 individuati e corretti fuori dalla fase di
+revisione: posa seduta basata su orderedToSit vanilla non sincronizzato; controllo
+del raggio casa che nella 26.3 legge direttamente i campi interni anziché i getter.
+La posa usa COMMAND sincronizzato e isWithinHome è migrato per BlockPos e Vec3.
+Riletti codice finale, interazioni e chiamanti senza altri difetti: No findings.
+
+Confrontati EntityDragonBase.mobInteract, FoodUtils, DragonAIEscort, DragonAIWander,
+HomePosition, ItemDragonStaff e default di IafConfig. Conservati ID, tre asset item,
+valori di nutrimento/cure e comportamento del pasto creativo (può riassegnare anche
+un drago già di proprietà). Dieta manuale non è riproduzione: isFood rimane false
+finché la relativa meccanica non viene migrata. Nessun nuovo input di rete client.
+
+Controllati autorità server, consumo creativo/sopravvivenza, vita/proprietario,
+crescita disabilitata persistita, salute/fame, comandi persistiti e ingresso in
+cavalcatura/spalle. Seguito non usa il teletrasporto del FollowOwnerGoal vanilla:
+è solo il ramo a terra dell'originale; il volo autonomo è ancora assente. Casa limita
+il vagabondaggio nella sua dimensione; ritorno notturno e config raggio non migrati,
+si usa il valore originale predefinito 40. Test anche per coordinate zero e confine.
+
+Build e 45 JUnit passati, 15 GameTest della mod passati (più baseline vanilla non
+conteggiato). Sei nuovi GameTest verificano dieta/cure/consumi, proprietà, creativo,
+crescita bloccata e NBT, comandi/casa/dimensioni/confine, camminata effettiva e stop,
+animazione dopo applicazione dei soli dati sincronizzati. Fixture del mock creativo
+ha instabuild esplicito; navigazione prova avviata a terra e limite 120 tick.
+Client avviato con risorse, grafica, audio e atlanti; nessuna prova visiva in mondo
+o con due veri client svolta dall'agente. Volo/combattimento autonomi e altre lacune
+della tappa 1 restano aperti. Funzioni 0.1.10 confermate dall'utente, punte grigie aperte.
+
 ## Fuoco, anteprima e spalle 0.1.10 — 18 ottobre 2026
 
 Skill review-agent applicata al diff completo da 237f00e83 in sola lettura, senza

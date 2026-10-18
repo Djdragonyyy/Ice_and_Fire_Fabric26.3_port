@@ -39,6 +39,9 @@ public final class FireDragon extends TamableAnimal {
     private static final EntityDataAccessor<Integer> ARMOR_PARTS = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> SHOULDER_CARRIER = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> SHOULDER_SLOT = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> COMMAND = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.INT);
+    private BlockPos dragonHome;
+    private String homeDimension = "";
     private Player shoulderPlayer;
     public final net.minecraft.world.SimpleContainer dragonInventory = new net.minecraft.world.SimpleContainer(5) {
         @Override public void setChanged() {
@@ -97,12 +100,18 @@ public final class FireDragon extends TamableAnimal {
         builder.define(ARMOR_PARTS, 0);
         builder.define(SHOULDER_CARRIER, -1);
         builder.define(SHOULDER_SLOT, 0);
+        builder.define(COMMAND, 0);
     }
 
     @Override protected void registerGoals() {
         goalSelector.addGoal(0, new FloatGoal(this));
         goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
-        goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1));
+        goalSelector.addGoal(4, new DragonEscortGoal(this));
+        goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1) {
+            { setInterval(20); }
+            @Override public boolean canUse() { return canMoveOnGround() && command() != 2 && super.canUse(); }
+            @Override public boolean canContinueToUse() { return canMoveOnGround() && command() != 2 && super.canContinueToUse(); }
+        });
         goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 8));
         goalSelector.addGoal(8, new RandomLookAroundGoal(this));
     }
@@ -114,6 +123,27 @@ public final class FireDragon extends TamableAnimal {
     public boolean male() { return entityData.get(MALE); }
     public void setMale(boolean value) { entityData.set(MALE, value); }
     public int hunger() { return entityData.get(HUNGER); }
+    public boolean agingDisabled() { return entityData.get(AGING_DISABLED); }
+    public int command() { return entityData.get(COMMAND); }
+    public void setCommand(int value) {
+        entityData.set(COMMAND, Math.clamp(value, 0, 2));
+        setOrderedToSit(command() == 1);
+        getNavigation().stop();
+    }
+    public boolean canMoveOnGround() {
+        return isAlive() && !isOrderedToSit() && !flying() && !isVehicle() && !isPassenger() && shoulderCarrier() == null;
+    }
+    public boolean hasDragonHome() { return dragonHome != null; }
+    public String homeDimension() { return homeDimension; }
+    @Override public boolean hasHome() { return dragonHome != null && homeDimension.equals(level().dimension().identifier().toString()); }
+    @Override public BlockPos getHomePosition() { return hasHome() ? dragonHome : super.getHomePosition(); }
+    @Override public int getHomeRadius() { return hasHome() ? 40 : super.getHomeRadius(); }
+    @Override public boolean isWithinHome(BlockPos pos) {
+        return !hasHome() || dragonHome.distSqr(pos) < (double) getHomeRadius() * getHomeRadius();
+    }
+    @Override public boolean isWithinHome(Vec3 pos) {
+        return !hasHome() || dragonHome.distToCenterSqr(pos) < (double) getHomeRadius() * getHomeRadius();
+    }
     public void setHunger(int value) { entityData.set(HUNGER, Math.clamp(value, 0, 100)); }
     public boolean flying() { return entityData.get(FLYING); }
     public int attackAnimation() { return entityData.get(ATTACK); }
@@ -198,7 +228,8 @@ public final class FireDragon extends TamableAnimal {
         prevShoulderProgress = shoulderProgress;
         shoulderProgress = Math.clamp(shoulderProgress + (carrier != null ? 0.5F : -0.5F), 0, 20);
         flyProgress = Math.clamp(flyProgress + (flying() ? 0.5F : -2F), 0, 20);
-        sitProgress = Math.clamp(sitProgress + (isOrderedToSit() ? 0.5F : -0.5F), 0, 20);
+        // orderedToSit is a server-only vanilla field; COMMAND is synchronized to observers.
+        sitProgress = Math.clamp(sitProgress + (command() == 1 ? 0.5F : -0.5F), 0, 20);
         if (level().isClientSide()) walkCycle = walkCycle < 39 ? walkCycle + 1 : 0;
         flightCycle = flightCycle < 58 ? flightCycle + 2 : 0;
         if (!level().isClientSide()) {
@@ -417,7 +448,40 @@ public final class FireDragon extends TamableAnimal {
 
     @Override public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
+        if (!isAlive()) return InteractionResult.PASS;
+        if (stack.is(IafContent.CREATIVE_DRAGON_MEAL)) {
+            if (!level().isClientSide()) {
+                tame(player);
+                setHunger(hunger() + 20);
+                heal(Math.min(getHealth(), (int) (getMaxHealth() / 2)));
+                feedingEffects(stack, false, true);
+                stack.consume(1, player);
+            }
+            return InteractionResult.SUCCESS;
+        }
         if (isOwnedBy(player)) {
+            if (stack.is(IafContent.DRAGON_STAFF)) {
+                if (!level().isClientSide()) {
+                    if (player.isShiftKeyDown()) {
+                        if (hasDragonHome()) {
+                            dragonHome = null;
+                            homeDimension = "";
+                            player.sendOverlayMessage(net.minecraft.network.chat.Component.translatable("dragon.command.remove_home"));
+                        } else {
+                            dragonHome = blockPosition().immutable();
+                            homeDimension = level().dimension().identifier().toString();
+                            player.sendOverlayMessage(net.minecraft.network.chat.Component.translatable("dragon.command.new_home",
+                                    dragonHome.getX(), dragonHome.getY(), dragonHome.getZ(), homeDimension));
+                        }
+                    } else {
+                        setCommand((command() + 1) % 3);
+                        playSound(net.minecraft.sounds.SoundEvents.ZOMBIE_INFECT, 1, 1);
+                        player.sendOverlayMessage(net.minecraft.network.chat.Component.translatable("dragon.command."
+                                + (command() == 1 ? "sit" : command() == 2 ? "escort" : "stand")));
+                    }
+                }
+                return InteractionResult.SUCCESS;
+            }
             if (stack.isEmpty() && player.isShiftKeyDown()) {
                 if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) DragonMenu.open(serverPlayer, this);
                 return InteractionResult.SUCCESS;
@@ -427,13 +491,34 @@ public final class FireDragon extends TamableAnimal {
                     growOneDay();
                     setHunger(hunger() + 20);
                     heal(Math.min(getHealth(), (int) (getMaxHealth() / 2)));
+                    feedingEffects(stack, false, true);
+                    stack.consume(1, player);
+                }
+                return InteractionResult.SUCCESS;
+            }
+            if (stack.is(IafContent.SICKLY_DRAGON_MEAL) && !agingDisabled()) {
+                if (!level().isClientSide()) {
+                    setHunger(hunger() + 20);
+                    heal(getMaxHealth());
+                    entityData.set(AGING_DISABLED, true);
+                    feedingEffects(stack, true, true);
+                    stack.consume(1, player);
+                }
+                return InteractionResult.SUCCESS;
+            }
+            int foodPoints = DragonFeeding.foodPoints(stack);
+            if (foodPoints > 0 && (hunger() < 100 || getHealth() < getMaxHealth())) {
+                if (!level().isClientSide()) {
+                    setHunger(hunger() + foodPoints);
+                    setHealth(Math.min(getMaxHealth(), (int) (getHealth() + foodPoints / 10)));
+                    feedingEffects(stack, false, false);
                     stack.consume(1, player);
                 }
                 return InteractionResult.SUCCESS;
             }
             if (stack.isEmpty() && !player.isShiftKeyDown() && DragonGrowth.canCarryRider(ageDays())) {
                 if (!level().isClientSide() && canAddPassenger(player) && player.startRiding(this)) {
-                    setOrderedToSit(false);
+                    setCommand(0);
                 }
                 return InteractionResult.SUCCESS;
             }
@@ -451,7 +536,7 @@ public final class FireDragon extends TamableAnimal {
                     shoulderPlayer = player;
                     entityData.set(SHOULDER_CARRIER, player.getId());
                     entityData.set(SHOULDER_SLOT, slot);
-                    setOrderedToSit(false);
+                    setCommand(0);
                     getNavigation().stop();
                     setPos(player.position().add(DragonShoulderLayout.offset(slot, player.yBodyRot, false, player.getScale())));
                 }
@@ -462,6 +547,19 @@ public final class FireDragon extends TamableAnimal {
     }
 
     @Override public boolean isFood(ItemStack stack) { return false; }
+
+    private void feedingEffects(ItemStack stack, boolean sickly, boolean meal) {
+        playSound(sickly ? net.minecraft.sounds.SoundEvents.ZOMBIE_VILLAGER_CURE : net.minecraft.sounds.SoundEvents.GENERIC_EAT.value(), 1, 1);
+        if (!(level() instanceof ServerLevel server)) return;
+        Vec3 head = headPosition();
+        for (var item : meal ? new net.minecraft.world.item.Item[]{stack.getItem(), net.minecraft.world.item.Items.BONE, net.minecraft.world.item.Items.BONE_MEAL}
+                : new net.minecraft.world.item.Item[]{stack.getItem()}) {
+            server.sendParticles(new net.minecraft.core.particles.ItemParticleOption(net.minecraft.core.particles.ParticleTypes.ITEM, item),
+                    head.x, head.y, head.z, 6, 0.15, 0.15, 0.15, 0.05);
+        }
+        if (sickly) server.sendParticles(new net.minecraft.core.particles.ItemParticleOption(net.minecraft.core.particles.ParticleTypes.ITEM,
+                net.minecraft.world.item.Items.POISONOUS_POTATO), head.x, head.y, head.z, 12, 0.15, 0.15, 0.15, 0.05);
+    }
     @Override public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob other) { return null; }
 
     @Override protected void addAdditionalSaveData(ValueOutput output) {
@@ -472,6 +570,14 @@ public final class FireDragon extends TamableAnimal {
         output.putBoolean("Gender", male());
         output.putBoolean("AgingDisabled", entityData.get(AGING_DISABLED));
         output.putBoolean("Flying", flying());
+        output.putInt("Command", command());
+        output.putBoolean("HasHomePosition", hasDragonHome());
+        if (dragonHome != null) {
+            output.putInt("HomeAreaX", dragonHome.getX());
+            output.putInt("HomeAreaY", dragonHome.getY());
+            output.putInt("HomeAreaZ", dragonHome.getZ());
+            output.putString("HomeDimension", homeDimension);
+        }
         net.minecraft.world.ContainerHelper.saveAllItems(output.child("DragonInventory"), dragonInventory.getItems());
     }
 
@@ -485,6 +591,10 @@ public final class FireDragon extends TamableAnimal {
         setMale(input.getBooleanOr("Gender", false));
         entityData.set(AGING_DISABLED, input.getBooleanOr("AgingDisabled", false));
         entityData.set(FLYING, input.getBooleanOr("Flying", false) && DragonGrowth.canCarryRider(ageDays()));
+        setCommand(input.getIntOr("Command", isOrderedToSit() ? 1 : 0));
+        dragonHome = input.getBooleanOr("HasHomePosition", false)
+                ? new BlockPos(input.getIntOr("HomeAreaX", 0), input.getIntOr("HomeAreaY", 0), input.getIntOr("HomeAreaZ", 0)) : null;
+        homeDimension = input.getStringOr("HomeDimension", level().dimension().identifier().toString());
         dragonInventory.clearContent();
         net.minecraft.world.ContainerHelper.loadAllItems(input.childOrEmpty("DragonInventory"), dragonInventory.getItems());
         for (int slot = 0; slot < 5; slot++) {

@@ -2,7 +2,15 @@
 
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
-Versione corrente: **0.1.10-stage1-dev**. Getto con 16 fotogrammi di flame.png originale
+Versione corrente: **0.1.11-stage1-dev**. Alimentazione con carne, pasto malaticcio
+per bloccare la crescita, pasto creativo e bastone originale dragon_stick.
+Comandi libero/seduto/seguimi, seguito a terra, casa persistente e limite di
+vagabondaggio. 45 JUnit e 15 GameTest della mod superati; client avviato.
+[TEST-0.1.11.md](TEST-0.1.11.md). Tappa 1 incompleta: volo/combattimento autonomi
+e ritorno al nido restano da migrare; punte grigie aperte.
+
+Versione precedente **0.1.10-stage1-dev**, confermata funzionante dall'utente.
+Getto con 16 fotogrammi di flame.png originale
 e dissolvenza; anteprima GUI senza riduzione aggiuntiva degli adulti; draghetti di
 stadio 1 in spalla (mano vuota, massimo tre; Maiusc per rilasciare). Conservati
 salvataggio indipendente e unica seduta adulta. 45 JUnit e 9 GameTest della mod

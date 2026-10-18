@@ -1,5 +1,52 @@
 # Prompt completo per continuare il porting su un altro PC
 
+## Aggiornamento 0.1.11 — alimentazione, comandi e seguito a terra
+
+L'utente conferma perfettamente funzionante la 0.1.10 (fuoco, anteprima e spalle)
+e autorizza a continuare la tappa 1. Nuovo checkpoint 0.1.11-stage1-dev:
+alimentazione manuale originale FoodUtils per drago di fuoco: componente FOOD e
+tag vanilla MEAT sostituiscono il vecchio isMeat. Nutrimento*10 fame e nutrimento
+salute, niente crescita; consuma un solo alimento se affamato/ferito, non se sano
+e sazio. Solo proprietario, pesce escluso (fuoco non piscivoro). Pasti originali:
+dragon_meal conservato con effetti sonori/particelle; sickly_dragon_meal blocca
+AGING_DISABLED persistentemente e cura al massimo, secondo pasto non consumato;
+creative_dragon_meal addomestica/riassegna il proprietario anche se già presente,
+come originale, senza crescita. Consumi rispettano abilità creative. Particelle
+server di alimento/ossa/farina d'ossa e patate velenose per malaticcio.
+
+Dragon staff registrato con ID originale dragon_stick, modello e texture originali;
+tre oggetti nuovi nella scheda Ingredienti, senza ricette migrate. Clic destro del
+proprietario cicla 0 libero -> 1 seduto -> 2 seguimi -> 0. COMMAND sincronizzato,
+ordine vanilla coerente e navigazione fermata a ogni cambio. Animazione usa COMMAND
+poiché orderedToSit vanilla non è sincronizzato. Monta e raccolta in spalla azzerano
+il comando per evitare ordini seduti residui. Maiusc+staff imposta/rimuove casa,
+campi originali HasHomePosition/HomeAreaX/Y/Z/HomeDimension, incluse coordinate zero;
+vincolo di vagabondaggio di 40 blocchi solo nella dimensione corretta. Override anche
+di isWithinHome(BlockPos/Vec3), perché Mob 26.3 legge i campi privati anziché getter.
+
+DragonEscortGoal migra il percorso terrestre di DragonAIEscort, velocità 1 e limite
+2000; ricalcola ogni 10 tick, stop entro dimensione media della collisione, nessun
+teletrasporto. Non avvia volo autonomo, che richiede ancora il flight manager.
+Vagabondaggio ogni 20 tick come DragonAIWander, escluso da seguimi/seduto/volo/
+cavalcatura/spalle. Il punto di casa non implementa ancora ritorno notturno al nido.
+
+Build riuscita, 45 JUnit e 15 GameTest della mod passati, oltre a baseline vanilla.
+Sei nuovi GameTest in DragonInteractionGameTests: alimentazione/consumi/cure e
+proprietà, pasto creativo e capacità creative, blocco crescita persistito, ciclo
+comandi/casa a coordinate zero/dimensioni/limite40, camminata reale con arresto da
+seduto, posa dopo assegnazione dei soli dati sincronizzati senza orderedToSit.
+Mock creativo richiede instabuild esplicito; test camminata maxTicks120, stato
+iniziale a terra e piattaforma di prova. Nessuna semplificazione dei test per
+aggirare difetti funzionali. Skill review-agent in sola lettura senza delega;
+due P2 corretti fuori revisione (posa non sincronizzata e isWithinHome), riletto
+il diff finale senza altri finding. Client avviato separatamente con risorse,
+grafica, audio e atlanti caricati; nessun collaudo visivo/multiplayer reale.
+
+Vedere TEST-0.1.11.md. Restano volo/combattimento autonomi, ritorno al nido, cibo
+da oggetti a terra, altre interazioni/animazioni, riproduzione/sonno e stendardo.
+La tappa 1 resta incompleta, punte grigie aperte, dorso ghast rimosso. Non avviare
+tappa 2. Conservare i vincoli Git e consegnare sempre mod più Fabric API esatta.
+
 ## Aggiornamento 0.1.10 — fuoco, anteprima e spalle
 
 Utente conferma funzionante quanto già implementato e chiede getto meno sgradevole,

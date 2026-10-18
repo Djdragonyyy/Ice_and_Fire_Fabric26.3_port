@@ -31,7 +31,7 @@ loom {
         gametest {
             server()
             source sourceSets.gametest
-            runDir 'run/0.1.10-gametest'
+            runDir 'run/0.1.11-gametest'
             vmArg '-Dfabric-api.gametest'
             vmArg "-Dfabric-api.gametest.report-file=${file('build/gametest-results.xml').absolutePath}"
         }
@@ -76,6 +76,10 @@ processResources {
         include 'assets/iceandfire/models/item/dragonarmor_*.json', 'assets/iceandfire/textures/item/dragonarmor_*.png'
         include 'assets/iceandfire/textures/gui/dragon.png'
         include 'assets/iceandfire/textures/item/dragon_meal.png'
+        include 'assets/iceandfire/textures/item/sickly_dragon_meal.png', 'assets/iceandfire/textures/item/creative_dragon_meal.png'
+        include 'assets/iceandfire/textures/item/dragon_stick.png'
+        include 'assets/iceandfire/models/item/sickly_dragon_meal.json', 'assets/iceandfire/models/item/creative_dragon_meal.json'
+        include 'assets/iceandfire/models/item/dragon_stick.json'
         include 'assets/iceandfire/textures/item/dragonegg_red.png'
         include 'assets/iceandfire/textures/item/dragonegg_green.png'
         include 'assets/iceandfire/textures/item/dragonegg_bronze.png'

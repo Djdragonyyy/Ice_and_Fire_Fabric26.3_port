@@ -1,4 +1,12 @@
 {
+  "item.iceandfire.dragon_stick": "Dragon Command Staff",
+  "item.iceandfire.sickly_dragon_meal": "Sickly Dragon Meal",
+  "item.iceandfire.creative_dragon_meal": "Creative Dragon Meal",
+  "dragon.command.stand": "Dragon is free to move",
+  "dragon.command.sit": "Dragon stays seated",
+  "dragon.command.escort": "Dragon follows you",
+  "dragon.command.remove_home": "Dragon home position removed",
+  "dragon.command.new_home": "Dragon home: %s, %s, %s (%s)",
   "item.iceandfire.dragonegg_gray": "Gray Dragon Egg",
   "key.category.iceandfire.dragon": "Ice and Fire",
   "key.iceandfire.dragon_down": "Dragon descend",

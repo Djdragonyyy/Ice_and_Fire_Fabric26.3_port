@@ -35,6 +35,9 @@ public final class IafContent {
     public static final SoundEvent FIRE_BREATH = Registry.register(BuiltInRegistries.SOUND_EVENT,
             id("firedragon_breath"), SoundEvent.createVariableRangeEvent(id("firedragon_breath")));
     public static final Item DRAGON_MEAL = registerItem("dragon_meal", properties("dragon_meal"));
+    public static final Item SICKLY_DRAGON_MEAL = registerItem("sickly_dragon_meal", properties("sickly_dragon_meal"));
+    public static final Item CREATIVE_DRAGON_MEAL = registerItem("creative_dragon_meal", properties("creative_dragon_meal"));
+    public static final Item DRAGON_STAFF = registerItem("dragon_stick", properties("dragon_stick").stacksTo(1));
     public static final Item[] FIRE_EGGS = {
             registerEggItem("dragonegg_red", 0), registerEggItem("dragonegg_green", 1),
             registerEggItem("dragonegg_bronze", 2), registerEggItem("dragonegg_gray", 3)
@@ -102,7 +105,12 @@ public final class IafContent {
             for (Item egg : FIRE_EGGS) output.accept(egg);
         });
         CreativeModeTabEvents.modifyOutputEvent(ResourceKey.create(Registries.CREATIVE_MODE_TAB,
-                Identifier.withDefaultNamespace("ingredients"))).register(output -> output.accept(DRAGON_MEAL));
+                Identifier.withDefaultNamespace("ingredients"))).register(output -> {
+                    output.accept(DRAGON_MEAL);
+                    output.accept(SICKLY_DRAGON_MEAL);
+                    output.accept(CREATIVE_DRAGON_MEAL);
+                    output.accept(DRAGON_STAFF);
+                });
         CreativeModeTabEvents.modifyOutputEvent(ResourceKey.create(Registries.CREATIVE_MODE_TAB,
                 Identifier.withDefaultNamespace("building_blocks"))).register(output -> IafTerrain.ITEMS.forEach(output::accept));
         CreativeModeTabEvents.modifyOutputEvent(ResourceKey.create(Registries.CREATIVE_MODE_TAB,

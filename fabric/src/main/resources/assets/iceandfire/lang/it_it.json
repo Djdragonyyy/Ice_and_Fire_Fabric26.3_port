@@ -1,4 +1,12 @@
 {
+  "item.iceandfire.dragon_stick": "Bastone del drago",
+  "item.iceandfire.sickly_dragon_meal": "Pasto malaticcio del drago",
+  "item.iceandfire.creative_dragon_meal": "Pasto creativo del drago",
+  "dragon.command.stand": "Il drago è libero di muoversi",
+  "dragon.command.sit": "Il drago resta seduto",
+  "dragon.command.escort": "Il drago ti segue",
+  "dragon.command.remove_home": "Punto di casa del drago rimosso",
+  "dragon.command.new_home": "Casa del drago: %s, %s, %s (%s)",
   "key.category.iceandfire.dragon": "Ice and Fire",
   "key.iceandfire.dragon_down": "Drago: scendi di quota",
   "key.iceandfire.dragon_takeoff": "Drago: decolla",
