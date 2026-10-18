@@ -1,5 +1,18 @@
 # Revisione del primo checkpoint
 
+## Correzione comandi 0.1.1
+
+Skill `review-agent` applicata in sola lettura al diff della correzione, inclusi test e traduzioni.
+No findings.
+
+Verificati i codici SDL di Minecraft 26.3, la registrazione tramite Fabric, il percorso input
+client/pacchetto/controllo verticale e la categoria con le sue traduzioni. Otto test superati:
+i due nuovi test verificano X/R/G, riassegnazione, rilascio, disattivazione e serializzazione
+del tasto di discesa. Build eseguita con lo stesso init script locale documentato nel README.
+La visibilità nel pannello comandi, la conservazione dopo riavvio e la discesa effettiva in un
+mondo richiedono ancora la prova dell'utente con questo JAR. Nessuna dichiarazione di completamento
+della tappa 1.
+
 Skill applicata: `review-agent`, dopo il primo ciclo di test. Revisione in sola lettura del diff
 rispetto alla base `0526aad94119b705a86207623481b087c4d052ca`; nessuna delega della revisione.
 

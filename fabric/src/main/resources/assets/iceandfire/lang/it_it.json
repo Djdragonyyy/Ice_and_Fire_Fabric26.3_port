@@ -1,0 +1,13 @@
+{
+  "key.category.iceandfire.dragon": "Ice and Fire",
+  "key.iceandfire.dragon_down": "Drago: scendi di quota",
+  "key.iceandfire.dragon_fire": "Drago: soffio (non ancora implementato)",
+  "key.iceandfire.dragon_strike": "Drago: attacco (non ancora implementato)",
+  "entity.iceandfire.fire_dragon": "Drago di fuoco",
+  "entity.iceandfire.dragon_egg": "Uovo di drago",
+  "item.iceandfire.dragon_meal": "Pasto del drago",
+  "item.iceandfire.dragonegg_red": "Uovo di drago rosso",
+  "item.iceandfire.dragonegg_green": "Uovo di drago verde",
+  "item.iceandfire.dragonegg_bronze": "Uovo di drago bronzeo",
+  "item.iceandfire.dragonegg_gray": "Uovo di drago grigio"
+}

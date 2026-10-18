@@ -88,7 +88,11 @@ Questa procedura è una checklist per quando le funzioni mancanti saranno comple
    7.201 tick effettivi di incubazione per la schiusa con i valori originali predefiniti.
 4. Salvare e riaprire durante l'incubazione e dopo la schiusa: controllare variante, proprietario e avanzamento.
 5. Usare il pasto per controllare i passaggi a 25, 50, 75, 100 e 125 giorni, salute e dimensioni.
-6. Dal terzo stadio salire con mano vuota; provare movimento, decollo tenendo salto, discesa con X,
+6. In Opzioni → Comandi → Assegnazione tasti, categoria Ice and Fire, verificare "Drago: scendi di quota"
+   (X). Provare anche la riassegnazione a un altro tasto libero e la conservazione dopo riavvio.
+   I tre comandi del drago usano nuovi identificatori in 0.1.1 per non ricaricare i codici errati
+   eventualmente salvati da 0.1.0; eventuali assegnazioni precedenti vanno reimpostate una volta.
+   Dal terzo stadio salire con mano vuota; provare movimento, decollo tenendo salto, discesa con X,
    atterraggio, dismontaggio e riapertura del mondo durante il volo.
 7. Provare R e G contro bersagli e ostacoli, confrontando danni, effetti e protezione del proprietario
    con la base Forge. Attualmente questo punto NON può essere superato.
