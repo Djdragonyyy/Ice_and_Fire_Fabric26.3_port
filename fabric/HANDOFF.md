@@ -1,5 +1,22 @@
 # Prompt completo per continuare il porting su un altro PC
 
+## Aggiornamento 0.1.5 — dismontaggio sul dorso
+
+L'utente richiede esplicitamente di restare in piedi sulla superficie solida del drago
+quando smonta, come sul ghast felice. Aggiunta pausa immediata nel metodo removePassenger,
+sia sul server sia come previsione client: azzerati velocità del drago, vecchi input,
+richiesta di decollo e bonus della planata. Come HappyGhast, la pausa dura dieci tick
+e viene rinnovata dal rilevamento del giocatore sul dorso già esistente.
+Il punto di dismontaggio è esplicitamente al centro superiore della collisione; azzerate
+velocità del passeggero e distanza di caduta prima del dismountTo vanilla sul server.
+Il centro superiore era già il default vanilla; la nuova pausa evita che la superficie
+continui a muoversi prima della scansione del giocatore appena sceso.
+Versione 0.1.5-stage1-dev: build ordinaria e 29 test superati; revisione in sola lettura
+senza delega con review-agent. Nessun nuovo avvio client o collaudo interattivo del
+dismontaggio eseguito dall'agente. Nuova prova richiesta a terra e in volo a ogni stadio
+cavalcabile, soprattutto a 125 giorni. V, spazio, tilt e camera della 0.1.4 conservati.
+Tappa 1 incompleta e punte grigie ancora aperte. Vedere TEST-0.1.5.md e REVIEW.md.
+
 ## Aggiornamento 0.1.4 — volo e visibilità
 
 Riscontro utente: tilt della 0.1.3 circa corretto, ma il drago deve raddrizzarsi in

@@ -2,7 +2,12 @@
 
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
-Versione corrente: **0.1.4-stage1-dev**. Tilt in discesa attenuato vicino ai blocchi;
+Versione corrente: **0.1.5-stage1-dev**. Dismontaggio sul centro del dorso solido,
+con arresto immediato del drago come sul ghast felice, azzeramento dell'inerzia e
+della distanza di caduta. Build ordinaria e 29 test superati. Prova in gioco ancora
+necessaria. Istruzioni: [TEST-0.1.5.md](TEST-0.1.5.md).
+
+Versione 0.1.4 (precedente): tilt in discesa attenuato vicino ai blocchi;
 tilt nascosto soltanto al pilota in prima persona. Nuovo comando **V: decolla**,
 riassegnabile, oltre a spazio tenuto premuto per oltre un secondo. Richiesta di decollo
 conservata tra i tick di rete e impulso iniziale mantenuto fino al distacco da terra.

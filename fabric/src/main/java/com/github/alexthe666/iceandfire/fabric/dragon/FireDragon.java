@@ -107,6 +107,30 @@ public final class FireDragon extends TamableAnimal {
         return isAlive() && (other == null || !isPassengerOfSameVehicle(other));
     }
 
+    @Override protected void removePassenger(Entity passenger) {
+        super.removePassenger(passenger);
+        if (passenger instanceof Player && isAlive() && !isRemoved()) {
+            // HappyGhast pauses immediately at dismount, before the next top-of-back scan.
+            // Predict the same stop on the client while the server sends the dismount position.
+            backStillTicks = 10;
+            entityData.set(BACK_OCCUPIED, true);
+            getNavigation().stop();
+            setDeltaMovement(Vec3.ZERO);
+            riderControls = 0;
+            takeoff.reset();
+            launchPending = false;
+            glidingSpeedBonus = 0;
+        }
+    }
+
+    @Override public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
+        if (!isAlive() || isRemoved()) return super.getDismountLocationForPassenger(passenger);
+        // Feet go on the solid collision surface, not at the animated saddle in front of it.
+        passenger.setDeltaMovement(Vec3.ZERO);
+        passenger.resetFallDistance();
+        return DragonBackPlatform.dismountPosition(getBoundingBox());
+    }
+
     private void updateBackPlatform() {
         if (level().isClientSide()) return;
         boolean occupied = level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(0.1, 2, 0.1),

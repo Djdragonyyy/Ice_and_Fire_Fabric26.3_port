@@ -1,5 +1,32 @@
 # Revisione del port Fabric
 
+## Dismontaggio sul dorso 0.1.5 — 18 ottobre 2026
+
+Richiesta: restare sulla superficie solida del drago dopo il dismontaggio, come sul
+ghast felice. Skill `review-agent` applicata in sola lettura, senza delega, all'intero
+diff dalla 0.1.4 (`980dbe614`), inclusi helper, test e versione. No findings.
+
+Confrontati i percorsi vanilla `LivingEntity.stopRiding`/`dismountVehicle`,
+`Entity.removePassenger` e i metodi corrispondenti di HappyGhast. Il punto superiore
+era già quello ereditato da Entity, ma mancava la pausa immediata di HappyGhast alla
+rimozione del passeggero: il drago poteva continuare il movimento prima della scansione
+del giocatore sopra. Aggiunta pausa di dieci tick, rinnovata dalla scansione esistente,
+con arresto della navigazione e azzeramento dell'inerzia e dei vecchi comandi.
+
+Posizione del dismontaggio esplicita al centro superiore della collisione. Il server
+mantiene il percorso vanilla `dismountTo`, azzerando velocità e distanza di caduta del
+passeggero; il client anticipa soltanto la pausa del drago. Nessun nuovo mixin, nessun
+blocco piazzato nel mondo e nessuna modifica alla collisione centrale o alla camera.
+Draghi morti/rimossi mantengono il fallback vanilla. I controlli V/spazio della 0.1.4
+rimangono disponibili; la monta resta dallo stadio 3.
+
+Build ordinaria JDK 25 riuscita: **29 test, 0 fallimenti, 0 errori**. Nuovo test:
+giocatore dismontato entro i bordi, sopra la superficie senza intersecarla e riconosciuto
+dalla scansione a 50/75/100/125 giorni, a tre quote del mondo. Questo è un controllo
+geometrico, non un collaudo della sequenza di rete o dell'arresto in un mondo reale.
+Nessun nuovo avvio client eseguito per la 0.1.5. Provare a terra/in volo, a ogni età,
+con dismontaggi ripetuti e due client; la conferma in gioco è ancora necessaria.
+
 ## Volo e visibilità 0.1.4 — 18 ottobre 2026
 
 Skill `review-agent` applicata in sola lettura, senza delega, al diff completo dalla
