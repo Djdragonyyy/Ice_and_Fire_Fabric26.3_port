@@ -1,5 +1,22 @@
 # Revisione del port Fabric
 
+## Diagnostica UV delle punte — 18 ottobre 2026
+
+Nuovo test `everySpikeVertexKeepsOriginalTabulaFaceOrientationAndUv`: confronto dei
+528 vertici delle 22 punte ground con facce, winding, normali, UV e mirroring di
+Citadel TabulaModelRenderUtils.ModelBox/TexturedQuad. Sorgente di riferimento ufficiale:
+https://github.com/AlexModGuy/Citadel/blob/master/src/main/java/com/github/alexthe666/citadel/client/model/TabulaModelRenderUtils.java
+Il riferimento matematico è indipendente dal costruttore vanilla sottoposto a test;
+non si limita a verificare UV finite o nell'intervallo. Test superato senza modifiche
+al lettore Tabula. Suite completa: 30 test, 0 fallimenti, 0 errori.
+
+Rilettura in sola lettura secondo review-agent, senza delega: No findings.
+Nessuna modifica di produzione, asset o versione della mod. Analizzati i pixel delle
+texture originali: colore osso e trasparenze presenti già negli asset; rapporto 2x tra
+PNG e dimensioni UV logiche coerente. Questo non riproduce il rendering effettivo sul
+profilo dell'utente né dimostra che l'aspetto vuoto dello screenshot sia corretto.
+La causa visiva resta aperta; necessarie vista laterale esterna e configurazione grafica.
+
 ## Dismontaggio sul dorso 0.1.5 — 18 ottobre 2026
 
 Richiesta: restare sulla superficie solida del drago dopo il dismontaggio, come sul

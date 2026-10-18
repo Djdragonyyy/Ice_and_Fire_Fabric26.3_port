@@ -1,5 +1,23 @@
 # Prompt completo per continuare il porting su un altro PC
 
+## Diagnosi punte grigie — screenshot utente del 18 ottobre 2026
+
+L'utente segnala il problema in ogni modello/stadio e fornisce una vista ravvicinata
+del drago rosso dall'alto, con punte chiare che sembrano scatole aperte. Non è ancora
+stata isolata la causa visiva: non dichiarare il difetto risolto.
+Confrontato ogni vertice delle 22 punte del modello ground con layout, winding,
+normali, UV e mirroring di Citadel TabulaModelRenderUtils.ModelBox/TexturedQuad:
+528 vertici corrispondenti, nuovo test superato. Suite attuale: 30 test senza errori.
+Il materiale EntityModel 26.3 usa già entityCutout, senza culling. Le texture originali
+512x256 usano la griglia UV logica 256x128: questo rapporto 2x è coerente, non un errore.
+Il colore osso chiaro è presente nelle texture originali. Alcune facce hanno alpha
+trasparente: ad esempio SOUTH della punta 1x1x2 ha 0/4 texel visibili in red_1 e 2/4
+in red_5. Le altre tre varianti allo stadio 5 condividono questi pixel osso.
+Nessuna modifica a modello, texture o renderer e nessuna nuova versione JAR per questa
+diagnosi. Prima di cambiare UV in Blockbench serve riproduzione da fuori, di lato,
+e conferma di shader/resource pack/altre mod grafiche. Domande inviate all'utente;
+risposte e ulteriore vista laterale ancora necessarie. Restano validi i JAR 0.1.5.
+
 ## Aggiornamento 0.1.5 — dismontaggio sul dorso
 
 L'utente richiede esplicitamente di restare in piedi sulla superficie solida del drago
