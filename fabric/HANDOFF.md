@@ -1,5 +1,25 @@
 # Prompt completo per continuare il porting su un altro PC
 
+## Aggiornamento 0.1.3 — riscontro e richieste utente
+
+L'utente conferma camera e comandi di schiusa della 0.1.2. Nuove richieste implementate:
+decollo più affidabile sul client che simula la cavalcatura; inclinazione salita/discesa
+adattata dal codice originale e sincronizzata; seduta ricavata dalla superficie Neck1
+per evitare che il bacino finisca dentro al modello nello stadio 5. Distanza camera invariata.
+L'utente autorizza espressamente un'aggiunta al gameplay: camminare sul drago non montato
+come sul ghast felice. La collisione centrale è solida in tutte le varianti di fuoco;
+il drago si ferma mentre un giocatore è sul dorso, con dieci tick di pausa dopo la discesa.
+Non è una collisione dettagliata di ali/coda. Ghiaccio/fulmine non sono ancora registrati.
+Versione corrente 0.1.3-stage1-dev; build ordinaria e 21 test riusciti. Revisione completa
+con skill review-agent in sola lettura senza delega; corretto il caso null delle query
+vanilla di collisione. Vedere REVIEW.md e TEST-0.1.3.md per dettaglio e collaudo richiesto.
+Le nuove modifiche non sono ancora confermate dall'utente in gioco. Punte grigie ancora
+aperte. Dopo questa prova continuare combattimento/soffio e il resto della tappa 1;
+non considerare autorizzato il salto alla tappa 2 dal solo esito di queste correzioni.
+Avvio 0.1.3 in directory di prova separata riuscito dai log, con risorse/grafica/audio
+caricati e ingresso in mondo locale; client lasciato aperto. Nessuna interazione
+del drago eseguita dall'agente.
+
 ## Aggiornamento della ripresa — 18 ottobre 2026
 
 Checkout recuperato dall'origin personale e verificato pulito su `port/fabric-26.3`,

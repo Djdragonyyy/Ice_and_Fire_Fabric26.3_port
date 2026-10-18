@@ -2,6 +2,12 @@
 
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
+Versione corrente: **0.1.3-stage1-dev**. Inclinazione del drago durante salita/discesa,
+impulso di decollo sul client pilota, seduta sulla superficie del collo anche allo stadio 5;
+dorso solido richiesto dall'utente, con arresto mentre un giocatore è sopra senza montare.
+Build ordinaria e 21 test superati. La camera della 0.1.2 è stata confermata dall'utente;
+le nuove correzioni richiedono prova visiva. Istruzioni: [TEST-0.1.3.md](TEST-0.1.3.md).
+
 Aggiornamento nuovo PC, 18 ottobre 2026: verificato il checkout pulito del ramo
 `port/fabric-26.3` al commit remoto `417f5a8d2`. Build ordinaria riuscita con JDK
 25.0.4.1+1, senza workaround ZIP. Completata la revisione 0.1.2 e corretto un salto

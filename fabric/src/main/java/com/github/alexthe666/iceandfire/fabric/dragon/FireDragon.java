@@ -29,6 +29,8 @@ public final class FireDragon extends TamableAnimal {
     private static final EntityDataAccessor<Boolean> MALE = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> AGING_DISABLED = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> FLYING = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Float> FLIGHT_PITCH = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Boolean> BACK_OCCUPIED = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.BOOLEAN);
     private int appliedAge = -1;
     private int riderControls;
     private long controlsReceivedAt;
@@ -36,6 +38,11 @@ public final class FireDragon extends TamableAnimal {
     private int flightTicks;
     private float glidingSpeedBonus;
     private float riderWalkingLift;
+    private boolean wasFlyingDuringTravel;
+    private Vec3 lastFlightPosition;
+    private float flightPitch;
+    private float previousFlightPitch;
+    private int backStillTicks;
     public int walkCycle;
     public int flightCycle;
     public float flyProgress;
@@ -66,6 +73,8 @@ public final class FireDragon extends TamableAnimal {
         builder.define(MALE, false);
         builder.define(AGING_DISABLED, false);
         builder.define(FLYING, false);
+        builder.define(FLIGHT_PITCH, 0F);
+        builder.define(BACK_OCCUPIED, false);
     }
 
     @Override protected void registerGoals() {
@@ -85,6 +94,26 @@ public final class FireDragon extends TamableAnimal {
     public int hunger() { return entityData.get(HUNGER); }
     public void setHunger(int value) { entityData.set(HUNGER, Math.clamp(value, 0, 100)); }
     public boolean flying() { return entityData.get(FLYING); }
+    public float flightPitch(float partialTick) {
+        return previousFlightPitch + (flightPitch - previousFlightPitch) * partialTick;
+    }
+
+    @Override public boolean isFlyingVehicle() { return flying(); }
+
+    @Override public boolean canBeCollidedWith(Entity other) {
+        // EntitySelector also queries collisions with no requesting entity.
+        return isAlive() && (other == null || !isPassengerOfSameVehicle(other));
+    }
+
+    private void updateBackPlatform() {
+        if (level().isClientSide()) return;
+        boolean occupied = level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(0.1, 2, 0.1),
+                player -> !player.isSpectator() && !player.noPhysics && !player.isPassenger()
+                        && DragonBackPlatform.isOnBack(getBoundingBox(), player.getBoundingBox())).size() > 0;
+        backStillTicks = occupied ? 10 : Math.max(0, backStillTicks - 1);
+        entityData.set(BACK_OCCUPIED, backStillTicks > 0);
+        if (backStillTicks > 0) getNavigation().stop();
+    }
     public void setRiderControls(int flags) {
         riderControls = flags & DragonControlPayload.ALL;
         controlsReceivedAt = level().getGameTime();
@@ -110,6 +139,8 @@ public final class FireDragon extends TamableAnimal {
     }
 
     @Override public void tick() {
+        previousFlightPitch = flightPitch;
+        updateBackPlatform();
         super.tick();
         prevFlyProgress = flyProgress;
         prevSitProgress = sitProgress;
@@ -124,7 +155,8 @@ public final class FireDragon extends TamableAnimal {
             if (tickCount % 3000 == 0) setHunger(hunger() - 1);
             if (getControllingPassenger() == null || level().getGameTime() - controlsReceivedAt > 10) riderControls = 0;
             takeoffTicks = control(DragonControlPayload.UP) ? takeoffTicks + 1 : 0;
-            if (!flying() && takeoffTicks > 20 && DragonGrowth.canCarryRider(ageDays())) {
+            if (!flying() && takeoffTicks > 20 && !entityData.get(BACK_OCCUPIED)
+                    && DragonGrowth.canCarryRider(ageDays())) {
                 entityData.set(FLYING, true);
                 setDeltaMovement(getDeltaMovement().add(0, 0.8, 0));
                 flightTicks = 0;
@@ -138,6 +170,13 @@ public final class FireDragon extends TamableAnimal {
             }
         }
         setNoGravity(flying());
+        if (!level().isClientSide() || isLocalInstanceAuthoritative()) {
+            Vec3 movement = lastFlightPosition == null ? Vec3.ZERO : position().subtract(lastFlightPosition);
+            flightPitch = DragonFlightMotion.nextPitch(flightPitch, movement.y,
+                    Math.abs(movement.x) + Math.abs(movement.z), flying());
+            if (!level().isClientSide()) entityData.set(FLIGHT_PITCH, flightPitch);
+        } else flightPitch = entityData.get(FLIGHT_PITCH);
+        lastFlightPosition = position();
         LivingEntity rider = getControllingPassenger();
         riderWalkingLift = !flying() && rider != null && rider.zza > 0
                 ? Math.min(DragonRiderLayout.walkingLiftLimit(ageDays()), riderWalkingLift + 0.1F)
@@ -145,9 +184,18 @@ public final class FireDragon extends TamableAnimal {
     }
 
     @Override public void travel(Vec3 input) {
+        if (entityData.get(BACK_OCCUPIED)) {
+            setDeltaMovement(Vec3.ZERO);
+            return;
+        }
+        boolean beginningFlight = flying() && !wasFlyingDuringTravel;
+        wasFlyingDuringTravel = flying();
         if (!flying()) { super.travel(input); return; }
         LivingEntity rider = getControllingPassenger();
         if (isLocalInstanceAuthoritative()) {
+            // The owner client simulates ridden flight: the server-only impulse was lost there.
+            var motion = getDeltaMovement();
+            setDeltaMovement(motion.x, DragonFlightMotion.takeoffVelocity(motion.y, onGround(), beginningFlight), motion.z);
             double speed = getAttributeValue(Attributes.MOVEMENT_SPEED);
             // Original EntityDragonBase air-speed curve, local acceleration and drag.
             float flightSpeed = (float) (speed * (5.2F + (speed - 0.15F) / (0.4F - 0.15F) * 1.5F));
@@ -190,6 +238,7 @@ public final class FireDragon extends TamableAnimal {
 
     @Override protected void tickRidden(Player player, Vec3 input) {
         super.tickRidden(player, input);
+        if (entityData.get(BACK_OCCUPIED)) return;
         setYRot(player.getYRot());
         setXRot(player.getXRot() * 0.5F);
         yBodyRot = getYRot();

@@ -1,5 +1,53 @@
 # Revisione del port Fabric
 
+## Correzioni e dorso solido 0.1.3 — 18 ottobre 2026
+
+Riscontro utente sulla 0.1.2: camera e comandi di schiusa funzionanti; segnalati decollo
+incerto, assenza di inclinazione in discesa con X e cavaliere dentro al modello allo
+stadio 5. Richiesto esplicitamente il dorso solido come quello del ghast felice.
+
+Skill `review-agent` applicata in sola lettura, senza delega, a tutto il diff dalla
+0.1.2 (`7e4c9fae5`), inclusi i nuovi helper/test. Confrontati `EntityDragonBase.updatePitch`,
+`RenderDragonBase.scale`, geometria Tabula originale e bytecode vanilla 26.3 di
+Entity/EntitySelector, HappyGhast, LivingEntityRenderer e controllo del movimento.
+
+- [P1] Gestire le query di collisione senza richiedente —
+  `fabric/src/main/java/com/github/alexthe666/iceandfire/fabric/dragon/FireDragon.java`,
+  `canBeCollidedWith`. La prima implementazione chiamava `isPassengerOfSameVehicle`
+  anche con argomento null. Il predicato vanilla di EntitySelector chiama proprio
+  `canBeCollidedWith(null)` e quel percorso avrebbe generato NullPointerException.
+  Corretto dopo la revisione con guardia null prima del confronto del veicolo.
+
+Rilettura della correzione: No findings. Non rilevati ulteriori difetti concreti.
+
+Implementazione: impulso iniziale di decollo sul lato che simula il movimento del
+veicolo; inclinazione da spostamento verticale con limiti originali -60/+40 gradi,
+smorzamento e stato sincronizzato per gli osservatori; identica rotazione sul modello
+e sulla seduta. La seduta deriva ora dalla superficie del cubo Neck1, anziché dal
+perno interno. Compensazione dell'altezza del bacino legata alla scala del giocatore,
+separata dalla scala visiva non limitata del drago. Distanza camera non modificata.
+
+Collisione solida sull'AABB centrale di tutti i draghi di fuoco registrati, passeggeri
+esclusi; pausa del movimento mentre un giocatore non montato sta sopra e per dieci
+tick dopo. Spettatori e giocatori senza collisione non bloccano il drago. Nuova funzione
+di gameplay autorizzata dall'utente, non proveniente dalla base Ice and Fire originale.
+Usate API vanilla: nessun nuovo mixin comune né nuova dipendenza.
+
+Build ordinaria con JDK 25: **21 test, 0 fallimenti, 0 errori**. I nuovi controlli
+coprono superficie effettiva del modello e bacino a 50/75/100/125 giorni, inclinazione
+-60/0/+40 gradi e scala del giocatore 0.5/1/2, limiti/smorzamento dell'inclinazione,
+impulso di decollo e riconoscimento dei piedi sopra il dorso.
+
+Avvio della nuova 0.1.3 verificato dai log in una directory di prova separata:
+mod, modello/risorse, grafica, audio e atlanti caricati; ingresso in un mondo locale
+confermato. Client lasciato aperto. Nessuna interazione del drago o verifica visiva
+eseguita dall'agente; presenti gli avvisi OSHI/Realms del profilo di sviluppo già noti.
+
+Queste sono verifiche automatiche; non equivalgono a una prova interattiva del volo,
+del dismontaggio o dell'appoggio in un mondo/server con due giocatori. La superficie
+solida segue la collisione centrale, non la geometria animata di ali/coda. Resa della
+seduta e del tilt da confermare in gioco. Punte grigie ancora aperte, tappa 1 incompleta.
+
 ## Revisione finale 0.1.2 sul nuovo PC — 18 ottobre 2026
 
 Skill locale `review-agent` applicata in sola lettura, senza delega, all'intero diff

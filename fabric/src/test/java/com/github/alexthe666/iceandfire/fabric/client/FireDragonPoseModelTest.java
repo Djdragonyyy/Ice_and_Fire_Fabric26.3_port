@@ -25,8 +25,45 @@ class FireDragonPoseModelTest {
                 var expected = matrix.last().pose().transformPosition(new org.joml.Vector3f(anchor));
                 var actual = FireDragonRenderer.riderRenderPosition(state, anchor);
                 assertEquals(state.x + expected.x, actual.x, 0.00001);
-                assertEquals(state.y + expected.y - 0.25, actual.y, 0.00001);
+                assertEquals(state.y + expected.y - 0.75, actual.y, 0.00001);
                 assertEquals(state.z + expected.z, actual.z, 0.00001);
+            }
+        }
+    }
+
+    @Test void seatedHipTouchesRenderedNeckSurfaceAtEveryStageAndFlightPitch() {
+        var model = model();
+        for (int age : new int[]{50, 75, 100, 125}) {
+            for (float pitch : new float[]{-60, 0, 40}) {
+                for (float playerScale : new float[]{0.5F, 1, 2}) {
+                    var state = new FireDragonRenderer.State();
+                    state.scale = com.github.alexthe666.iceandfire.fabric.dragon.DragonGrowth.renderSize(age) / 3F;
+                    state.bodyRot = 237;
+                    state.flightPitch = pitch;
+                    state.flying = pitch != 0;
+                    state.flyProgress = state.flying ? 20 : 0;
+                    state.flightCycle = 26;
+                    state.ageInTicks = 10.25F;
+                    model.setupAnim(state);
+                    var matrix = new com.mojang.blaze3d.vertex.PoseStack();
+                    matrix.scale(state.scale, state.scale, state.scale);
+                    matrix.mulPose(new org.joml.Matrix4f().rotation(com.mojang.math.Axis.YP.rotationDegrees(180 - state.bodyRot)));
+                    matrix.scale(-1, -1, 1);
+                    matrix.mulPose(new org.joml.Matrix4f().rotation(com.mojang.math.Axis.XP.rotationDegrees(pitch)));
+                    matrix.translate(0, -1.501F, 0);
+                    var renderedSurface = new org.joml.Vector3f(Float.NaN);
+                    model.root().visit(matrix, (pose, path, index, cube) -> {
+                        if (!path.equals("/BodyUpper/Neck1")) return;
+                        pose.pose().transformPosition(new org.joml.Vector3f(
+                                (cube.minX + cube.maxX) / 32F, cube.minY / 16F, cube.maxZ / 16F), renderedSurface);
+                    });
+                    assertTrue(Float.isFinite(renderedSurface.y));
+                    var rider = FireDragonRenderer.riderRenderPosition(state, model.riderAnchor(), playerScale);
+                    assertEquals(renderedSurface.x, rider.x, 0.00001);
+                    assertEquals(renderedSurface.y, rider.y + 0.75F * playerScale, 0.00001,
+                            "Hip must stay on top of neck, including stage 5 at 125 days");
+                    assertEquals(renderedSurface.z, rider.z, 0.00001);
+                }
             }
         }
     }

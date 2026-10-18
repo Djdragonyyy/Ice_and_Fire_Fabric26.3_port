@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -18,7 +19,8 @@ abstract class DragonRiderRenderMixin {
     private void iceandfire$attachRider(Entity entity, EntityRenderState state, float partialTick, CallbackInfo ci) {
         if (!(entity.getVehicle() instanceof FireDragon dragon) || dragon.getControllingPassenger() != entity) return;
         if (!(Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(dragon) instanceof FireDragonRenderer renderer)) return;
-        var position = renderer.riderRenderPosition(dragon, partialTick);
+        float riderScale = entity instanceof LivingEntity living ? living.getScale() : 1;
+        var position = renderer.riderRenderPosition(dragon, partialTick, riderScale);
         state.x = position.x;
         state.y = position.y;
         state.z = position.z;

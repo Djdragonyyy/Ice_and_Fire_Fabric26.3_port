@@ -14,6 +14,7 @@ import org.joml.Vector3f;
 final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
     private final Map<String, ModelPart> parts;
     private final Map<String, TabulaLoader.Model> poses = new HashMap<>();
+    private final Vector3f seatSurface = new Vector3f(Float.NaN);
 
     FireDragonPoseModel(ResourceManager resources) {
         this(name -> pose(resources, name));
@@ -26,6 +27,12 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
     private FireDragonPoseModel(Function<String, TabulaLoader.Model> loader, TabulaLoader.Model ground) {
         super(ground.root());
         parts = ground.parts();
+        // Read the actual neck cube's upper rear edge, rather than its internal pivot.
+        parts.get("Neck1").visit(new PoseStack(), (pose, path, index, cube) -> {
+            if (path.isEmpty() && index == 0) seatSurface.set(
+                    (cube.minX + cube.maxX) / 32F, cube.minY / 16F, cube.maxZ / 16F);
+        });
+        if (!Float.isFinite(seatSurface.y)) throw new IllegalStateException("Missing neck seat geometry");
         for (String name : List.of("base_male", "base_female", "flying", "sitting", "walk1", "walk2", "walk3", "walk4",
                 "flight1", "flight2", "flight3", "flight4", "flight5", "flight6")) {
             poses.put(name, loader.apply(name));
@@ -37,7 +44,7 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
         PoseStack stack = new PoseStack();
         parts.get("BodyUpper").translateAndRotate(stack);
         parts.get("Neck1").translateAndRotate(stack);
-        return stack.last().pose().transformPosition(new Vector3f(0, -0.01F, -0.035F));
+        return stack.last().pose().transformPosition(new Vector3f(seatSurface));
     }
 
     private static TabulaLoader.Model pose(ResourceManager resources, String name) {

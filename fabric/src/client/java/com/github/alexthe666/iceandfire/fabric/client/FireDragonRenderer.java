@@ -10,6 +10,8 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 
 /** Uses the original Tabula geometry, poses and stage/variant textures. */
 public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragonRenderer.State, EntityModel<FireDragonRenderer.State>> {
@@ -25,6 +27,7 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
         float flyProgress;
         float sitProgress;
         float partialTick;
+        float flightPitch;
     }
 
     public FireDragonRenderer(EntityRendererProvider.Context context) {
@@ -44,6 +47,7 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
         state.flyProgress = dragon.prevFlyProgress + (dragon.flyProgress - dragon.prevFlyProgress) * partialTick;
         state.sitProgress = dragon.prevSitProgress + (dragon.sitProgress - dragon.prevSitProgress) * partialTick;
         state.partialTick = partialTick;
+        state.flightPitch = dragon.flightPitch(partialTick);
         // The legacy renderer used renderSize / 3; the entity's bounding-box
         // scale is separately capped at seven in the original implementation.
         state.scale = DragonGrowth.renderSize(dragon.ageDays()) / 3F;
@@ -53,23 +57,35 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
         return IafContent.id("textures/models/firedragon/" + COLORS[state.variant] + "_" + state.stage + ".png");
     }
 
+    @Override protected void scale(State state, PoseStack stack) {
+        // Same placement as RenderDragonBase.scale: after yaw/axis flip, before model translation.
+        stack.mulPose(new org.joml.Matrix4f().rotation(Axis.XP.rotationDegrees(state.flightPitch)));
+    }
+
     /** Visual rider follows the animated neck; physical seat retains the original POV offsets. */
-    public Vec3 riderRenderPosition(FireDragon dragon, float partialTick) {
+    public Vec3 riderRenderPosition(FireDragon dragon, float partialTick, float riderScale) {
         State state = new State();
         extractRenderState(dragon, state, partialTick);
         FireDragonPoseModel pose = (FireDragonPoseModel) getModel();
         pose.setupAnim(state);
         var anchor = pose.riderAnchor();
-        return riderRenderPosition(state, anchor);
+        return riderRenderPosition(state, anchor, riderScale);
     }
 
     static Vec3 riderRenderPosition(State state, org.joml.Vector3f anchor) {
-        double yaw = Math.toRadians(state.bodyRot);
-        double right = anchor.x * state.scale;
-        double forward = -anchor.z * state.scale;
-        return new Vec3(
-                state.x - forward * Math.sin(yaw) + right * Math.cos(yaw),
-                state.y + (1.501 - anchor.y) * state.scale - 0.25,
-                state.z + forward * Math.cos(yaw) + right * Math.sin(yaw));
+        return riderRenderPosition(state, anchor, 1);
+    }
+
+    static Vec3 riderRenderPosition(State state, org.joml.Vector3f anchor, float riderScale) {
+        PoseStack stack = new PoseStack();
+        stack.scale(state.scale, state.scale, state.scale);
+        stack.mulPose(new org.joml.Matrix4f().rotation(Axis.YP.rotationDegrees(180 - state.bodyRot)));
+        stack.scale(-1, -1, 1);
+        stack.mulPose(new org.joml.Matrix4f().rotation(Axis.XP.rotationDegrees(state.flightPitch)));
+        stack.translate(0, -1.501F, 0);
+        var surface = stack.last().pose().transformPosition(new org.joml.Vector3f(anchor));
+        // The player's seated hip is 12 model pixels above its feet. This offset must
+        // follow the PLAYER scale, while the surface follows the uncapped DRAGON render scale.
+        return new Vec3(state.x + surface.x, state.y + surface.y - 0.75F * riderScale, state.z + surface.z);
     }
 }
