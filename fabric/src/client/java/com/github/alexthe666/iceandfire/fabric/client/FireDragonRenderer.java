@@ -29,6 +29,9 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
         float sitProgress;
         float partialTick;
         float flightPitch;
+        int attack;
+        float attackTick;
+        float breathProgress;
     }
 
     public FireDragonRenderer(EntityRendererProvider.Context context) {
@@ -48,6 +51,9 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
         state.flyProgress = dragon.prevFlyProgress + (dragon.flyProgress - dragon.prevFlyProgress) * partialTick;
         state.sitProgress = dragon.prevSitProgress + (dragon.sitProgress - dragon.prevSitProgress) * partialTick;
         state.partialTick = partialTick;
+        state.attack = dragon.attackAnimation();
+        state.attackTick = dragon.attackAnimationTick() + partialTick;
+        state.breathProgress = dragon.prevBreathProgress + (dragon.breathProgress - dragon.prevBreathProgress) * partialTick;
         var client = Minecraft.getInstance();
         boolean firstPersonRider = client.player != null && client.getCameraEntity() == client.player
                 && dragon.getControllingPassenger() == client.player && client.options.getCameraType().isFirstPerson();

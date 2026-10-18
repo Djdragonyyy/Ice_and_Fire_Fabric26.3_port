@@ -1,5 +1,36 @@
 # Revisione del port Fabric
 
+## Combattimento controllato 0.1.8 — 18 ottobre 2026
+
+Skill locale review-agent applicata in sola lettura e senza delega al diff completo
+rispetto a c772f0331, inclusi nuovi file, configurazione, risorse e test. No findings.
+
+Confrontati EntityDragonBase, EntityFireDragon, EntityDragonCharge, EntityDragonFireCharge,
+IafDragonLogic, IafDragonDestructionManager e DragonTabulaModelAnimator. Copiati dati del
+danno dragon_fire e suono breath originali; modello del proiettile resta un cubo di magma.
+Input continua a essere validato dal server tramite veicolo/proprietario; timeout dei
+comandi esistente e reset dello stato di combattimento senza cavaliere. Nessuna modifica
+di collisione, cavalcatura, camera o decollo. Esclusi proprietario/alleati/passeggeri dai
+bersagli, inclusi animali con riferimento allo stesso proprietario anche offline.
+Intersezioni reali del raycast, ostacoli e lato server controllati nel percorso del danno.
+
+Build riuscita: 38 test, zero fallimenti/errori. Undici test aggiunti: sei sullo stato
+di combattimento, tre sulla geometria e due su keyframe/continuità/assenza di accumulo
+delle pose. Verificate le risorse nel JAR. Questi test non istanziano un mondo server
+e non dimostrano danni, collisioni del proiettile o assenza di fuoco amico in multiplayer.
+
+Limiti intenzionali del checkpoint: sola cavalcatura; nessuna IA di attacco autonoma,
+conversione in blocchi carbonizzati, distruzione dell'area da charge, DragonForge o
+esplosione opzionale. Particelle FLAME vanilla temporanee: migrazione della particella
+originale incompleta. Non è parità completa con l'originale. Verifica in gioco richiesta
+con bersagli, muri, acqua, dismount e due giocatori. Tappa 1 e punte grigie ancora aperte.
+
+Avvio client 0.1.8 riuscito in run/0.1.8-smoke: mod, grafica, audio e atlanti caricati;
+configurazione di combattimento generata. Avvisi di contatori OSHI e autenticazione
+Realms non bloccanti. Nessuna entrata in mondo e nessun collaudo del combattimento
+eseguito dall'agente. Il primo comando di avvio aveva un percorso relativo errato
+dell'init script; corretto con il percorso assoluto prima dell'avvio verificato.
+
 ## Rimozione funzione ghast 0.1.7 — 18 ottobre 2026
 
 Revisione del diff rispetto alla 0.1.6: rimossi tutti i collegamenti alla piattaforma

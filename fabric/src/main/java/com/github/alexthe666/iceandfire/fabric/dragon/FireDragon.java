@@ -1,6 +1,7 @@
 package com.github.alexthe666.iceandfire.fabric.dragon;
 
 import com.github.alexthe666.iceandfire.fabric.IafContent;
+import com.github.alexthe666.iceandfire.fabric.DragonCombatConfig;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -32,6 +33,11 @@ public final class FireDragon extends TamableAnimal {
     private static final EntityDataAccessor<Boolean> AGING_DISABLED = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> FLYING = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Float> FLIGHT_PITCH = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Boolean> BREATHING = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> ATTACK = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> ATTACK_TICK = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.INT);
+    private final DragonCombatState combat = new DragonCombatState();
+    public float breathProgress, prevBreathProgress;
     private int appliedAge = -1;
     private int riderControls;
     private long controlsReceivedAt;
@@ -74,6 +80,9 @@ public final class FireDragon extends TamableAnimal {
         builder.define(AGING_DISABLED, false);
         builder.define(FLYING, false);
         builder.define(FLIGHT_PITCH, 0F);
+        builder.define(BREATHING, false);
+        builder.define(ATTACK, DragonCombatState.NONE);
+        builder.define(ATTACK_TICK, 0);
     }
 
     @Override protected void registerGoals() {
@@ -93,6 +102,8 @@ public final class FireDragon extends TamableAnimal {
     public int hunger() { return entityData.get(HUNGER); }
     public void setHunger(int value) { entityData.set(HUNGER, Math.clamp(value, 0, 100)); }
     public boolean flying() { return entityData.get(FLYING); }
+    public int attackAnimation() { return entityData.get(ATTACK); }
+    public int attackAnimationTick() { return entityData.get(ATTACK_TICK); }
     public float flightPitch(float partialTick) {
         return previousFlightPitch + (flightPitch - previousFlightPitch) * partialTick;
     }
@@ -142,6 +153,9 @@ public final class FireDragon extends TamableAnimal {
         // Flight must be active before vanilla processes this tick's ridden movement.
         setNoGravity(flying());
         super.tick();
+        if (level() instanceof ServerLevel server) tickCombat(server);
+        prevBreathProgress = breathProgress;
+        breathProgress = Math.clamp(breathProgress + (entityData.get(BREATHING) ? 0.5F : -0.5F), 0, 10);
         prevFlyProgress = flyProgress;
         prevSitProgress = sitProgress;
         flyProgress = Math.clamp(flyProgress + (flying() ? 0.5F : -2F), 0, 20);
@@ -197,6 +211,51 @@ public final class FireDragon extends TamableAnimal {
             }
         }
         return clearance;
+    }
+
+    public Vec3 headPosition() {
+        return position().add(DragonCombatGeometry.headOffset(DragonGrowth.renderSize(ageDays()),
+                getYRot(), flightPitch, flyProgress, sitProgress));
+    }
+
+    private void tickCombat(ServerLevel server) {
+        LivingEntity rider = getControllingPassenger();
+        boolean active = isAlive() && rider != null && DragonGrowth.canCarryRider(ageDays()) && !isInWater();
+        boolean fire = active && control(DragonControlPayload.FIRE);
+        combat.tick(active, fire, stage());
+        if (active && control(DragonControlPayload.STRIKE)) {
+            combat.start(DragonCombatState.BITE);
+            LivingEntity target = DragonFireCombat.biteTarget(this, rider);
+            if (target != null) {
+                float damage = (int) getAttributeValue(Attributes.ATTACK_DAMAGE);
+                if (target.hurtServer(server, damageSources().mobAttack(this), damage)
+                        && DragonCombatConfig.current.canDragonsHealFromBiting) heal(damage * 0.1F);
+            }
+        } else if (fire && combat.breathing()) {
+            // The original rider attack chooses the charge branch with probability 1/5 each tick.
+            if (random.nextInt(5) == 0) {
+                if (combat.animation() != DragonCombatState.CHARGE) combat.start(DragonCombatState.CHARGE);
+                else if (combat.animationTick() == 20) {
+                    Vec3 direction = rider.getLookAngle().add(random.nextGaussian() * 0.0075,
+                            random.nextGaussian() * 0.0075, random.nextGaussian() * 0.0075).normalize();
+                    DragonFireCharge charge = IafContent.FIRE_DRAGON_CHARGE.create(server, EntitySpawnReason.TRIGGERED);
+                    if (charge != null) {
+                        charge.setOwner(this);
+                        charge.setPos(DragonFireCombat.clip(this, getEyePosition(), headPosition()));
+                        charge.setDeltaMovement(direction.scale(0.07));
+                        server.addFreshEntity(charge);
+                    }
+                    playSound(IafContent.FIRE_BREATH, 4, 1);
+                }
+            } else if (combat.emitting()) {
+                Vec3 head = DragonFireCombat.clip(this, getEyePosition(), headPosition());
+                DragonFireCombat.breath(server, this, head, DragonFireCombat.aim(this, rider, 10 * stage()), combat.burnProgress());
+                if (tickCount % 5 == 0) playSound(IafContent.FIRE_BREATH, 4, 1);
+            }
+        }
+        entityData.set(BREATHING, combat.breathing());
+        entityData.set(ATTACK, combat.animation());
+        entityData.set(ATTACK_TICK, combat.animationTick());
     }
 
     @Override public void onSyncedDataUpdated(EntityDataAccessor<?> key) {

@@ -1,5 +1,40 @@
 # Prompt completo per continuare il porting su un altro PC
 
+## Aggiornamento 0.1.8 — combattimento controllato, primo passaggio
+
+Ripresa tappa 1 su richiesta dell'utente. Migrati i percorsi del cavaliere:
+G morso con selezione del bersaglio lungo lo sguardo, danno da ATTACK_DAMAGE e
+guarigione opzionale; R soffio, carica oltre 20 tick, estensione a 40 tick, durata
+massima stage*25, spegnimento dello stato dopo rilascio e reset al dismount.
+Selezione casuale originale del ramo palla di fuoco (1/5 per tick), animazione
+di carica da 30 tick, emissione al tick 20 quando selezionato il ramo originale.
+Registrato fire_dragon_charge, accelerazione 0.07, impatto server e danno dragon_fire;
+renderer a cubo di magma come l'originale, suono originale firedragon_breath incluso.
+Sincronizzati stato soffio, animazione e tick; migrate pose originali bite1/2/3,
+blast_charge1/2/3 e stream_breath con keyframe. La seduta segue ancora la posa del collo.
+Protezione di drago, proprietario, passeggeri e alleati/animali dello stesso proprietario;
+bersagli creativi/spettatori esclusi. Raycast dei blocchi limita il getto, controllo
+di visibilità limita il danno ad area. Gli effetti sono esclusivamente server.
+
+Configurazione parziale config/iceandfire-combat.json, valori originali:
+dragonAttackDamageFire=2, dragonGriefing=0, tamedDragonGriefing=true,
+canDragonsHealFromBiting=true. File non valido: log di errore e default, senza riscriverlo.
+Accensione base del fuoco subordinata a mob_griefing e opzioni griefing. NON sono
+ancora migrati conversioni in blocchi carbonizzati, distruzione dell'area da charge,
+DragonForge, esplosioni opzionali, particella originale DragonFire (temporaneamente
+FLAME vanilla), IA autonoma o gli altri attacchi. Non dichiarare completo il combattimento
+originale o la tappa 1. Prossima attività: completare questi effetti/IA e inventario,
+oltre alle altre lacune elencate nel documento; nessun passaggio alla tappa 2.
+
+Build 0.1.8-stage1-dev: 38 test superati, inclusi 11 nuovi test su tempi/bersagli/pose.
+Revisione read-only con skill review-agent, senza delega: nessun ulteriore difetto
+individuato. I test non simulano danni in un vero mondo: collaudo utente necessario.
+Vedere TEST-0.1.8.md e REVIEW.md. Dorso ghast assente; punte grigie ancora aperte.
+Client 0.1.8 avviato in run/0.1.8-smoke separata: mod inizializzata, risorse,
+backend grafico, audio e atlanti caricati. Configurazione predefinita generata.
+Avvisi OSHI/Realms del profilo di sviluppo non bloccanti. Nessuna entrata in mondo
+né prova degli attacchi eseguita dall'agente; client lasciato aperto per il collaudo.
+
 ## Aggiornamento 0.1.7 — funzione ghast rimossa su richiesta
 
 L'utente revoca la richiesta del dorso solido: rimuovere completamente la funzione

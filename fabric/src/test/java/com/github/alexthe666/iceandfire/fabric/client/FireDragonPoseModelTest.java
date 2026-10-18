@@ -9,6 +9,47 @@ import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FireDragonPoseModelTest {
+    @Test void attackKeyframesKeepOriginalPoseOrderAndDurations() {
+        int bite = com.github.alexthe666.iceandfire.fabric.dragon.DragonCombatState.BITE;
+        int charge = com.github.alexthe666.iceandfire.fabric.dragon.DragonCombatState.CHARGE;
+        assertEquals("bite1", FireDragonPoseModel.attackFrame(bite, 10).from());
+        assertEquals("bite2", FireDragonPoseModel.attackFrame(bite, 15).from());
+        assertEquals("bite3", FireDragonPoseModel.attackFrame(bite, 20).from());
+        assertNull(FireDragonPoseModel.attackFrame(bite, 30).from());
+        assertEquals("attack_blast_charge1", FireDragonPoseModel.attackFrame(charge, 10).from());
+        assertEquals("attack_blast_charge2", FireDragonPoseModel.attackFrame(charge, 20).from());
+        assertEquals("attack_blast_charge3", FireDragonPoseModel.attackFrame(charge, 25).from());
+        assertNull(FireDragonPoseModel.attackFrame(charge, 30).to());
+    }
+
+    @Test void originalAttackPosesBlendContinuouslyWithoutAccumulationOrStaleSeat() {
+        var model = model();
+        var state = new FireDragonRenderer.State();
+        for (int attack : new int[]{1, 2}) {
+            state.attack = attack;
+            for (float boundary : new float[]{0, 10, 15, 20, 25, 30, 35}) {
+                state.attackTick = Math.max(0, boundary - 0.0001F);
+                model.setupAnim(state);
+                var before = rotations(model);
+                state.attackTick = boundary;
+                model.setupAnim(state);
+                var after = rotations(model);
+                for (int i = 0; i < before.length; i++) assertEquals(before[i], after[i], 0.001F);
+                var anchor = model.riderAnchor();
+                model.setupAnim(state);
+                assertArrayEquals(after, rotations(model), 0.00001F);
+                assertEquals(anchor, model.riderAnchor());
+            }
+        }
+        state.attack = 0;
+        for (float progress : new float[]{0, 0.001F, 5, 10, 5, 0}) {
+            state.breathProgress = progress;
+            model.setupAnim(state);
+            var expected = rotations(model);
+            model.setupAnim(state);
+            assertArrayEquals(expected, rotations(model), 0.00001F);
+        }
+    }
     @Test void onlyFirstPersonPilotSeesAnUntiltedDragon() {
         for (float pitch : new float[]{-60, -30, 0, 20, 40}) {
             assertEquals(0, FireDragonRenderer.viewPitch(pitch, true));

@@ -1,0 +1,6 @@
+{
+  "firedragon_breath": {
+    "sounds": [{"name": "iceandfire:mobs/dragon/fire/breath", "volume": 0.4}],
+    "subtitle": "iceandfire.sound.subtitle.firedragon_breath"
+  }
+}

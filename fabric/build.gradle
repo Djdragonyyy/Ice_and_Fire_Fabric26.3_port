@@ -45,6 +45,8 @@ processResources {
     from('../src/main/resources') {
         include 'assets/iceandfire/models/tabula/firedragon/**'
         include 'assets/iceandfire/textures/models/firedragon/**'
+        include 'assets/iceandfire/sounds/mobs/dragon/fire/breath.ogg'
+        include 'data/iceandfire/damage_type/dragon_fire.json'
         include 'assets/iceandfire/textures/item/dragon_meal.png'
         include 'assets/iceandfire/textures/item/dragonegg_red.png'
         include 'assets/iceandfire/textures/item/dragonegg_green.png'

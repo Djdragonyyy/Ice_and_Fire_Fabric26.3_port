@@ -2,12 +2,13 @@
 
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
-Versione corrente: **0.1.7-stage1-dev**. Rimossa completamente su richiesta la funzione
-del dorso solido derivata dal ghast felice, insieme a rilevamento del giocatore sopra,
-pausa e dismontaggio personalizzato. Rimane una sola seduta principale del drago.
-Build pulita e 27 test superati; prova in gioco ancora necessaria.
-Istruzioni: [TEST-0.1.7.md](TEST-0.1.7.md). I paragrafi seguenti descrivono versioni storiche;
-la funzione del dorso solido citata sotto non è più presente.
+Versione corrente: **0.1.8-stage1-dev**. Primo passaggio di combattimento controllato:
+G morso e R soffio, con palle di fuoco casuali, danno server, pose e suono originali.
+Il getto usa per ora particelle vanilla e accensione base: conversioni del terreno,
+distruzione dell'area da proiettile e IA originale devono ancora essere migrate.
+Build e 38 test superati; prova in gioco ancora necessaria.
+Istruzioni: [TEST-0.1.8.md](TEST-0.1.8.md). Unica seduta e nessun dorso solido.
+I paragrafi seguenti descrivono versioni storiche; la funzione ghast citata sotto è rimossa.
 
 Versione 0.1.4 (precedente): tilt in discesa attenuato vicino ai blocchi;
 tilt nascosto soltanto al pilota in prima persona. Nuovo comando **V: decolla**,
@@ -98,8 +99,9 @@ modelli/texture originali e interpolazione iniziale delle pose di movimento.
 
 Da completare prima di chiudere la tappa 1:
 
-- Combattimento originale, soffio, proiettile di fuoco ed effetti sui blocchi; R e G sono attualmente
-  trasmessi come input ma NON eseguono ancora gli attacchi.
+- Completare il combattimento originale oltre al primo passaggio R/G: altri attacchi,
+  IA autonoma, particella DragonFire originale, conversioni in blocchi carbonizzati,
+  distruzione dell'area da proiettile, DragonForge ed esplosioni opzionali.
 - IA originale e volo autonomo, comportamento in acqua/lava, posizione del cavaliere e discesa sicura.
 - Inventario/interfaccia e interazioni necessarie; alimentazione completa, comandi e gestione dell'uovo danneggiato.
 - Animazioni di attacco, animazioni secondarie, occhi, differenze visive maschio/femmina, suoni e particelle.

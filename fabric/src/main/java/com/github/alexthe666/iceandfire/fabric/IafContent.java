@@ -2,6 +2,8 @@ package com.github.alexthe666.iceandfire.fabric;
 
 import com.github.alexthe666.iceandfire.fabric.dragon.FireDragon;
 import com.github.alexthe666.iceandfire.fabric.dragon.FireDragonEgg;
+import com.github.alexthe666.iceandfire.fabric.dragon.DragonFireCharge;
+import net.minecraft.sounds.SoundEvent;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.minecraft.core.Registry;
@@ -21,6 +23,9 @@ import net.minecraft.world.item.context.UseOnContext;
 public final class IafContent {
     public static final EntityType<FireDragon> FIRE_DRAGON = registerDragon();
     public static final EntityType<FireDragonEgg> DRAGON_EGG = registerEgg();
+    public static final EntityType<DragonFireCharge> FIRE_DRAGON_CHARGE = registerCharge();
+    public static final SoundEvent FIRE_BREATH = Registry.register(BuiltInRegistries.SOUND_EVENT,
+            id("firedragon_breath"), SoundEvent.createVariableRangeEvent(id("firedragon_breath")));
     public static final Item DRAGON_MEAL = registerItem("dragon_meal", properties("dragon_meal"));
     public static final Item[] FIRE_EGGS = {
             registerEggItem("dragonegg_red", 0), registerEggItem("dragonegg_green", 1),
@@ -42,6 +47,13 @@ public final class IafContent {
         return Registry.register(BuiltInRegistries.ENTITY_TYPE, key,
                 EntityType.Builder.of(FireDragonEgg::new, MobCategory.MISC)
                         .sized(0.45F, 0.55F).fireImmune().clientTrackingRange(10).build(key));
+    }
+
+    private static EntityType<DragonFireCharge> registerCharge() {
+        var key = ResourceKey.create(Registries.ENTITY_TYPE, id("fire_dragon_charge"));
+        return Registry.register(BuiltInRegistries.ENTITY_TYPE, key,
+                EntityType.Builder.of(DragonFireCharge::new, MobCategory.MISC).sized(0.8F, 0.8F)
+                        .fireImmune().clientTrackingRange(16).updateInterval(1).build(key));
     }
 
     private static Item.Properties properties(String name) {

@@ -9,6 +9,7 @@ public final class IceAndFireFabricClient implements ClientModInitializer {
     public void onInitializeClient() {
         EntityRendererRegistry.register(IafContent.FIRE_DRAGON, FireDragonRenderer::new);
         EntityRendererRegistry.register(IafContent.DRAGON_EGG, FireDragonEggRenderer::new);
+        EntityRendererRegistry.register(IafContent.FIRE_DRAGON_CHARGE, DragonFireChargeRenderer::new);
         DragonKeyMappings.initialize();
     }
 }
