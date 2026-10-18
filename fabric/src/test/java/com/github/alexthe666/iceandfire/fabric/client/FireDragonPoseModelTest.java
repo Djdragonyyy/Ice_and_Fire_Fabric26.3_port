@@ -89,6 +89,27 @@ class FireDragonPoseModelTest {
         assertNotEquals(seated, model.riderAnchor(), "Seat must follow body animation");
     }
 
+    @Test void flightBobFadesContinuouslyAtTakeoffAndLanding() {
+        var model = model();
+        for (float age : new float[]{10, 25, 40}) {
+            var state = new FireDragonRenderer.State();
+            state.ageInTicks = age;
+            model.setupAnim(state);
+            var grounded = model.riderAnchor();
+            float groundedY = model.root().getChild("BodyUpper").y;
+            state.flyProgress = 0.0001F;
+            model.setupAnim(state);
+            assertEquals(groundedY, model.root().getChild("BodyUpper").y, 0.001F,
+                    "Flight bob must disappear gradually at landing");
+            assertEquals(0, grounded.distance(model.riderAnchor()), 0.001F);
+            state.flyProgress = 0;
+            state.flying = true;
+            model.setupAnim(state);
+            assertEquals(groundedY, model.root().getChild("BodyUpper").y, 0.001F,
+                    "Flight bob must start gradually at takeoff");
+        }
+    }
+
     private static float[] rotations(FireDragonPoseModel model) {
         var parts = model.root().getAllParts();
         float[] result = new float[parts.size() * 3];

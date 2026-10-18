@@ -2,7 +2,13 @@
 
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
-Per lo stato aggiornato della 0.1.2, i 16 test superati e la ripresa su un altro PC,
+Aggiornamento nuovo PC, 18 ottobre 2026: verificato il checkout pulito del ramo
+`port/fabric-26.3` al commit remoto `417f5a8d2`. Build ordinaria riuscita con JDK
+25.0.4.1+1, senza workaround ZIP. Completata la revisione 0.1.2 e corretto un salto
+del corpo/seduta nella transizione del volo; **17 test superati**. Dettagli in
+[REVIEW.md](REVIEW.md). Le punte grigie e le prove visive/in mondo rimangono aperte.
+
+Per i vincoli operativi, i risultati precedenti e la ripresa su un altro PC,
 leggere [HANDOFF.md](HANDOFF.md). I risultati del primo checkpoint riportati sotto sono storici.
 
 Base originale: ramo `1.20`, commit `0526aad94119b705a86207623481b087c4d052ca`, Minecraft 1.20.1.

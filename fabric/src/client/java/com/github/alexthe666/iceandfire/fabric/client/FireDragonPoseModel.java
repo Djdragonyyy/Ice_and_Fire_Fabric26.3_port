@@ -111,7 +111,8 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
             bob("ThighR", (float) Math.sin(phase * 0.2F) * amount * 0.85F);
             bob("ThighL", (float) Math.sin(phase * 0.2F) * amount * 0.85F);
         } else {
-            bob("BodyUpper", (float) Math.sin(-age * 0.2F) * 2.5F);
+            // Fade with the pose so the last landing frame cannot move the body/seat abruptly.
+            bob("BodyUpper", (float) Math.sin(-age * 0.2F) * 2.5F * (state.flyProgress / 20F));
         }
         // Original chainWave/chainSwing idle motion, evaluated at render time rather than at 20 Hz.
         String[] tail = {"Tail1", "Tail2", "Tail3", "Tail4"};

@@ -1,5 +1,22 @@
 # Prompt completo per continuare il porting su un altro PC
 
+## Aggiornamento della ripresa — 18 ottobre 2026
+
+Checkout recuperato dall'origin personale e verificato pulito su `port/fabric-26.3`,
+HEAD e ramo remoto entrambi `417f5a8d28bf62599e3ff84cf7bbdae06d625ba1`.
+JDK 25 assente nel PATH iniziale: scaricato localmente Azul Zulu 25.0.4.1+1 e verificato
+SHA-256 contro il catalogo ufficiale. Nessuna modifica alle impostazioni Java globali.
+Build ordinaria riuscita senza workaround ZIP sul nuovo PC. Revisione integrale 0.1.2
+completata con la skill locale `review-agent`, in sola lettura senza delega; corretto
+successivamente il bob del volo che saltava a fine atterraggio. Test di regressione
+prima fallito e poi superato; suite finale **17 test superati**, nessun fallimento.
+Vedere `REVIEW.md`. Ricerca plugin Blockbench ripetuta: nessun risultato.
+Client di sviluppo avviato: mod, grafica, audio e atlanti caricati; log di ingresso
+nel mondo locale `New World`. Nessuna prova del drago eseguita dall'agente; client
+lasciato aperto per il collaudo dell'utente. Avvisi OSHI/Realms non hanno bloccato l'avvio.
+Le istruzioni sotto descrivono il precedente passaggio e restano il riferimento per i vincoli.
+Punte grigie ancora aperte; prova utente della 0.1.2 e tappa 1 ancora incomplete.
+
 Riprendi questo progetto nella stessa repository e sul ramo indicato sotto. Comunica in italiano.
 Leggi prima gli eventuali AGENTS.md applicabili, questo file, fabric/README.md e fabric/REVIEW.md.
 Controlla stato Git, commit e sorgenti effettivi: questo documento descrive il punto di passaggio
