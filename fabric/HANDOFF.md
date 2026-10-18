@@ -1,5 +1,32 @@
 # Prompt completo per continuare il porting su un altro PC
 
+## Aggiornamento 0.1.4 — volo e visibilità
+
+Riscontro utente: tilt della 0.1.3 circa corretto, ma il drago deve raddrizzarsi in
+discesa vicino ai blocchi; in salita il corpo attraversa la prima persona; decollo
+ancora intermittente. Richieste implementate nella 0.1.4-stage1-dev:
+
+- Nove raycast contro le forme di collisione dei blocchi sotto corpo/collo/testa,
+  calcolati per tick solo in discesa. L'inclinazione positiva si attenua fino a zero
+  vicino al suolo/ostacoli, con distanza proporzionata alla dimensione visiva.
+- Solo il pilota in prima persona vede il modello senza tilt; terza persona e altri
+  giocatori mantengono il tilt. Nessuna modifica alla distanza della camera.
+- Tasto V riassegnabile per decollare; spazio tenuto oltre un secondo resta disponibile.
+  Input raccolto all'inizio del tick; breve pressione memorizzata fino al tick server,
+  attesa massima di un secondo se il dorso è occupato e nessun rilancio automatico
+  tenendo V. Stato di volo impostato prima della simulazione vanilla, impulso sul lato
+  che simula il veicolo e conservato fino al distacco da terra.
+
+Nuovo bit TAKEOFF nel payload: installare 0.1.4 su server e client insieme; non usare
+client 0.1.4 con server 0.1.3. Controllo proprietario e monta dallo stadio 3 invariati.
+Build ordinaria riuscita, 28 test superati. Revisione in sola lettura con review-agent,
+senza delega. Dettaglio in REVIEW.md e TEST-0.1.4.md. Resa visiva, rilevamento reale dei
+blocchi e affidabilità del decollo ancora da confermare in gioco dall'utente.
+La tappa 1 resta incompleta e le punte grigie sono ancora aperte. Dopo il riscontro,
+continuare combattimento e soffio, non la tappa 2.
+Client 0.1.4 avviato in directory separata con mod, grafica, audio e atlanti caricati;
+lasciato aperto per la prova. Nessuna verifica visiva del drago eseguita dall'agente.
+
 ## Aggiornamento 0.1.3 — riscontro e richieste utente
 
 L'utente conferma camera e comandi di schiusa della 0.1.2. Nuove richieste implementate:

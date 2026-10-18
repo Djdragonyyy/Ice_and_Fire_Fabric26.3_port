@@ -12,6 +12,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import net.minecraft.client.Minecraft;
 
 /** Uses the original Tabula geometry, poses and stage/variant textures. */
 public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragonRenderer.State, EntityModel<FireDragonRenderer.State>> {
@@ -47,10 +48,17 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
         state.flyProgress = dragon.prevFlyProgress + (dragon.flyProgress - dragon.prevFlyProgress) * partialTick;
         state.sitProgress = dragon.prevSitProgress + (dragon.sitProgress - dragon.prevSitProgress) * partialTick;
         state.partialTick = partialTick;
-        state.flightPitch = dragon.flightPitch(partialTick);
+        var client = Minecraft.getInstance();
+        boolean firstPersonRider = client.player != null && client.getCameraEntity() == client.player
+                && dragon.getControllingPassenger() == client.player && client.options.getCameraType().isFirstPerson();
+        state.flightPitch = viewPitch(dragon.flightPitch(partialTick), firstPersonRider);
         // The legacy renderer used renderSize / 3; the entity's bounding-box
         // scale is separately capped at seven in the original implementation.
         state.scale = DragonGrowth.renderSize(dragon.ageDays()) / 3F;
+    }
+
+    static float viewPitch(float flightPitch, boolean firstPersonRider) {
+        return firstPersonRider ? 0 : flightPitch;
     }
 
     @Override public Identifier getTextureLocation(State state) {

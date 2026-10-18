@@ -2,7 +2,13 @@
 
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
-Versione corrente: **0.1.3-stage1-dev**. Inclinazione del drago durante salita/discesa,
+Versione corrente: **0.1.4-stage1-dev**. Tilt in discesa attenuato vicino ai blocchi;
+tilt nascosto soltanto al pilota in prima persona. Nuovo comando **V: decolla**,
+riassegnabile, oltre a spazio tenuto premuto per oltre un secondo. Richiesta di decollo
+conservata tra i tick di rete e impulso iniziale mantenuto fino al distacco da terra.
+Build ordinaria e 28 test superati. Istruzioni: [TEST-0.1.4.md](TEST-0.1.4.md).
+
+Versione 0.1.3 (precedente): inclinazione del drago durante salita/discesa,
 impulso di decollo sul client pilota, seduta sulla superficie del collo anche allo stadio 5;
 dorso solido richiesto dall'utente, con arresto mentre un giocatore è sopra senza montare.
 Build ordinaria e 21 test superati. La camera della 0.1.2 è stata confermata dall'utente;

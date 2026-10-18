@@ -1,5 +1,43 @@
 # Revisione del port Fabric
 
+## Volo e visibilità 0.1.4 — 18 ottobre 2026
+
+Skill `review-agent` applicata in sola lettura, senza delega, al diff completo dalla
+0.1.3 (`284f4d25e`), inclusi nuovo stato di decollo, test e traduzioni. No findings.
+Letti i percorsi input client, payload, verifica proprietario, aggiornamento FLYING,
+simulazione del veicolo e trasformazione di rendering. Verificati con le classi
+vanilla locali la lettura di spazio e il momento della simulazione cavalcata.
+
+Correzioni: avvio del volo prima di `super.tick`, richiesta V memorizzata anche se
+arriva il rilascio prima del tick server; impulso applicato dal simulatore e non
+consumato prima del distacco. Un contatto a terra momentaneamente perso non elimina
+la spinta iniziale. Mantiene il volo già in corso senza ripetere impulsi in aria.
+Richieste annullate senza proprietario/controlli recenti, allo stadio errato o con
+discesa premuta; attesa breve sul dorso occupato e nessuna richiesta conservata
+indefinitamente. Il nuovo bit TAKEOFF richiede la stessa 0.1.4 su server e client.
+
+Il tilt positivo usa un limite graduale in funzione della distanza dai blocchi
+calcolata con nove raycast sotto corpo e collo/testa; forme COLLIDER e fluidi ignorati.
+La distanza di attenuazione è max(2 blocchi, renderSize / 4). La ricerca avviene a
+20 Hz, solo quando il tilt è positivo, e non modifica collisioni fisiche o blocchi.
+La prima persona disattiva il tilt solo se la camera è quella del pilota locale;
+la seduta renderizzata usa lo stesso stato. Camera in terza persona invariata.
+
+Build ordinaria JDK 25 riuscita: **28 test, 0 fallimenti, 0 errori**. Nuovi controlli
+su pressione breve V e rimappatura, pressione/rilascio tra due tick server, spazio
+continuo, richiesta bloccata/scaduta, tasto tenuto durante atterraggio, stadio/rilascio
+controlli, impulso con contatto perso, curva continua di raddrizzamento a ogni età
+cavalcabile e tilt locale di prima persona. Restano tutti i test precedenti.
+
+Limiti: i test matematici non sostituiscono un collaudo del rilevamento di terreno,
+gradini e sporgenze reali; non è stata misurata la prestazione con molti draghi.
+I raycast campionano il corpo e non sono una collisione esatta del modello completo.
+Serve prova utente di decollo, prima persona e atterraggio a 50/75/100/125 giorni,
+oltre al test multiplayer reale. Nessuna dichiarazione di tappa 1 completata.
+Avvio client 0.1.4 verificato in directory separata: mod, grafica, audio e atlanti
+caricati. Client lasciato aperto per la prova; nessuna verifica visiva o interazione
+del drago eseguita dall'agente. Avvisi OSHI/Realms del profilo di sviluppo già noti.
+
 ## Correzioni e dorso solido 0.1.3 — 18 ottobre 2026
 
 Riscontro utente sulla 0.1.2: camera e comandi di schiusa funzionanti; segnalati decollo

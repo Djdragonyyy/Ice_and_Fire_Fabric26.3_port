@@ -17,9 +17,11 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.HitResult;
 
 /** Initial migration of lifecycle and ownership; combat and rendering are migrated separately. */
 public final class FireDragon extends TamableAnimal {
@@ -34,11 +36,11 @@ public final class FireDragon extends TamableAnimal {
     private int appliedAge = -1;
     private int riderControls;
     private long controlsReceivedAt;
-    private int takeoffTicks;
+    private final DragonTakeoff takeoff = new DragonTakeoff();
     private int flightTicks;
     private float glidingSpeedBonus;
     private float riderWalkingLift;
-    private boolean wasFlyingDuringTravel;
+    private boolean launchPending;
     private Vec3 lastFlightPosition;
     private float flightPitch;
     private float previousFlightPitch;
@@ -115,6 +117,7 @@ public final class FireDragon extends TamableAnimal {
         if (backStillTicks > 0) getNavigation().stop();
     }
     public void setRiderControls(int flags) {
+        takeoff.acceptControls(flags);
         riderControls = flags & DragonControlPayload.ALL;
         controlsReceivedAt = level().getGameTime();
     }
@@ -141,6 +144,21 @@ public final class FireDragon extends TamableAnimal {
     @Override public void tick() {
         previousFlightPitch = flightPitch;
         updateBackPlatform();
+        if (!level().isClientSide()) {
+            boolean hasRider = getControllingPassenger() != null;
+            if (!hasRider || level().getGameTime() - controlsReceivedAt > 10) {
+                riderControls = 0;
+                takeoff.reset();
+            }
+            if (hasRider && takeoff.tick(DragonGrowth.canCarryRider(ageDays()), flying(),
+                    entityData.get(BACK_OCCUPIED), control(DragonControlPayload.UP), control(DragonControlPayload.DOWN))) {
+                entityData.set(FLYING, true);
+                flightTicks = 0;
+                launchPending = true;
+            }
+        }
+        // Flight must be active before vanilla processes this tick's ridden movement.
+        setNoGravity(flying());
         super.tick();
         prevFlyProgress = flyProgress;
         prevSitProgress = sitProgress;
@@ -153,14 +171,6 @@ public final class FireDragon extends TamableAnimal {
             if (!entityData.get(AGING_DISABLED) && age < Integer.MAX_VALUE) entityData.set(AGE_TICKS, age + 1);
             updateGrowth();
             if (tickCount % 3000 == 0) setHunger(hunger() - 1);
-            if (getControllingPassenger() == null || level().getGameTime() - controlsReceivedAt > 10) riderControls = 0;
-            takeoffTicks = control(DragonControlPayload.UP) ? takeoffTicks + 1 : 0;
-            if (!flying() && takeoffTicks > 20 && !entityData.get(BACK_OCCUPIED)
-                    && DragonGrowth.canCarryRider(ageDays())) {
-                entityData.set(FLYING, true);
-                setDeltaMovement(getDeltaMovement().add(0, 0.8, 0));
-                flightTicks = 0;
-            }
             if (flying()) {
                 flightTicks++;
                 if (onGround() && flightTicks > 20 && !control(DragonControlPayload.UP)) {
@@ -174,6 +184,8 @@ public final class FireDragon extends TamableAnimal {
             Vec3 movement = lastFlightPosition == null ? Vec3.ZERO : position().subtract(lastFlightPosition);
             flightPitch = DragonFlightMotion.nextPitch(flightPitch, movement.y,
                     Math.abs(movement.x) + Math.abs(movement.z), flying());
+            if (flightPitch > 0) flightPitch = DragonFlightMotion.limitDescentPitch(
+                    flightPitch, descentClearance(), DragonGrowth.renderSize(ageDays()));
             if (!level().isClientSide()) entityData.set(FLIGHT_PITCH, flightPitch);
         } else flightPitch = entityData.get(FLIGHT_PITCH);
         lastFlightPosition = position();
@@ -183,19 +195,45 @@ public final class FireDragon extends TamableAnimal {
                 : Math.max(0, riderWalkingLift - 0.15F);
     }
 
+    private double descentClearance() {
+        float size = DragonGrowth.renderSize(ageDays());
+        double range = DragonFlightMotion.descentFadeDistance(size);
+        double yaw = Math.toRadians(getYRot());
+        double halfWidth = getBbWidth() * 0.5;
+        double clearance = range;
+        // Sample the body footprint and the forward neck/head, including ledges and slabs.
+        // Nine block-shape rays per tick only while pitching down, never per render frame.
+        for (double forward : new double[]{0, size * 0.275, size * 0.55}) {
+            for (double side : new double[]{-halfWidth, 0, halfWidth}) {
+                double x = getX() - Math.sin(yaw) * forward + Math.cos(yaw) * side;
+                double z = getZ() + Math.cos(yaw) * forward + Math.sin(yaw) * side;
+                Vec3 start = new Vec3(x, getBoundingBox().maxY, z);
+                Vec3 end = new Vec3(x, getY() - range, z);
+                var hit = level().clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+                if (hit.getType() != HitResult.Type.MISS) clearance = Math.min(clearance,
+                        Math.max(0, getY() - hit.getLocation().y));
+            }
+        }
+        return clearance;
+    }
+
+    @Override public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+        if (FLYING.equals(key)) launchPending = flying() && getControllingPassenger() != null;
+    }
+
     @Override public void travel(Vec3 input) {
         if (entityData.get(BACK_OCCUPIED)) {
             setDeltaMovement(Vec3.ZERO);
             return;
         }
-        boolean beginningFlight = flying() && !wasFlyingDuringTravel;
-        wasFlyingDuringTravel = flying();
-        if (!flying()) { super.travel(input); return; }
+        if (!flying()) { launchPending = false; super.travel(input); return; }
         LivingEntity rider = getControllingPassenger();
         if (isLocalInstanceAuthoritative()) {
-            // The owner client simulates ridden flight: the server-only impulse was lost there.
+            // Keep the launch request until the simulator actually leaves the ground.
             var motion = getDeltaMovement();
-            setDeltaMovement(motion.x, DragonFlightMotion.takeoffVelocity(motion.y, onGround(), beginningFlight), motion.z);
+            boolean rising = control(DragonControlPayload.UP) && !control(DragonControlPayload.DOWN);
+            setDeltaMovement(motion.x, DragonFlightMotion.takeoffVelocity(motion.y, launchPending, onGround(), rising), motion.z);
             double speed = getAttributeValue(Attributes.MOVEMENT_SPEED);
             // Original EntityDragonBase air-speed curve, local acceleration and drag.
             float flightSpeed = (float) (speed * (5.2F + (speed - 0.15F) / (0.4F - 0.15F) * 1.5F));
@@ -222,6 +260,7 @@ public final class FireDragon extends TamableAnimal {
             setSpeed(flightSpeed);
             moveRelative(flightSpeed, new Vec3(strafe, vertical, forward));
             move(MoverType.SELF, getDeltaMovement());
+            if (!onGround()) launchPending = false;
             setDeltaMovement(getDeltaMovement().scale(0.9));
         } else {
             setDeltaMovement(Vec3.ZERO);

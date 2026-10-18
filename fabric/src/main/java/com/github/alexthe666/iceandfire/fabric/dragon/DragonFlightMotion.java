@@ -13,7 +13,18 @@ public final class DragonFlightMotion {
         return pitch;
     }
 
-    public static double takeoffVelocity(double currentY, boolean grounded, boolean beginningFlight) {
-        return grounded && beginningFlight ? Math.max(currentY, 0.8) : currentY;
+    public static double takeoffVelocity(double currentY, boolean launchPending, boolean grounded, boolean rising) {
+        return launchPending || (grounded && rising) ? Math.max(currentY, 0.8) : currentY;
+    }
+
+    public static double descentFadeDistance(float renderSize) {
+        return Math.max(2, renderSize * 0.25);
+    }
+
+    public static float limitDescentPitch(float pitch, double clearance, float renderSize) {
+        if (pitch <= 0) return pitch;
+        float amount = (float) Math.clamp(clearance / descentFadeDistance(renderSize), 0, 1);
+        // Smoothstep keeps both ends of the visual transition flat.
+        return Math.min(pitch, 40 * amount * amount * (3 - 2 * amount));
     }
 }

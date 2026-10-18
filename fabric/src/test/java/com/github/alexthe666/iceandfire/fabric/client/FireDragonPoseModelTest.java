@@ -9,6 +9,12 @@ import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FireDragonPoseModelTest {
+    @Test void onlyFirstPersonPilotSeesAnUntiltedDragon() {
+        for (float pitch : new float[]{-60, -30, 0, 20, 40}) {
+            assertEquals(0, FireDragonRenderer.viewPitch(pitch, true));
+            assertEquals(pitch, FireDragonRenderer.viewPitch(pitch, false));
+        }
+    }
     @Test void riderPlacementMatchesVanillaModelTransformAtEveryHeadingAndScale() {
         for (float size : new float[]{7F / 3F, 12.5F / 3F, 20F / 3F, 10F}) {
             for (float yaw : new float[]{0, 90, 180, 237}) {

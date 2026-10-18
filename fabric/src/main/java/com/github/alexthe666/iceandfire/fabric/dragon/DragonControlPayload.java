@@ -13,7 +13,8 @@ public record DragonControlPayload(int flags) implements CustomPacketPayload {
     public static final int DOWN = 2;
     public static final int FIRE = 4;
     public static final int STRIKE = 8;
-    public static final int ALL = UP | DOWN | FIRE | STRIKE;
+    public static final int TAKEOFF = 16;
+    public static final int ALL = UP | DOWN | FIRE | STRIKE | TAKEOFF;
     public static final Type<DragonControlPayload> TYPE = new Type<>(IafContent.id("dragon_control"));
     public static final StreamCodec<RegistryFriendlyByteBuf, DragonControlPayload> CODEC = StreamCodec.of(
             (buffer, payload) -> buffer.writeByte(payload.flags), buffer -> new DragonControlPayload(buffer.readUnsignedByte()));
