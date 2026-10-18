@@ -15,7 +15,11 @@ Nessuna modifica di produzione, asset o versione della mod. Analizzati i pixel d
 texture originali: colore osso e trasparenze presenti già negli asset; rapporto 2x tra
 PNG e dimensioni UV logiche coerente. Questo non riproduce il rendering effettivo sul
 profilo dell'utente né dimostra che l'aspetto vuoto dello screenshot sia corretto.
-La causa visiva resta aperta; necessarie vista laterale esterna e configurazione grafica.
+La causa visiva resta aperta. L'utente conferma riproduzione anche da fuori/di lato
+con sole Ice and Fire e Fabric API. Necessaria un'immagine laterale ravvicinata per
+il confronto visivo. Verificati successivamente alpha base 0/255 (un solo texel alpha 1),
+soglia vanilla cutout 0.1, culling già disattivato e overlay maschile trasparente sui
+campioni delle punte. Non individuata una differenza di soglia o UV da correggere.
 
 ## Dismontaggio sul dorso 0.1.5 — 18 ottobre 2026
 

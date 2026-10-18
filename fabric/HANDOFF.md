@@ -14,9 +14,14 @@ Il colore osso chiaro è presente nelle texture originali. Alcune facce hanno al
 trasparente: ad esempio SOUTH della punta 1x1x2 ha 0/4 texel visibili in red_1 e 2/4
 in red_5. Le altre tre varianti allo stadio 5 condividono questi pixel osso.
 Nessuna modifica a modello, texture o renderer e nessuna nuova versione JAR per questa
-diagnosi. Prima di cambiare UV in Blockbench serve riproduzione da fuori, di lato,
-e conferma di shader/resource pack/altre mod grafiche. Domande inviate all'utente;
-risposte e ulteriore vista laterale ancora necessarie. Restano validi i JAR 0.1.5.
+diagnosi. L'utente conferma che il difetto compare anche da fuori e di lato, usando
+solo Ice and Fire e Fabric API: non attribuirlo alla prima persona o a shader esterni.
+Controllata anche la composizione originale ArrayLayeredTexture: overlay maschile
+trasparente sui campioni delle punte. PNG base con alpha 0/255, salvo un texel quasi
+trasparente; pipeline vanilla entityCutout con soglia 0.1 e culling disattivato.
+Serve ancora un'immagine laterale ravvicinata dello stesso drago per confrontare
+la forma delle facce con quella prevista dagli asset; non spostare UV alla cieca.
+Restano validi i JAR 0.1.5, difetto visivo ancora aperto.
 
 ## Aggiornamento 0.1.5 — dismontaggio sul dorso
 
