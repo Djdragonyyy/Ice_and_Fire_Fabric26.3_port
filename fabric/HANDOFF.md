@@ -1,5 +1,18 @@
 # Prompt completo per continuare il porting su un altro PC
 
+## Passaggio a un altro PC — 19 ottobre 2026
+
+Su richiesta dell'utente, aggiunto in radice PROMPT_RIPRESA_TEMPORANEO.md, pronto
+da copiare nella nuova chat dopo il pull del ramo port/fabric-26.3. Ultimo commit
+funzionale b3c265a78, versione 0.1.11-stage1-dev; il successivo commit documentale
+include questo passaggio. La 0.1.10 è confermata dall'utente; la 0.1.11 ha build,
+45 JUnit e 15 GameTest passati, ma il collaudo utente delle nuove interazioni resta
+da fare. Nessuna modifica funzionale in questo passaggio. Tutti i sorgenti, test,
+asset selezionati e documentazione sono versionati. JAR/build, cache, JDK e outputs
+locali non vengono trasferiti dal pull: ricostruire e consegnare i due JAR sul nuovo
+PC. Il prompt temporaneo si può rimuovere dopo aver recepito la ripresa; conservare
+questo handoff. Origin corrente è Djdragonyyy, non gli username storici citati sotto.
+
 ## Aggiornamento 0.1.11 — alimentazione, comandi e seguito a terra
 
 L'utente conferma perfettamente funzionante la 0.1.10 (fuoco, anteprima e spalle)
