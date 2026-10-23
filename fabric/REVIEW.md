@@ -1,5 +1,39 @@
 # Revisione del port Fabric
 
+## Volo autonomo e nido 0.1.12 — 23 ottobre 2026
+
+Skill locale review-agent applicata in sola lettura al diff completo da
+91f9d4baa, inclusi nuovi file, test, fixture e launcher Windows, senza delega.
+No findings. Controllati anche il test aggiuntivo del ciclo completo da 42 blocchi
+e il diff finale senza errori whitespace. Nessuna modifica durante la revisione.
+
+Confrontati IafDragonLogic, IafDragonFlightManager, DragonAIEscort,
+DragonAIReturnToRoost, DragonUtils e i default di IafConfig; verificata l'API 26.3
+nel bytecode locale (isBrightOutside, world clocks, collisioni e GameTest).
+Controllati autorità server, limiti età/pilota/spalle, precedenza dei comandi,
+rilascio e reset dello stato, persistenza e sincronizzazione hovering, dimensione
+della casa, guardie su bersagli verticali e velocità zero, cap delle accelerazioni,
+interruzione al target non raggiungibile. Il ramo di simulazione cavalcato conserva
+camera, input, seduta e un solo passeggero; nessun nuovo payload o mixin.
+
+Build pulita con JDK25: 50 JUnit senza errori e 23 GameTest della mod superati,
+più baseline vanilla escluso. Nuovi test: sterzo e avanzamento numerico, posa
+hovering confrontata agli asset originali, crescita/clearance/NoAI/pilota,
+decollo-seguito-seduto con movimento e atterraggio reali, NBT/sync stadio2,
+limite 2000, ritorno a piedi e dall'aria, ciclo completo da 42 blocchi, comandi e
+dimensione. Fixture 48x96x48: il cubo standard limitava artificialmente le prove.
+
+
+Client 0.1.12 avviato in run/0.1.12-smoke con init script locale che cambia
+soltanto la directory di esecuzione: caricati mod, OpenGL, audio e atlanti.
+Terminato dall'agente dopo il caricamento. Nessuna entrata in mondo o verifica
+visiva del drago; avvisi OSHI/Realms del profilo di sviluppo non bloccanti.
+
+Rischi residui: il manager aereo verifica visibilità e destinazione ma non aggira
+ogni ostacolo complesso; nessun benchmark con molti draghi, collaudo interattivo o
+multiplayer con due veri client. Acqua/lava complete, combattimento autonomo,
+sonno e altre lacune della tappa 1 ancora aperti. Punte grigie non modificate.
+
 ## Alimentazione e comandi 0.1.11 — 18 ottobre 2026
 
 Review-agent applicata in sola lettura al diff completo da 0be657b51, inclusi nuovi

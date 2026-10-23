@@ -2,7 +2,14 @@
 
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
-Versione corrente: **0.1.11-stage1-dev**. Alimentazione con carne, pasto malaticcio
+Versione corrente: **0.1.12-stage1-dev**. Volo autonomo dallo stadio 2,
+hovering e posa originale, seguito in aria senza teletrasporto, atterraggio su
+comando e ritorno notturno alla casa a piedi/in volo. Pilota sempre dallo stadio 3.
+Build pulita, 50 JUnit e 23 GameTest della mod passati (baseline vanilla escluso).
+Istruzioni e limiti: [TEST-0.1.12.md](TEST-0.1.12.md). Nessuna conferma visiva o
+multiplayer delle novità. Tappa 1 incompleta e punte grigie ancora aperte.
+
+Versione precedente: **0.1.11-stage1-dev**. Alimentazione con carne, pasto malaticcio
 per bloccare la crescita, pasto creativo e bastone originale dragon_stick.
 Comandi libero/seduto/seguimi, seguito a terra, casa persistente e limite di
 vagabondaggio. 45 JUnit e 15 GameTest della mod superati; client avviato.

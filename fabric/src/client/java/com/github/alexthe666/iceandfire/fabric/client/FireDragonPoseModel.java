@@ -34,7 +34,7 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
                     (cube.minX + cube.maxX) / 32F, cube.minY / 16F, cube.maxZ / 16F);
         });
         if (!Float.isFinite(seatSurface.y)) throw new IllegalStateException("Missing neck seat geometry");
-        for (String name : List.of("base_male", "base_female", "flying", "sitting", "sitting_shoulder", "walk1", "walk2", "walk3", "walk4",
+        for (String name : List.of("base_male", "base_female", "flying", "hovering", "sitting", "sitting_shoulder", "walk1", "walk2", "walk3", "walk4",
                 "flight1", "flight2", "flight3", "flight4", "flight5", "flight6",
                 "bite1", "bite2", "bite3", "attack_blast_charge1", "attack_blast_charge2", "attack_blast_charge3", "attack_stream_breath")) {
             poses.put(name, loader.apply(name));
@@ -55,7 +55,7 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
 
     @Override public void setupAnim(FireDragonRenderer.State state) {
         super.setupAnim(state);
-        boolean walking = !state.flying && state.flyProgress <= 0;
+        boolean walking = !state.flying && state.flyProgress <= 0 && state.hoverProgress <= 0;
         float cycle = animationCycle(walking ? state.walkCycle : state.flightCycle, state.partialTick, walking);
         int current = (int) (cycle / 10);
         int previous = current == 0 ? (walking ? 3 : 5) : current - 1;
@@ -87,10 +87,18 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
                 if (sitting != null) transition(cube, sitting, state.sitProgress / 20F);
             }
             if (!walking && flight != null) {
-                float amount = state.flyProgress / 20F;
+                float amount = Math.min(20, state.flyProgress + state.hoverProgress) / 20F;
                 cube.xRot += amount * distance(cube.xRot, previousPose.xRot + frame * distance(previousPose.xRot, currentPose.xRot));
                 cube.yRot += amount * distance(cube.yRot, previousPose.yRot + frame * distance(previousPose.yRot, currentPose.yRot));
                 cube.zRot += amount * distance(cube.zRot, previousPose.zRot + frame * distance(previousPose.zRot, currentPose.zRot));
+            }
+        }
+        if (state.hoverProgress > 0) {
+            for (var entry : parts.entrySet()) {
+                String name = entry.getKey();
+                if (name.contains("Wing") || name.contains("Finger") || name.startsWith("arm") || name.contains("Tail")) continue;
+                ModelPart hover = poses.get("hovering").parts().get(name);
+                if (hover != null) transition(entry.getValue(), hover, state.hoverProgress / 20F);
             }
         }
         applySecondaryMotion(state, walking);

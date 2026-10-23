@@ -1,5 +1,58 @@
 # Prompt completo per continuare il porting su un altro PC
 
+## Aggiornamento 0.1.12 — 23 ottobre 2026, ripresa su questo PC
+
+Clonato origin personale Djdragonyyy e usato esclusivamente port/fabric-26.3;
+git switch e git pull --ff-only origin port/fabric-26.3 riusciti. Base di ripresa
+91f9d4baa (ultimo funzionale b3c265a78). Nessuna modifica locale preesistente.
+JDK 25 assente: scaricato localmente Azul Zulu 25.0.4.1+1, verificato SHA-256
+5e91bc55aaa08750370d60b7030bb79193901ce1e93aba31becbf78c3ade5826 dal catalogo
+ufficiale. JAVA_HOME/GRADLE_USER_HOME solo nei processi, nessuna config globale.
+Il launcher .bat con JAVA_HOME/bin/java.exe falliva nella creazione dei file cache;
+separatore Windows corretto in JAVA_HOME\bin\java.exe. Nessun workaround ZipFS.
+Baseline 0.1.11 ricostruita: 45 JUnit e 15 GameTest della mod superati.
+
+Checkpoint 0.1.12-stage1-dev: primo flight manager autonomo non di combattimento,
+adattato da IafDragonFlightManager, IafDragonLogic, DragonUtils e ReturnToRoost.
+Decollo dallo stadio 2, verifica spazio, 40 tick hovering, probabilità 1/1500 per
+il vagabondaggio diurno, seguito oltre 30 blocchi/differenza Y>8 entro 2000, niente
+teletrasporto o caricamento chunk per inseguire. Sterzo originale con guardie su
+bersagli verticali/velocità zero, cap simmetrico dell'accelerazione, target maxY256.
+Atterraggio dopo oltre 6000 tick di crociera, comando seduto, proprietario fuori
+portata o rotta non disponibile. Simulazione autonoma server distinta dal pilota.
+Hovering sincronizzato/persistito, posa originale e battito d'ali; il salvataggio
+Flying ammette lo stadio 2 senza sbloccare il pilota prima dello stadio 3.
+
+Ritorno notturno alla casa nella dimensione corretta, con comandi 1/2 prioritari:
+a piedi vicino al nido; decollo oltre 40 blocchi, approccio aereo e atterraggio.
+La rotta resta attiva durante l'avvicinamento finché il drago atterra; evita di
+riprendere il vagabondaggio in aria all'ingresso del raggio del nido. Con casa
+impostata il drago non vagabonda a terra di notte. Sonno completo NON migrato.
+Limite deliberato: bersagli con visibilità e collisione disponibile, nessun
+pathfinder aereo completo per aggirare edifici/caverne. Default originali ancora
+fissi, comportamento completo acqua/lava e attacchi aerei restano da migrare.
+
+Build clean build runGametest riuscita: 50 JUnit e 23 GameTest della mod,
+più always_pass vanilla non conteggiato. Otto nuovi GameTest con movimento reale,
+arrivo a casa e atterraggio, anche ciclo completo a 42 blocchi dal nido; arena
+48x96x48 separata perché il cubo standard 8x8x8 bloccava il percorso ai confini.
+Non sono state indebolite le asserzioni: il rientro ora richiede arrivo/atterraggio.
+Skill locale review-agent trovata, letta e applicata in sola lettura al diff
+completo da 91f9d4baa, senza delega; No findings. Dettaglio in REVIEW.md.
+
+
+Client 0.1.12 avviato in run/0.1.12-smoke con init script locale che cambia
+soltanto la directory di esecuzione: caricati mod, OpenGL, audio e atlanti.
+Terminato dall'agente dopo il caricamento. Nessuna entrata in mondo o verifica
+visiva del drago; avvisi OSHI/Realms del profilo di sviluppo non bloccanti.
+
+Vedere TEST-0.1.12.md. Nessuna conferma utente delle novità 0.1.11/0.1.12;
+la 0.1.10 resta l'ultima confermata dall'utente. Nessun collaudo visivo o con due
+veri client eseguito dall'agente. Tappa 1 incompleta, punte grigie ancora aperte,
+dorso ghast assente. Prossimo blocco: combattimento autonomo e altri attacchi,
+cibo raccolto a terra, altre interazioni/animazioni, sonno/riproduzione/stendardo.
+Non avviare la tappa 2. Conservare la consegna dei due JAR e i vincoli Git.
+
 ## Passaggio a un altro PC — 19 ottobre 2026
 
 Su richiesta dell'utente, aggiunto in radice PROMPT_RIPRESA_TEMPORANEO.md, pronto

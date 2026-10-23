@@ -5,7 +5,7 @@
   "name": "Ice and Fire integration tests",
   "environment": "server",
   "entrypoints": {
-    "fabric-gametest": ["com.github.alexthe666.iceandfire.fabric.dragon.DragonInventoryTerrainGameTests", "com.github.alexthe666.iceandfire.fabric.dragon.DragonInteractionGameTests"]
+    "fabric-gametest": ["com.github.alexthe666.iceandfire.fabric.dragon.DragonInventoryTerrainGameTests", "com.github.alexthe666.iceandfire.fabric.dragon.DragonInteractionGameTests", "com.github.alexthe666.iceandfire.fabric.dragon.DragonFlightGameTests"]
   },
   "depends": {"iceandfire": "*", "fabric-gametest-api-v1": "*"}
 }

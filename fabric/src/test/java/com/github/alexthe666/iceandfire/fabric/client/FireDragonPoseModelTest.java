@@ -9,6 +9,36 @@ import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FireDragonPoseModelTest {
+    @Test void hoveringUsesOriginalBodyPoseAndKeepsWingCycleWithoutAccumulation() throws IOException {
+        var model = model();
+        var state = new FireDragonRenderer.State();
+        state.flying = true;
+        state.hoverProgress = 20;
+        model.setupAnim(state);
+        Path file = Path.of(System.getProperty("iceandfire.legacyResources"),
+                "assets/iceandfire/models/tabula/firedragon/firedragon_hovering.tbl");
+        try (var input = Files.newInputStream(file)) {
+            var original = TabulaLoader.parse(input);
+            for (String name : new String[]{"BodyUpper", "ThighR", "ThighL"}) {
+                var actual = find(model.root(), name);
+                var expected = original.parts().get(name);
+                assertEquals(Math.sin(expected.xRot), Math.sin(actual.xRot), 0.00001);
+                assertEquals(Math.cos(expected.zRot), Math.cos(actual.zRot), 0.00001);
+            }
+        }
+        var first = rotations(model);
+        model.setupAnim(state);
+        assertArrayEquals(first, rotations(model), 0.00001F);
+        state.flightCycle = 20;
+        model.setupAnim(state);
+        assertFalse(java.util.Arrays.equals(first, rotations(model)), "Hovering still flaps the wings");
+        state.hoverProgress = 0;
+        state.flying = false;
+        model.setupAnim(state);
+        var ground = rotations(model);
+        model.setupAnim(new FireDragonRenderer.State());
+        assertArrayEquals(ground, rotations(model), 0.00001F, "Hover pose must reset on landing");
+    }
     @Test void carriedDragonUsesOriginalFoldedPoseAndResetsAfterRelease() throws IOException {
         var model = model();
         var state = new FireDragonRenderer.State();

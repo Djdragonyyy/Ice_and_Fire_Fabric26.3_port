@@ -26,6 +26,7 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
         int walkCycle;
         int flightCycle;
         float flyProgress;
+        float hoverProgress;
         float sitProgress;
         float partialTick;
         float flightPitch;
@@ -54,6 +55,7 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
         state.walkCycle = dragon.walkCycle;
         state.flightCycle = dragon.flightCycle;
         state.flyProgress = dragon.prevFlyProgress + (dragon.flyProgress - dragon.prevFlyProgress) * partialTick;
+        state.hoverProgress = dragon.prevHoverProgress + (dragon.hoverProgress - dragon.prevHoverProgress) * partialTick;
         state.sitProgress = dragon.prevSitProgress + (dragon.sitProgress - dragon.prevSitProgress) * partialTick;
         state.partialTick = partialTick;
         state.attack = dragon.attackAnimation();

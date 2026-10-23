@@ -32,6 +32,7 @@ public final class FireDragon extends TamableAnimal {
     private static final EntityDataAccessor<Boolean> MALE = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> AGING_DISABLED = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> FLYING = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> HOVERING = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Float> FLIGHT_PITCH = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Boolean> BREATHING = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> ATTACK = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.INT);
@@ -50,6 +51,8 @@ public final class FireDragon extends TamableAnimal {
         }
     };
     private final DragonCombatState combat = new DragonCombatState();
+    final DragonFlightManager flightManager = new DragonFlightManager(this);
+    public float hoverProgress, prevHoverProgress;
     public float breathProgress, prevBreathProgress;
     private int appliedAge = -1;
     private int riderControls;
@@ -93,6 +96,7 @@ public final class FireDragon extends TamableAnimal {
         builder.define(MALE, false);
         builder.define(AGING_DISABLED, false);
         builder.define(FLYING, false);
+        builder.define(HOVERING, false);
         builder.define(FLIGHT_PITCH, 0F);
         builder.define(BREATHING, false);
         builder.define(ATTACK, DragonCombatState.NONE);
@@ -106,11 +110,12 @@ public final class FireDragon extends TamableAnimal {
     @Override protected void registerGoals() {
         goalSelector.addGoal(0, new FloatGoal(this));
         goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
+        goalSelector.addGoal(3, new DragonReturnToRoostGoal(this));
         goalSelector.addGoal(4, new DragonEscortGoal(this));
         goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1) {
             { setInterval(20); }
-            @Override public boolean canUse() { return canMoveOnGround() && command() != 2 && super.canUse(); }
-            @Override public boolean canContinueToUse() { return canMoveOnGround() && command() != 2 && super.canContinueToUse(); }
+            @Override public boolean canUse() { return canMoveOnGround() && command() != 2 && (level().isBrightOutside() || !hasHome()) && !flightManager.wantsRoost() && super.canUse(); }
+            @Override public boolean canContinueToUse() { return canMoveOnGround() && command() != 2 && (level().isBrightOutside() || !hasHome()) && !flightManager.wantsRoost() && super.canContinueToUse(); }
         });
         goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 8));
         goalSelector.addGoal(8, new RandomLookAroundGoal(this));
@@ -128,10 +133,14 @@ public final class FireDragon extends TamableAnimal {
     public void setCommand(int value) {
         entityData.set(COMMAND, Math.clamp(value, 0, 2));
         setOrderedToSit(command() == 1);
+        flightManager.commandChanged();
         getNavigation().stop();
     }
     public boolean canMoveOnGround() {
-        return isAlive() && !isOrderedToSit() && !flying() && !isVehicle() && !isPassenger() && shoulderCarrier() == null;
+        return canMoveAutonomously() && !flying();
+    }
+    public boolean canMoveAutonomously() {
+        return isAlive() && !isNoAi() && command() != 1 && !isVehicle() && !isPassenger() && shoulderCarrier() == null;
     }
     public boolean hasDragonHome() { return dragonHome != null; }
     public String homeDimension() { return homeDimension; }
@@ -146,6 +155,11 @@ public final class FireDragon extends TamableAnimal {
     }
     public void setHunger(int value) { entityData.set(HUNGER, Math.clamp(value, 0, 100)); }
     public boolean flying() { return entityData.get(FLYING); }
+    public boolean hovering() { return entityData.get(HOVERING); }
+    void setAutonomousFlight(boolean airborne, boolean hovering) {
+        entityData.set(FLYING, airborne);
+        entityData.set(HOVERING, airborne && hovering);
+    }
     public int attackAnimation() { return entityData.get(ATTACK); }
     public int attackAnimationTick() { return entityData.get(ATTACK_TICK); }
     public int armorParts() { return entityData.get(ARMOR_PARTS); }
@@ -212,11 +226,12 @@ public final class FireDragon extends TamableAnimal {
             }
             if (hasRider && takeoff.tick(DragonGrowth.canCarryRider(ageDays()), flying(),
                     control(DragonControlPayload.UP), control(DragonControlPayload.DOWN))) {
-                entityData.set(FLYING, true);
+                setAutonomousFlight(true, false);
                 flightTicks = 0;
                 launchPending = true;
             }
         }
+        if (level() instanceof ServerLevel) flightManager.tick();
         // Flight must be active before vanilla processes this tick's ridden movement.
         setNoGravity(flying() || carrier != null);
         super.tick();
@@ -224,12 +239,14 @@ public final class FireDragon extends TamableAnimal {
         prevBreathProgress = breathProgress;
         breathProgress = Math.clamp(breathProgress + (entityData.get(BREATHING) ? 0.5F : -0.5F), 0, 10);
         prevFlyProgress = flyProgress;
+        prevHoverProgress = hoverProgress;
+        hoverProgress = Math.clamp(hoverProgress + (hovering() ? 0.5F : -2F), 0, 20);
         prevSitProgress = sitProgress;
         prevShoulderProgress = shoulderProgress;
         shoulderProgress = Math.clamp(shoulderProgress + (carrier != null ? 0.5F : -0.5F), 0, 20);
-        flyProgress = Math.clamp(flyProgress + (flying() ? 0.5F : -2F), 0, 20);
+        flyProgress = Math.clamp(flyProgress + (flying() && !hovering() ? 0.5F : -2F), 0, 20);
         // orderedToSit is a server-only vanilla field; COMMAND is synchronized to observers.
-        sitProgress = Math.clamp(sitProgress + (command() == 1 ? 0.5F : -0.5F), 0, 20);
+        sitProgress = Math.clamp(sitProgress + (command() == 1 && !flying() ? 0.5F : -0.5F), 0, 20);
         if (level().isClientSide()) walkCycle = walkCycle < 39 ? walkCycle + 1 : 0;
         flightCycle = flightCycle < 58 ? flightCycle + 2 : 0;
         if (!level().isClientSide()) {
@@ -239,7 +256,7 @@ public final class FireDragon extends TamableAnimal {
             if (tickCount % 3000 == 0) setHunger(hunger() - 1);
             if (flying()) {
                 flightTicks++;
-                if (onGround() && flightTicks > 20 && !control(DragonControlPayload.UP)) {
+                if (getControllingPassenger() != null && onGround() && flightTicks > 20 && !control(DragonControlPayload.UP)) {
                     entityData.set(FLYING, false);
                     flightTicks = 0;
                 }
@@ -364,6 +381,14 @@ public final class FireDragon extends TamableAnimal {
     @Override public void travel(Vec3 input) {
         if (isPassenger() || shoulderCarrier() != null) { setDeltaMovement(Vec3.ZERO); return; }
         if (!flying()) { launchPending = false; super.travel(input); return; }
+        if (getControllingPassenger() == null) {
+            launchPending = false;
+            if (isLocalInstanceAuthoritative()) {
+                move(MoverType.SELF, getDeltaMovement());
+                setDeltaMovement(getDeltaMovement().scale(0.9));
+            } else setDeltaMovement(Vec3.ZERO);
+            return;
+        }
         LivingEntity rider = getControllingPassenger();
         if (isLocalInstanceAuthoritative()) {
             // Keep the launch request until the simulator actually leaves the ground.
@@ -570,6 +595,7 @@ public final class FireDragon extends TamableAnimal {
         output.putBoolean("Gender", male());
         output.putBoolean("AgingDisabled", entityData.get(AGING_DISABLED));
         output.putBoolean("Flying", flying());
+        output.putBoolean("Hovering", hovering());
         output.putInt("Command", command());
         output.putBoolean("HasHomePosition", hasDragonHome());
         if (dragonHome != null) {
@@ -590,7 +616,8 @@ public final class FireDragon extends TamableAnimal {
         setHunger(input.getIntOr("Hunger", 50));
         setMale(input.getBooleanOr("Gender", false));
         entityData.set(AGING_DISABLED, input.getBooleanOr("AgingDisabled", false));
-        entityData.set(FLYING, input.getBooleanOr("Flying", false) && DragonGrowth.canCarryRider(ageDays()));
+        flightManager.reset();
+        setAutonomousFlight(input.getBooleanOr("Flying", false) && stage() >= 2, input.getBooleanOr("Hovering", false));
         setCommand(input.getIntOr("Command", isOrderedToSit() ? 1 : 0));
         dragonHome = input.getBooleanOr("HasHomePosition", false)
                 ? new BlockPos(input.getIntOr("HomeAreaX", 0), input.getIntOr("HomeAreaY", 0), input.getIntOr("HomeAreaZ", 0)) : null;
