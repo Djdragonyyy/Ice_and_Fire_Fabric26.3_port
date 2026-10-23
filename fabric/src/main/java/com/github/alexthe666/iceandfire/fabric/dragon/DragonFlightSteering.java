@@ -10,7 +10,7 @@ final class DragonFlightSteering {
 
     static Step towards(Vec3 offset, float yaw, double speed) {
         double plane = offset.horizontalDistance();
-        double horizontalScale = plane < 1.0e-6 ? 0 : Math.clamp(1 - Math.abs(offset.y * 0.7) / plane, 0, 1);
+        double horizontalScale = plane < 1.0e-6 ? 0 : Math.clamp(1 - Math.abs(offset.y * 0.7) / plane, 0.2, 1);
         Vec3 direction = new Vec3(offset.x * horizontalScale, offset.y, offset.z * horizontalScale);
         double distance = direction.length();
         if (distance <= 1) return new Step(Vec3.ZERO, yaw, 0.2);

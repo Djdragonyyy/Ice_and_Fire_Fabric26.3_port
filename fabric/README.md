@@ -2,7 +2,15 @@
 
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
-Versione corrente: **0.1.12-stage1-dev**. Volo autonomo dallo stadio 2,
+Versione corrente: **0.1.13-stage1-dev**. Corretti gli overlay testa/coda tramite
+ordine di disegno; verifica grafica nel client con confronto prima/dopo e 32 icone.
+Seguito terrestre/aereo più rapido e stabile, recupero con teletrasporto sicuro
+a150 blocchi, volo autonomo libero/seguimi verificato con movimento reale.
+53 JUnit, 27 GameTest della mod e una prova client con mondo/screenshot.
+[TEST-0.1.13.md](TEST-0.1.13.md) e [riepilogo cumulativo della tappa1](STATO-TAPPA-1.md).
+Tappa1 incompleta: attendere il riscontro su queste correzioni prima di proseguire.
+
+Versione precedente: **0.1.12-stage1-dev**. Volo autonomo dallo stadio 2,
 hovering e posa originale, seguito in aria senza teletrasporto, atterraggio su
 comando e ritorno notturno alla casa a piedi/in volo. Pilota sempre dallo stadio 3.
 Build pulita, 50 JUnit e 23 GameTest della mod passati (baseline vanilla escluso).

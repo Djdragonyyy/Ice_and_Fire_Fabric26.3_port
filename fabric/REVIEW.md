@@ -1,5 +1,29 @@
 # Revisione del port Fabric
 
+## Armature e seguito 0.1.13 — 23 ottobre 2026
+
+Review-agent applicata in sola lettura al diff completo da8476a4143, inclusi
+nuovi file, test e build/source set client, senza delega. No findings.
+Confrontati ordine submit dei layer vanilla26.3, assegnazione slot/materiali,
+asset originali, percorsi owner/comandi/pilota e navigazione. Teletrasporto
+richiesto dall'utente: controlli dimensione, proprietà, distanza, NoAI, veicoli,
+chunk caricati, world border, AABB/supporto/fluidi e azzeramento momentum.
+Letti anche il minimo di crociera0.6 e la guardia per i bersagli ripidi
+(fattore orizzontale minimo0.2), con regressione JUnit e movimento GameTest.
+Tentativi di teletrasporto limitati a uno al secondo; nessun nuovo payload client autorevole.
+
+53 JUnit e27 GameTest della mod superati, oltre al baseline vanilla escluso.
+Un ClientGameTest crea un mondo temporaneo, risolve i32 modelli item, verifica
+slot head/tail ricevuti sul client e fotografa griglia/GUI su GPU. Confronto
+anche col vecchio renderer: head/tail assenti dal modello prima, presenti dopo;
+icone isolate visibili in entrambe le prove. PNG/UV non modificati. Source set
+di test separati e controllati come esclusi dal JAR di produzione.
+
+Limiti: nessun server con due veri client, nessun benchmark con molti draghi;
+teletrasporto solo con drago simulato e destinazione sicura caricata. Il volo
+non è un pathfinder completo per grotte/edifici; combattimento autonomo e altre
+lacune restano aperte. I risultati grafici non confermano il profilo dell'utente.
+
 ## Volo autonomo e nido 0.1.12 — 23 ottobre 2026
 
 Skill locale review-agent applicata in sola lettura al diff completo da

@@ -13,7 +13,7 @@ final class DragonFlightManager {
     static final int MAX_HEIGHT = 256;
     private final FireDragon dragon;
     private Vec3 target;
-    private int hoverTicks, flyTicks;
+    private int hoverTicks, flyTicks, escortRecalculate, teleportDelay;
     private boolean landing, returning;
     private double speed = 0.2;
 
@@ -23,7 +23,7 @@ final class DragonFlightManager {
 
     void reset() {
         target = null;
-        hoverTicks = flyTicks = 0;
+        hoverTicks = flyTicks = escortRecalculate = teleportDelay = 0;
         landing = returning = false;
         speed = 0.2;
     }
@@ -56,6 +56,10 @@ final class DragonFlightManager {
             dragon.setAutonomousFlight(dragon.isAlive() && !dragon.isPassenger()
                     && dragon.shoulderCarrier() == null && dragon.flying(), false);
             return;
+        }
+        if (--teleportDelay <= 0) {
+            teleportDelay = 20;
+            if (DragonEscortTeleport.tryTeleport(dragon)) return;
         }
         boolean wantsRoost = wantsRoost();
         if (!dragon.flying()) {
@@ -95,8 +99,9 @@ final class DragonFlightManager {
             target = clampHeight(home.add(0, horizontalHomeDistance() < 40 ? 0 : 15 + dragon.getRandom().nextInt(3), 0));
             if (!canReach(target)) target = null;
         } else if (target == null || dragon.position().distanceToSqr(target) < 4 || !canReach(target)
-                || owner != null && dragon.distanceTo(owner) > 10) {
+                || owner != null && --escortRecalculate <= 0) {
             target = owner != null ? escortTarget(owner) : wanderTarget();
+            escortRecalculate = 10;
         }
         if (target == null) {
             // A blocked route must not turn into flight towards (0,0,0).
@@ -111,6 +116,9 @@ final class DragonFlightManager {
             speed = 0.2;
             return;
         }
+        if (owner != null && owner.onGround() && owner.position().subtract(dragon.position()).horizontalDistance()
+                < Math.max(4, dragon.getBbWidth() + 2)) { landing = true; land(); return; }
+        speed = Math.max(speed, owner != null && dragon.distanceTo(owner) > 20 ? 1.2 : 0.6);
         var step = DragonFlightSteering.towards(target.subtract(dragon.position()), dragon.getYRot(), speed);
         speed = step.speed();
         dragon.setYRot(step.yaw());
@@ -143,14 +151,13 @@ final class DragonFlightManager {
         return Vec3.atCenterOf(dragon.getHomePosition()).subtract(dragon.position()).horizontalDistance();
     }
     private Vec3 escortTarget(LivingEntity owner) {
-        BlockPos pos = owner.blockPosition();
-        if (!dragon.level().hasChunkAt(pos)) return null;
-        int ground = dragon.level().getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, pos.getX(), pos.getZ());
-        for (int i = 0; i < 10; i++) {
-            Vec3 candidate = clampHeight(new Vec3(pos.getX() + dragon.getRandom().nextInt(40) - 20 + 0.5,
-                    pos.getY() - ground > 16 ? pos.getY() + 0.5 : pos.getY() + 8 + dragon.getRandom().nextInt(16) + 0.5,
-                    pos.getZ() + dragon.getRandom().nextInt(40) - 20 + 0.5));
-            if (dragon.position().distanceToSqr(candidate) > 6 && canReach(candidate)) return candidate;
+        Vec3 predicted = owner.position().add(owner.getDeltaMovement().scale(10));
+        double height = owner.onGround() ? 8 : 1;
+        Vec3 destination = clampHeight(predicted.add(0, height, 0));
+        if (canReach(destination)) return destination;
+        for (int offset : new int[]{4, 8, 12}) {
+            destination = clampHeight(predicted.add(0, height + offset, 0));
+            if (canReach(destination)) return destination;
         }
         return null;
     }

@@ -23,8 +23,8 @@ final class DragonEscortGoal extends Goal {
     @Override public void tick() {
         var owner = dragon.getOwner();
         if (owner != null && --recalculate <= 0) {
-            recalculate = 10;
-            dragon.getNavigation().moveTo(owner, 1);
+            recalculate = 5;
+            dragon.getNavigation().moveTo(owner, dragon.distanceTo(owner) > 16 ? 2.0 : 1.5);
         }
     }
     @Override public void stop() { dragon.getNavigation().stop(); }

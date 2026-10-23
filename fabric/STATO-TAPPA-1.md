@@ -1,0 +1,105 @@
+# Stato della tappa 1 — drago di fuoco, Fabric 26.3
+
+Aggiornato per 0.1.13-stage1-dev, 23 ottobre 2026. La tappa 1 è ancora incompleta.
+Questo riepilogo distingue ciò che è nel codice da ciò che manca: build e test
+non sostituiscono il riscontro in gioco, soprattutto per grafica e multiplayer.
+L'ultima versione esplicitamente confermata dall'utente prima di queste prove era
+la 0.1.10. Nessun passaggio alla tappa 2 in questo checkpoint.
+
+## Modifiche richieste per la 0.1.13
+
+- Armatura indossata: passaggi di disegno esplicitamente successivi alla pelle,
+  in ordine testa/collo/corpo/coda. La 26.3 raggruppa le chiamate per texture:
+  inviare pelle e armature nello stesso gruppo poteva coprire di nuovo gli overlay.
+  Asset e UV originali conservati. Prova grafica delle icone e della GUI nel client.
+- Seguimi a terra più rapido: moltiplicatore 1.5, 2 oltre 16 blocchi, ricalcolo
+  del percorso ogni 5 tick invece di 10.
+- Seguimi in volo: rotta stabile aggiornata ogni 10 tick verso la posizione
+  prevista del proprietario, anziché una destinazione casuale diversa quasi a
+  ogni tick. Accelerazione di recupero della distanza; atterraggio vicino a un
+  proprietario a terra, poi ripresa del seguito terrestre.
+- Recupero del proprietario a distanza di almeno 150 blocchi, controllato circa
+  ogni secondo: teletrasporto verso una posizione libera e sostenuta vicino a lui.
+  Se è in aria, solo dallo stadio 2 è ammessa una destinazione aerea libera.
+  Controllati corpo intero, supporto, fluidi, limiti verticali, bordo e chunk già
+  caricati. Nessun teletrasporto per seduto/libero, NoAI, passeggeri o pilota;
+  niente cambio dimensione, niente destinazioni forzate dentro blocchi o lava.
+- Prove di movimento effettivo per decollo, inseguimento con recupero della
+  distanza, atterraggio e volo durante vagabondaggio senza proprietario.
+
+Il teletrasporto è una modifica al gameplay richiesta dall'utente e sostituisce
+il precedente vincolo di seguito senza teletrasporto. Il drago deve essere
+caricato e simulato dal server perché la sua IA possa eseguire questi controlli.
+Se non trova una destinazione sicura, continua il comportamento disponibile e
+riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
+
+## Implementato finora
+
+1. Progetto Fabric indipendente in fabric/, codice client/comune separato,
+   registrazioni e rete, con il sorgente Forge originale conservato in src/.
+   Minecraft26.3, Java25, Loader0.19.5 e Fabric API0.163.0+26.3 fissati.
+2. Quattro varianti di uova di fuoco: rosso, verde, bronzo e grigio. Piazzamento,
+   dimensioni originali, incubazione nel fuoco oltre 7200 tick, schiusa,
+   trasferimento di nome e proprietario. Persistenza dell'incubazione.
+3. Drago di fuoco con crescita, cinque stadi, sesso/variante, fame, statistiche
+   derivate dall'età, dimensione e scala, proprietà e stati salvati nel mondo.
+4. Geometria Tabula e texture originali, lettore dedicato, interpolazione delle
+   pose di camminata/volo/seduta/hovering/spalle e prime animazioni di attacco.
+   Movimenti secondari di corpo/coda, transizioni e aggancio animato del pilota.
+5. Un solo pilota proprietario dallo stadio3 (50 giorni). Movimento a terra,
+   decollo V o spazio tenuto, salita spazio, discesa X, sprint/planata, tilt,
+   atterraggio, rimappatura comandi, camera adattata alla crescita e F5 vanilla.
+   Nessun dorso solido o posto aggiuntivo del ghast.
+6. Piccoli di stadio1 sulle spalle/testa: massimo tre, mano vuota del proprietario;
+   rilascio con Maiusc e negli altri casi previsti. Restano entità del mondo
+   salvate indipendentemente dal giocatore, senza usare PLAYER come veicolo.
+7. Combattimento controllato dal pilota: G morso; R soffio progressivo e ramo
+   palla di fuoco, animazioni e temporizzazioni. Danno server, ostacoli e protezione
+   di proprietario, alleati e passeggeri; fiamma originale animata e scalata.
+8. Conversione del terreno e distruzione/conversione dell'area da proiettile;
+   sette blocchi carbonizzati/cenere, ritorno al terreno originale dove previsto,
+   rispetto di griefing, mob_griefing, resistenza e blocchi protetti.
+9. Inventario del drago: cinque slot (stendardo, testa, collo, corpo, coda),
+   apertura Maiusc+mano vuota, GUI originale, anteprima e statistiche;
+   controlli di accesso/distanza, shift-click, salvataggio e rilascio alla morte.
+   32 armature, otto materiali per quattro parti, bonus e overlay sincronizzati.
+   Lo stendardo è conservato nello slot ma il suo layer grafico manca ancora.
+10. Alimentazione manuale con carne: fame e cura, consumo corretto anche in
+    creativo e rifiuto se sazio/sano. Pasto del drago per crescere; pasto malaticcio
+    per bloccare la crescita e curare; pasto creativo per assegnare proprietà.
+11. Bastone dragon_stick: libero/seduto/seguimi, stati sincronizzati e salvati;
+    casa impostabile/rimuovibile con Maiusc, dimensione e coordinate zero gestite,
+    raggio predefinito40. Seguito terrestre e aereo, ora con recupero a150 blocchi.
+12. Volo autonomo dallo stadio2: spazio libero per il decollo, hovering40 tick,
+    vagabondaggio diurno con probabilità originale1/1500, seguito in aria,
+    bersagli nei chunk caricati e discesa su comando. Ritorno notturno al nido
+    a piedi o in volo, con atterraggio e precedenza di seduto/seguimi.
+13. Prima configurazione del combattimento, risorse originali selezionate,
+    licenza/attribuzioni, test numerici e GameTest nel runtime Fabric. Prove client
+    separate; mondi e mod di test esclusi dal JAR distribuito.
+
+## Da completare nella tappa 1
+
+- Combattimento autonomo: selezione bersagli, attacchi terrestri mancanti e
+  modalità aeree originali (tackle, hover blast, scorch stream), reazioni e
+  coordinamento con movimento e volo.
+- Raccolta e consumo del cibo dagli oggetti a terra; altre interazioni originali
+  e gestione completa dell'uovo danneggiato.
+- Sonno completo e animazioni, riproduzione e ciclo collegato.
+- Comportamento completo in acqua/lava e navigazione aerea più robusta fra
+  edifici, alberi e grotte. Il manager attuale verifica spazio e visibilità,
+  ma non aggira qualsiasi ostacolo complesso.
+- Layer dello stendardo; occhi, differenze visive complete maschio/femmina,
+  animazioni secondarie/attacchi, suoni e particelle ancora mancanti.
+- Configurazioni originali non ancora esposte; integrazione DragonForge ed
+  esplosioni opzionali del combattimento.
+- Difetto delle punte grigie ancora aperto: non è stato risolto né modificato
+  alla cieca. Continuare con confronto equivalente all'originale.
+- Collaudo in gioco di camera, seduta, attacchi, armature e volo ai vari stadi;
+  mondi salvati/riaperti e due veri client su server dedicato, con controlli di
+  proprietà e sincronizzazione. Il riscontro dell'utente resta necessario.
+
+Restano fuori da questa consegna draghi di ghiaccio/fulmine, altre creature,
+progressione completa, ricette, strutture e generazione naturale: appartengono
+alle tappe successive. Non iniziarle prima del completamento e del riscontro
+sulla tappa 1. Prima si verificano le correzioni richieste per questa versione.

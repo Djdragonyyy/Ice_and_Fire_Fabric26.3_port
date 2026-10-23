@@ -16,6 +16,79 @@ import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.phys.Vec3;
 
 public class DragonFlightGameTests {
+    @GameTest(structure = "iceandfire:flight_arena", skyAccess = true, padding = 12)
+    public void escortTeleportsAt150ToSafeGroundAndHonorsCommands(GameTestHelper helper) {
+        floor(helper, 10);
+        var owner = helper.makeMockPlayer(GameType.SURVIVAL);
+        owner.setPos(helper.absoluteVec(new Vec3(24.5, 2, 24.5)));
+        owner.setOnGround(true);
+        var dragon = dragon(helper, owner, 0);
+        dragon.setCommand(2);
+        dragon.setPos(owner.position().add(-149, 0, 0));
+        require(!DragonEscortTeleport.tryTeleport(dragon), "No teleport before 150 blocks");
+        dragon.setPos(owner.position().add(-150, 0, 0));
+        require(DragonEscortTeleport.tryTeleport(dragon), "Teleport starts at 150 blocks even for a ground-only baby");
+        require(dragon.distanceTo(owner) < 12 && !dragon.flying() && dragon.onGround(), "Teleport finds nearby supported ground");
+        require(helper.getLevel().noCollision(dragon) && dragon.getDeltaMovement().equals(Vec3.ZERO), "Arrival is collision-free and clears momentum");
+        dragon.setPos(owner.position().add(-151, 0, 0));
+        dragon.setCommand(1);
+        require(!DragonEscortTeleport.tryTeleport(dragon), "Sit cannot teleport");
+        dragon.setCommand(0);
+        require(!DragonEscortTeleport.tryTeleport(dragon), "Wandering cannot teleport");
+        dragon.setCommand(2);
+        dragon.setNoAi(true);
+        require(!DragonEscortTeleport.tryTeleport(dragon), "NoAI cannot teleport");
+        helper.succeed();
+    }
+    @GameTest(structure = "iceandfire:flight_arena", skyAccess = true, padding = 12)
+    public void escortRefusesBlockedDestinationsAndProtectsPilot(GameTestHelper helper) {
+        var owner = helper.makeMockPlayer(GameType.SURVIVAL);
+        owner.setPos(helper.absoluteVec(new Vec3(24.5, 30, 24.5)));
+        owner.setOnGround(true);
+        var dragon = dragon(helper, owner, 50);
+        dragon.setCommand(2);
+        dragon.setPos(owner.position().add(-151, 0, 0));
+        var start = dragon.position();
+        require(!DragonEscortTeleport.tryTeleport(dragon) && start.equals(dragon.position()), "No unsupported teleport into empty air");
+        require(owner.startRiding(dragon), "Pilot mounts");
+        require(!DragonEscortTeleport.tryTeleport(dragon), "Mounted dragons cannot teleport");
+        owner.stopRiding();
+        helper.succeed();
+    }
+    @GameTest(structure = "iceandfire:flight_arena", maxTicks = 340, skyAccess = true, padding = 12)
+    public void aerialEscortActuallyCatchesGroundOwnerAndLands(GameTestHelper helper) {
+        floor(helper, 10);
+        var owner = helper.makeMockPlayer(GameType.SURVIVAL);
+        var dragon = dragon(helper, owner, 25);
+        dragon.setPos(helper.absoluteVec(new Vec3(4.5, 2, 24.5)));
+        owner.setPos(helper.absoluteVec(new Vec3(42.5, 2, 24.5)));
+        owner.setOnGround(true);
+        dragon.setCommand(2);
+        helper.getLevel().addFreshEntity(dragon);
+        helper.runAfterDelay(5, () -> require(dragon.hovering(), "Distant owner triggers takeoff"));
+        helper.runAfterDelay(180, () -> require(dragon.distanceTo(owner) < 18, "Stable air route must actually catch up"));
+        helper.runAfterDelay(300, () -> {
+            require(dragon.distanceTo(owner) < 6 && dragon.onGround() && !dragon.flying(), "Escort returns to ground near its owner");
+            helper.succeed();
+        });
+    }
+    @GameTest(structure = "iceandfire:flight_arena", maxTicks = 110, skyAccess = true, padding = 12)
+    public void wanderingTakesOffAndMovesWithoutAnOwner(GameTestHelper helper) {
+        floor(helper, 10);
+        var dragon = dragon(helper, null, 25);
+        long seed = 0;
+        do { dragon.getRandom().setSeed(seed++); } while (dragon.getRandom().nextInt(1500) != 0);
+        dragon.getRandom().setSeed(seed - 1);
+        dragon.flightManager.tick();
+        require(dragon.flying() && dragon.hovering(), "Original random wandering trigger can start flight");
+        var start = dragon.position();
+        helper.getLevel().addFreshEntity(dragon);
+        helper.runAfterDelay(85, () -> {
+            require(dragon.flying() && dragon.getY() > start.y + 8
+                    && dragon.position().subtract(start).horizontalDistance() > 1, "Wandering must climb and fly horizontally: start=" + start + " actual=" + dragon.position() + " flying=" + dragon.flying() + " target=" + dragon.flightManager.target() + " ticks=" + dragon.tickCount);
+            helper.succeed();
+        });
+    }
     @GameTest(environment = "iceandfire:night", structure = "iceandfire:flight_arena", maxTicks = 560, skyAccess = true, padding = 12)
     public void distantRoostTriggersTakeoffAndCompletesReturn(GameTestHelper helper) {
         floor(helper, 10);
@@ -144,7 +217,7 @@ public class DragonFlightGameTests {
         var before = dragon.position();
         owner.setPos(before.add(2001, 30, 0));
         dragon.flightManager.tick();
-        require(!dragon.flying() && dragon.position().equals(before), "Original 2000-block escort limit and no teleportation");
+        require(!dragon.flying() && dragon.position().equals(before), "No teleport to a distant owner without a safe loaded destination");
         helper.succeed();
     }
     @GameTest(environment = "iceandfire:night", structure = "iceandfire:flight_arena", maxTicks = 220, padding = 12, skyAccess = true)

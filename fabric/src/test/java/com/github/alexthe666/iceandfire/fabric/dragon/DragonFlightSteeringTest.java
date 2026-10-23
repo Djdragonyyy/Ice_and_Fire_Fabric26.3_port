@@ -6,6 +6,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DragonFlightSteeringTest {
+    @Test void steepTargetsMustNotStallHorizontalFlight() {
+        var step = DragonFlightSteering.towards(new Vec3(8, 16, 0), -90, 1);
+        assertTrue(step.acceleration().x > 0, "Steep wandering targets still require forward progress");
+        assertTrue(step.acceleration().y > 0);
+    }
     @Test void verticalAndCoincidentTargetsRemainFiniteAtZeroSpeed() {
         for (Vec3 target : new Vec3[]{Vec3.ZERO, new Vec3(0, 50, 0), new Vec3(0, -50, 0), new Vec3(1.0e-12, 20, 0)}) {
             var step = DragonFlightSteering.towards(target, 37, 0);

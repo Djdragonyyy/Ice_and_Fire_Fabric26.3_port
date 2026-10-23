@@ -1,5 +1,49 @@
 # Prompt completo per continuare il porting su un altro PC
 
+## Aggiornamento 0.1.13 — correzioni richieste, 23 ottobre 2026
+
+Ripresa da8476a4143 sul ramo port/fabric-26.3. Utente segnala head/tail invisibili
+sul drago e in inventario, seguito lento e chiede recupero a circa150 blocchi,
+volo in libero/seguimi e riepilogo completo prima di proseguire. Autorizza inoltre
+esplicitamente push del risultato e successiva sospensione del PC.
+
+Armature: stesso gruppo di submit della pelle causava il ridisegno della pelle
+sopra head/tail. Migrato collector.order(slot+1), come separazione dei passaggi
+vanilla26.3. Riprodotta la sparizione degli overlay usando temporaneamente il
+vecchio renderer nello stesso test client; codice corretto ripristinato in finally.
+Screenshot prima/dopo della GUI mostrano head/tail equipaggiati, ora visibili.
+32 icone verificate con modelli reali e screenshot. Le icone isolate risultano
+visibili anche col vecchio renderer nella prova pulita: non dichiarare trovato
+un asset PNG mancante. Modelli, UV e PNG originali conservati byte-identici.
+
+Seguito: terra1.5/2 oltre16 blocchi e ricalcolo5 tick. In aria eliminato il
+bersaglio casuale rigenerato quasi ogni tick: destinazione prevista del proprietario
+con aggiornamento10 tick, accelerazione di recupero e atterraggio vicino a lui
+se a terra. Teletrasporto richiesto dall'utente a >=150 blocchi, tentativo ogni20
+tick, solo seguimi/proprietario vivo/stessa dimensione/drago libero da pilota e
+passeggeri/NoAI disattivo. Controlli intero AABB, supporto, fluidi, world border,
+altezza e chunk caricati; aereo solo stadio2+ con proprietario in aria. Il drago
+deve essere simulato: niente caricamento forzato o teletrasporto fra dimensioni.
+Questo requisito utente revoca il precedente divieto di teletrasporto del seguito.
+La prova finale di wandering ha rilevato uno stallo con bersagli ripidi: il
+vecchio fattore orizzontale arrivava a zero e piccoli impulsi erano azzerati
+dalla fisica vanilla. Minimo fattore0.2 e minimo crociera0.6; test di regressione
+su bersaglio ripido e movimento orizzontale reale, senza ridurre le asserzioni.
+
+Build pulita:53 JUnit,27 GameTest della mod più baseline vanilla escluso;
+un test client in mondo temporaneo con screenshot GPU, menu reale e verifica
+sincronizzazione slot head/tail. Nuovo source set clientGametest separato,
+escluso dal JAR. Provati anche recupero aereo con arrivo/atterraggio e decollo/
+movimento orizzontale del wandering senza proprietario. Revisione completa con
+skill review-agent read-only senza delega: No findings. Vedere REVIEW.md.
+
+TEST-0.1.13.md contiene installazione e prova utente; STATO-TAPPA-1.md contiene
+il riepilogo cumulativo completo implementato/mancante richiesto dall'utente.
+Tappa1 e punte grigie ancora aperte, nessun dorso ghast, pilota unico dallo
+stadio3. Non proseguire oltre queste correzioni prima del riscontro utente.
+Restano combattimento autonomo/altri attacchi, cibo a terra, sonno/riproduzione,
+stendardo e lacune di animazioni/configurazioni/navigazione descritte nel riepilogo.
+
 ## Aggiornamento 0.1.12 — 23 ottobre 2026, ripresa su questo PC
 
 Clonato origin personale Djdragonyyy e usato esclusivamente port/fabric-26.3;

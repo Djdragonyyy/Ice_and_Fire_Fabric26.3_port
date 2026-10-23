@@ -13,12 +13,17 @@ final class DragonArmorLayer extends RenderLayer<FireDragonRenderer.State, Entit
     DragonArmorLayer(FireDragonRenderer parent) { super(parent); }
     @Override public void submit(PoseStack stack, SubmitNodeCollector collector, int light,
                                  FireDragonRenderer.State state, float yRot, float xRot) {
+        submitLayers(getParentModel(), state, stack, collector, light);
+    }
+    static void submitLayers(EntityModel<FireDragonRenderer.State> model, FireDragonRenderer.State state,
+                             PoseStack stack, SubmitNodeCollector collector, int light) {
         if (state.isInvisible) return;
         for (int slot = 0; slot < 4; slot++) {
             int armor = (state.armor >> (slot * 4)) & 15;
             if (armor < 1 || armor > 8) continue;
-            collector.submitModel(getParentModel(), state, stack,
-                    IafContent.id("textures/models/firedragon/armor_" + PARTS[slot] + "_" + armor + ".png"),
+            // Separate ordered passes must follow the skin; texture batching at order zero can cover armor again.
+            collector.order(slot + 1).submitModel(model, state, stack,
+                    net.minecraft.resources.Identifier.fromNamespaceAndPath("iceandfire", "textures/models/firedragon/armor_" + PARTS[slot] + "_" + armor + ".png"),
                     light, OverlayTexture.NO_OVERLAY, state.outlineColor);
         }
     }

@@ -6,7 +6,7 @@ Conservare fabric/HANDOFF.md: contiene lo storico e i vincoli permanenti.
 ---
 
 Continua il porting di Ice and Fire. Comunica in italiano. Leggi integralmente
-fabric/HANDOFF.md, fabric/README.md, fabric/REVIEW.md, fabric/TEST-0.1.12.md e gli
+fabric/HANDOFF.md, fabric/README.md, fabric/REVIEW.md, fabric/TEST-0.1.13.md e gli
 AGENTS.md applicabili. Non ricominciare da zero o sovrascrivere modifiche locali.
 
 Repository personale:
@@ -15,13 +15,19 @@ Ramo esclusivo: port/fabric-26.3. Controlla stato, remote e git log prima di
 modificare; git switch e git pull --ff-only origin port/fabric-26.3, preservando
 il lavoro locale. Verifica l'esistenza del commit base 417f5a8d2. Niente reset.
 
-Checkpoint attuale: 0.1.12-stage1-dev, volo autonomo non di combattimento,
+Prima di continuare leggere anche fabric/STATO-TAPPA-1.md. L'utente vuole prima
+collaudare le correzioni0.1.13 (armature, seguito, teletrasporto a150 blocchi),
+poi proseguire. Il teletrasporto è ora autorizzato e richiesto: prevale sui vecchi
+vincoli storici senza teletrasporto. Prova client grafica con mondo, griglia32
+icone e GUI head/tail; screenshot prima/dopo. Nessun multiplayer con due client.
+
+Checkpoint attuale: 0.1.13-stage1-dev, volo autonomo non di combattimento,
 hovering, seguito in aria, atterraggio su comando e ritorno notturno al nido.
-Build pulita, 50 JUnit e 23 GameTest della mod superati, oltre al baseline vanilla
-always_pass che NON va contato come test della mod. Client avviato con grafica/audio/atlanti e poi terminato, senza prove in mondo. Le prove di movimento sono
-in un'arena GameTest 48x96x48. Non dichiarare collaudo visivo o multiplayer reale.
+Build pulita, 53 JUnit e 27 GameTest della mod superati, oltre al baseline vanilla
+always_pass che NON va contato come test della mod. Prova client automatica in mondo con screenshot di icone e GUI; nessun test con due veri client. Le prove di movimento sono
+in un'arena GameTest 48x96x48. Non estendere le prove grafiche a gameplay o multiplayer mai collaudati.
 La 0.1.10 resta l'ultima versione confermata in gioco dall'utente; le novità
-0.1.11 e 0.1.12 richiedono il suo riscontro.
+0.1.11, 0.1.12 e 0.1.13 richiedono il suo riscontro.
 
 Toolchain fissata: Minecraft Java 26.3, JDK25, Loader0.19.5, Fabric API
 0.163.0+26.3, Loom1.18.4, Gradle9.7.1. Usare fabric/ come progetto Gradle
