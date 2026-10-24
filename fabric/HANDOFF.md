@@ -1,6 +1,31 @@
 # Prompt completo per continuare il porting su un altro PC
 
-Verificati62 JUnit,67 GameTest della mod (68 con baseline vanilla escluso) e4 prove client con otto screenshot. Nessuna prova con due veri client.
+Verificati62 JUnit,73 GameTest della mod (74 con baseline vanilla escluso) e4 prove client con otto screenshot. Nessuna prova con due veri client.
+
+## Checkpoint 0.1.21 — caccia autonoma
+
+Base d3bfca45b. DragonAITarget/NonTamed e tag originali migrati: ricerca selvatico
+con intervallo5, fame probabilistica e giocatori survival; alimentare visibile
+intervallo3 con fame<90/taglia/dieta. Addomesticati non cacciano giocatori,
+abitanti/golem o pet già addomesticati. Comandi, sonno, NoAI, controllo, ritorno
+notturno e amore hanno precedenza. Difesa priorità1..3 resta prima della caccia5/6.
+Una nuova caccia non sostituisce mai un target esistente, anche assegnato fuori
+dai goal: regressione cambio bersaglio aveva rilevato il problema, corretta.
+
+Carne raggiungibile riservata prima della NUOVA caccia; foodGoal conserva il
+candidato fra target selector e movement selector. Politica esplicita del port,
+non parità di ogni dettaglio temporale della confusa priorità MOVE originale.
+Nuova config originale dragonTargetSearchLength128, validazione1..10000,
+attributo cap2048 e ricerca3D. Tag nel nuovo percorso tags/entity_type.
+
+Scenario difesa dal sonno aggiornato da mucca a zombie NoAI: la mucca adesso era
+una legittima preda prima del riposo. Mantenute tutte le asserzioni sonno,
+risveglio, bersaglio e danno. Test client combattimento ora acquisisce la mucca
+tramite caccia reale, senza setTarget manuale, poi attende pose coda/ali.
+Aggressori zombie nei test resi persistenti: l'altro giocatore reale faceva
+despawn vanilla a distanza, osservato come DISCARDED e lastHurt=null. La prova
+isolata passava; non indebolite le asserzioni della suite completa.
+Tappa1 ancora incompleta; prossimi shake prey e le altre lacune cumulative.
 
 ## Checkpoint 0.1.20 — stendardo
 

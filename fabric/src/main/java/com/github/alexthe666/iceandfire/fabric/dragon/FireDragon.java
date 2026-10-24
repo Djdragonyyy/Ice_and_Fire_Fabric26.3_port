@@ -64,6 +64,7 @@ public final class FireDragon extends TamableAnimal {
     private int lastWingImpact = -1;
     private int eatingTicks;
     boolean seekingFood;
+    private DragonFoodGoal foodGoal;
     private LivingEntity previousAutonomousTarget;
     private boolean rangedChargePending, autonomousCharging;
     private DragonFlightManager.AirAttack previousAirAttack;
@@ -132,7 +133,8 @@ public final class FireDragon extends TamableAnimal {
         goalSelector.addGoal(3, new DragonReturnToRoostGoal(this));
         goalSelector.addGoal(4, new DragonEscortGoal(this));
         goalSelector.addGoal(5, new DragonMeleeGoal(this));
-        goalSelector.addGoal(6, new DragonFoodGoal(this));
+        foodGoal = new DragonFoodGoal(this);
+        goalSelector.addGoal(6, foodGoal);
         goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1) {
             { setInterval(20); }
             @Override public boolean canUse() { return canMoveOnGround() && command() != 2 && (level().isBrightOutside() || !hasHome()) && !flightManager.wantsRoost() && super.canUse(); }
@@ -146,10 +148,12 @@ public final class FireDragon extends TamableAnimal {
             @Override public boolean canUse() { return !dragonSleeping() && super.canUse(); }
             @Override public boolean canContinueToUse() { return !dragonSleeping() && super.canContinueToUse(); }
         });
-        // Same defensive priorities as EntityDragonBase; hunting is migrated separately.
+        // Original defensive priorities stay above food and non-defensive hunting.
         targetSelector.addGoal(1, new OwnerHurtTargetGoal(this));
         targetSelector.addGoal(2, new OwnerHurtByTargetGoal(this));
         targetSelector.addGoal(3, new HurtByTargetGoal(this));
+        targetSelector.addGoal(5, new DragonHuntGoal(this, true));
+        targetSelector.addGoal(6, new DragonHuntGoal(this, false));
     }
 
     public int ageDays() { return DragonGrowth.days(entityData.get(AGE_TICKS)); }
@@ -186,6 +190,7 @@ public final class FireDragon extends TamableAnimal {
     public boolean canMoveOnGround() {
         return canMoveAutonomously() && !flying();
     }
+    boolean hasPriorityFood() { return foodGoal != null && foodGoal.canUse(); }
     public boolean canMoveAutonomously() {
         return autonomousControlsAllowed() && !dragonSleeping();
     }
@@ -264,6 +269,7 @@ public final class FireDragon extends TamableAnimal {
         getAttribute(Attributes.MAX_HEALTH).setBaseValue(DragonGrowth.maxHealth(appliedAge, 500));
         getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DragonGrowth.attackDamage(appliedAge, 17));
         getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(DragonGrowth.movementSpeed(appliedAge));
+        getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(Math.min(2048, DragonCombatConfig.current.dragonTargetSearchLength));
         getAttribute(Attributes.ARMOR).setBaseValue(1 + 19 / 125F * appliedAge);
         updateArmor();
         getAttribute(Attributes.SCALE).setBaseValue(DragonGrowth.scale(appliedAge));

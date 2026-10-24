@@ -1,12 +1,19 @@
 # Stato della tappa 1 — drago di fuoco, Fabric 26.3
 
-Verificati62 JUnit,67 GameTest della mod (68 con baseline vanilla escluso) e4 prove client con otto screenshot. Nessuna prova con due veri client.
+Verificati62 JUnit,73 GameTest della mod (74 con baseline vanilla escluso) e4 prove client con otto screenshot. Nessuna prova con due veri client.
 
-Aggiornato per 0.1.20-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
+Aggiornato per 0.1.21-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
 Questo riepilogo distingue ciò che è nel codice da ciò che manca: build e test
 non sostituiscono il riscontro in gioco, soprattutto per grafica e multiplayer.
 L'utente ha confermato la 0.1.13 funzionante il 24 ottobre e chiesto di continuare.
 La prova0.1.14 ha rilevato alberi e dismount: correzioni0.1.15 da collaudare. Nessun passaggio alla tappa 2.
+
+## Novità 0.1.21
+
+Caccia tramite tag originali, fame/taglia e protezione giocatori/pet per draghi
+addomesticati; aggressività selvatici e ricerca3D configurabile. Difesa e target
+attivi prioritari; carne raggiungibile prima di una nuova caccia. Prove server
+e client combattimento ora senza acquisizione manuale del bersaglio.
 
 ## Novità 0.1.20
 
@@ -169,7 +176,7 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 
 ## Da completare nella tappa 1
 
-- Combattimento autonomo: caccia/selezione non difensiva, shake prey e
+- Combattimento autonomo: shake prey e
   parità delle configurazioni/temporizzazioni originali, reazioni e
   coordinamento con movimento e volo.
 - Altre interazioni originali e dettagli del ciclo delle uova.
@@ -190,4 +197,4 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 Restano fuori da questa consegna draghi di ghiaccio/fulmine, altre creature,
 progressione completa, ricette, strutture e generazione naturale: appartengono
 alle tappe successive. Non iniziarle prima del completamento e del riscontro
-sulla tappa 1. La 0.1.13 è confermata; collaudare le novità0.1.20 alla ripresa del port.
+sulla tappa 1. La 0.1.13 è confermata; collaudare le novità0.1.21 alla ripresa del port.

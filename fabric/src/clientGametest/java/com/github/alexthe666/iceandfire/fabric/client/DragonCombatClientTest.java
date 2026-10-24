@@ -12,7 +12,7 @@ import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.block.Blocks;
 
-/** Real server attacks, synchronized animation state and GPU-rendered inventory preview. */
+/** Natural prey selection, real server attacks, synchronized poses and GPU-rendered preview. */
 public class DragonCombatClientTest implements FabricClientGameTest {
     @Override public void runTest(ClientGameTestContext context) {
         try (var world = context.worldBuilder().create()) {
@@ -38,7 +38,7 @@ public class DragonCombatClientTest implements FabricClientGameTest {
                 victim.setPos(dragon.position().add(3, 0, 0));
                 player.level().addFreshEntity(victim);
                 player.level().addFreshEntity(dragon);
-                dragon.setTarget(victim);
+                // Hunting must select the tagged prey; do not inject a combat target.
                 return dragon.getId();
             });
             context.waitFor(client -> client.level.getEntity(id) instanceof FireDragon);

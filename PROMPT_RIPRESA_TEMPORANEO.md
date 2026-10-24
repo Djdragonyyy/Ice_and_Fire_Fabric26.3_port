@@ -1,12 +1,12 @@
 # Prompt temporaneo per la prossima ripresa
 
-Aggiornato il 24 ottobre 2026, checkpoint 0.1.20, nuova autorizzazione utente a proseguire nelle fasi.
+Aggiornato il 24 ottobre 2026, checkpoint 0.1.21, nuova autorizzazione utente a proseguire nelle fasi.
 Conservare fabric/HANDOFF.md: contiene lo storico e i vincoli permanenti.
 
 ---
 
 Continua il porting di Ice and Fire. Comunica in italiano. Leggi integralmente
-fabric/HANDOFF.md, fabric/README.md, fabric/REVIEW.md, fabric/TEST-0.1.20.md e gli
+fabric/HANDOFF.md, fabric/README.md, fabric/REVIEW.md, fabric/TEST-0.1.21.md e gli
 AGENTS.md applicabili. Non ricominciare da zero o sovrascrivere modifiche locali.
 
 Repository personale:
@@ -29,7 +29,7 @@ Non consumare quota artificialmente o dichiarare chiuse fasi non migrate.
 Nuova richiesta supera attese di riscontro fra checkpoint, conserva ordine delle
 tappe e loro verifica. La1 è ancora incompleta.
 
-Checkpoint0.1.20: layer stendardo BodyUpper animato con colori/motivi e snapshot sincronizzato. Prossimi: shake prey/
+Checkpoint0.1.20: layer stendardo BodyUpper animato con colori/motivi e snapshot sincronizzato. Checkpoint0.1.21: caccia/config ricerca, difesa e target attivi prioritari, cibo raggiungibile prima di nuova caccia. Prossimi: shake prey/
 caccia, stendardo, configurazioni/interazioni/animazioni e limiti navigazione/
 acqua/lava nello stato cumulativo. Uova raccolte senza incubazione/proprietà.
 Sonno solo libero, NoAI congela automazione; targeting separato da movimento per

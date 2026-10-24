@@ -24,7 +24,10 @@ final class DragonFoodGoal extends Goal {
                 && dragon.hasLineOfSight(item);
     }
     @Override public boolean canUse() {
-        if (!available() || dragon.level().getGameTime() < nextScan) return false;
+        if (!available()) return false;
+        // Target selection may reserve food before the movement selector gets its turn.
+        if (food != null && edible(food)) return true;
+        if (dragon.level().getGameTime() < nextScan) return false;
         nextScan = dragon.level().getGameTime() + 20;
         double range = dragon.getAttributeValue(Attributes.FOLLOW_RANGE);
         food = dragon.level().getEntitiesOfClass(ItemEntity.class, dragon.getBoundingBox().inflate(range, 4, range), this::edible)

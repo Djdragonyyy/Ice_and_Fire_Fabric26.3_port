@@ -1,6 +1,34 @@
 # Revisione del port Fabric
 
-Verificati62 JUnit,67 GameTest della mod (68 con baseline vanilla escluso) e4 prove client con otto screenshot. Nessuna prova con due veri client.
+Verificati62 JUnit,73 GameTest della mod (74 con baseline vanilla escluso) e4 prove client con otto screenshot. Nessuna prova con due veri client.
+
+## Revisione 0.1.21 — 24 ottobre 2026
+
+Review-agent applicata read-only senza delega al diff completo da d3bfca45b,
+inclusi nuovi goal/tag/test, configurazione e documenti. Confrontati originali
+DragonAITarget/NonTamed, FoodUtils, shouldTarget e API TargetGoal26.3 locali.
+
+[P2] Conservare un bersaglio già attivo prima di cercare nuove prede —
+DragonHuntGoal.canUse. La nuova ricerca poteva riassegnare il target e riavviare
+il morso; la regressione del cambio bersaglio ha rilevato danni non attesi.
+Corretto fuori revisione con guardia target==null; stessa regressione passata
+senza allentare le asserzioni. Verificate priorità1..3 della difesa e annullamento
+per comandi/sonno/NoAI/amore, sicurezza pet/giocatori, fame e attributo di ricerca.
+Rilettura finale produzione: No findings.
+
+Le prove del sonno ora usano aggressori non alimentari: le mucche erano diventate
+prede legittime prima del riposo. Una nuova prova difensiva passava isolata ma
+falliva nella suite: diagnostica mostra zombie DISCARDED e lastHurt=null. Il
+vero giocatore creato in un'altra arena attivava il despawn a distanza dei mob
+ostili; aggressori resi persistenti. Mantenuti tempi, danni e tutte le asserzioni.
+Filtro ufficiale usato solo tramite init script temporaneo esterno, non commesso;
+il risultato consegnato deve essere la suite completa, non il singolo test.
+
+La carne raggiungibile ha precedenza prima di una NUOVA caccia: politica esplicita
+del port, non parità dei due goal MOVE originali. Ricerca visibile alimentare3,
+selvatica5 e probabilità nextInt(100)>fame per non giocatori. Tag originali nel
+percorso singolare26.3, protezioni e range3D/configurazione128/cap2048.
+Nessun collaudo con due veri client o confronto prestazionale. Tappa1 incompleta.
 
 ## Revisione 0.1.20 — 24 ottobre 2026
 

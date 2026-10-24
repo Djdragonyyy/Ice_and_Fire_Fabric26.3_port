@@ -15,6 +15,7 @@ public final class DragonCombatConfig {
     public int dragonBreakBlockCooldown = 5;
     public double dragonBlockBreakingDropChance = 0.1;
     public boolean doDragonsSleep = true;
+    public int dragonTargetSearchLength = 128;
 
     public static void load() {
         var path = FabricLoader.getInstance().getConfigDir().resolve("iceandfire-combat.json");
@@ -27,6 +28,7 @@ public final class DragonCombatConfig {
                             || parsed.dragonAttackDamageFire < 0 || parsed.dragonAttackDamageFire > Float.MAX_VALUE / 5
                             || parsed.dragonGriefing < 0 || parsed.dragonGriefing > 2
                             || parsed.dragonBreakBlockCooldown < 0 || parsed.dragonBreakBlockCooldown > 10000
+                            || parsed.dragonTargetSearchLength < 1 || parsed.dragonTargetSearchLength > 10000
                             || !Double.isFinite(parsed.dragonBlockBreakingDropChance)
                             || parsed.dragonBlockBreakingDropChance < 0 || parsed.dragonBlockBreakingDropChance > 1) {
                         throw new IllegalArgumentException("Invalid combat values");

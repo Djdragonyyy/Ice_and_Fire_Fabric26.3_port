@@ -47,8 +47,8 @@ public class DragonSleepGameTests {
     @GameTest(environment = "iceandfire:night", structure = "iceandfire:flight_arena", maxTicks = 130, padding = 12)
     public void damageWakesSleepingDragonAndRetaliates(GameTestHelper h) {
         var d = dragon(h);
-        var attacker = EntityTypes.COW.create(h.getLevel(), EntitySpawnReason.TRIGGERED);
-        attacker.setNoAi(true);
+        var attacker = EntityTypes.ZOMBIE.create(h.getLevel(), EntitySpawnReason.TRIGGERED);
+        attacker.setPersistenceRequired(); attacker.setNoAi(true);
         attacker.setPos(d.position().add(3, 0, 0));
         attacker.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH).setBaseValue(200);
         attacker.setHealth(200);
@@ -101,8 +101,9 @@ public class DragonSleepGameTests {
         var owner = h.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
         d.setTame(true, false); d.setOwner(owner);
         owner.setPos(d.position().add(0, 0, 5));
-        var enemy = EntityTypes.COW.create(h.getLevel(), EntitySpawnReason.TRIGGERED);
-        enemy.setNoAi(true);
+        // A food animal is now legitimately hunted before sleep; use a non-food aggressor.
+        var enemy = EntityTypes.ZOMBIE.create(h.getLevel(), EntitySpawnReason.TRIGGERED);
+        enemy.setPersistenceRequired(); enemy.setNoAi(true);
         enemy.setPos(d.position().add(3, 0, 0));
         enemy.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH).setBaseValue(200);
         enemy.setHealth(200);
@@ -141,7 +142,7 @@ public class DragonSleepGameTests {
     public void selectingThreatWakesBeforeMovementGoals(GameTestHelper h) {
         var d = dragon(h);
         d.setDragonSleeping(true);
-        var enemy = EntityTypes.COW.create(h.getLevel(), EntitySpawnReason.TRIGGERED);
+        var enemy = EntityTypes.ZOMBIE.create(h.getLevel(), EntitySpawnReason.TRIGGERED);
         enemy.setPos(d.position().add(3, 0, 0));
         require(d.canAttack(enemy), "Sleep must not prevent defensive target selection");
         d.setTarget(enemy);
