@@ -1,5 +1,19 @@
 # Prompt completo per continuare il porting su un altro PC
 
+## Ultima istruzione utente — niente sospensione, ripresa al reset
+
+Il 24 ottobre, dopo il risveglio della0.1.23, l'utente ha annullato esplicitamente
+ogni futura sospensione del PC: continuare fino al completamento del port.
+La sospensione precedente è riuscita e il helper è terminato. NON lanciare più
+suspend-after-delivery.ps1 o altri comandi di sospensione/spegnimento. Questa
+istruzione prevale su TUTTE le note storiche sotto e negli altri documenti.
+
+Usare la quota residua per progresso reale e riprendere appena il limite d'uso
+si reimposta, nella stessa chat e con lo stesso goal completo, senza nuove chat
+o lavorazioni duplicate. Non consumare quota artificialmente e non dichiarare
+completate fasi con funzioni mancanti. Al risveglio controllo quota93%; reset
+indicato dall'app24ottobre12:38:03UTC (14:38Roma). Verificare stato attuale.
+
 Verificati68 JUnit,80 GameTest della mod (81 con baseline vanilla escluso) e4 prove client con dieci screenshot. Nessuna prova con due veri client.
 
 ## Checkpoint 0.1.23 — configurazioni del ciclo vitale

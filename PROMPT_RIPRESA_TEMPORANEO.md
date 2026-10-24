@@ -1,5 +1,19 @@
 # Prompt temporaneo per la prossima ripresa
 
+## Ultima istruzione utente — niente sospensione, ripresa al reset
+
+Il 24 ottobre, dopo il risveglio della0.1.23, l'utente ha annullato esplicitamente
+ogni futura sospensione del PC: continuare fino al completamento del port.
+La sospensione precedente è riuscita e il helper è terminato. NON lanciare più
+suspend-after-delivery.ps1 o altri comandi di sospensione/spegnimento. Questa
+istruzione prevale su TUTTE le note storiche sotto e negli altri documenti.
+
+Usare la quota residua per progresso reale e riprendere appena il limite d'uso
+si reimposta, nella stessa chat e con lo stesso goal completo, senza nuove chat
+o lavorazioni duplicate. Non consumare quota artificialmente e non dichiarare
+completate fasi con funzioni mancanti. Al risveglio controllo quota93%; reset
+indicato dall'app24ottobre12:38:03UTC (14:38Roma). Verificare stato attuale.
+
 Aggiornato il 24 ottobre 2026, checkpoint 0.1.23, nuova autorizzazione utente a proseguire nelle fasi.
 Conservare fabric/HANDOFF.md: contiene lo storico e i vincoli permanenti.
 
