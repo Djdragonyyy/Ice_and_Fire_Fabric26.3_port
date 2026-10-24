@@ -1,12 +1,12 @@
 # Prompt temporaneo per la prossima ripresa
 
-Aggiornato il 24 ottobre 2026, checkpoint 0.1.14 dopo conferma utente della 0.1.13.
+Aggiornato il 24 ottobre 2026, checkpoint 0.1.15, dopo segnalazioni su alberi/dismount della0.1.14.
 Conservare fabric/HANDOFF.md: contiene lo storico e i vincoli permanenti.
 
 ---
 
 Continua il porting di Ice and Fire. Comunica in italiano. Leggi integralmente
-fabric/HANDOFF.md, fabric/README.md, fabric/REVIEW.md, fabric/TEST-0.1.14.md e gli
+fabric/HANDOFF.md, fabric/README.md, fabric/REVIEW.md, fabric/TEST-0.1.15.md e gli
 AGENTS.md applicabili. Non ricominciare da zero o sovrascrivere modifiche locali.
 
 Repository personale:
@@ -20,20 +20,20 @@ ha confermato la 0.1.13 funzionante e autorizzato a proseguire. Il teletrasporto
 richiesto a150 blocchi resta autorizzato. La precedente sospensione PC era una
 richiesta specifica già eseguita: non sospendere di nuovo senza nuova richiesta.
 
-Checkpoint attuale: 0.1.14-stage1-dev, prima difesa autonoma terrestre.
-Goal originali per bersaglio del proprietario, aggressore del proprietario e del
-drago; inseguimento1.5, ricalcolo4..10tick, morso35tick, impatto16..24, un colpo
-riuscito per animazione, controlli server di portata/visibilità/alleanze.
-Seduto/NoAI/pilota/spalle interrompono. Cambiare bersaglio riavvia la carica.
-In aria atterra per combattere a terra: comportamento transitorio del port,
-non dichiarare migrate le modalità aeree. Caccia, altri attacchi e soffio autonomo
-restano da implementare. Conservare R/G controllati dal pilota.
-La 0.1.13 è l'ultima confermata dall'utente; la difesa0.1.14 richiede collaudo.
+Checkpoint attuale: 0.1.15-stage1-dev. Difesa e morso autonomi già nella0.1.14,
+ora passaggio locale fra tronchi/foglie per adulti stage3+ (griefing/blacklist
+rispettati), dismount sicuro/protezione della caduta solo a terra e doppio salto
+entro7tick per decollare. In aria nessuna uscita a terra o immunità aggiunta;
+nessun dorso solido. Primo soffio autonomo terrestre stage2+ a distanza visibile,
+con warmup20/estensione40 e danni server già migrati. Non dichiarare migrate
+palla di fuoco autonoma, altri attacchi o modalità aeree originali.
+La0.1.13 è confermata, l'utente ha segnalato problemi dopo la0.1.14; collaudare
+le correzioni e novità0.1.15. Non sospendere il PC senza nuova richiesta.
 
-Build riuscita: 53 JUnit, 34 GameTest della mod (più always_pass vanilla escluso)
-e una prova client con mondo e screenshot superati. Revisione completa secondo
-review-agent in sola lettura senza delega: No findings. Nessun test con due client.
-Non estendere test automatici a gameplay o multiplayer con due client mai provati.
+Build verificata: 56 JUnit, 41 GameTest della mod (42 includendo always_pass
+vanilla escluso dal conteggio) e un test client grafico con mondo/screenshot
+superati. Nessuna prova multiplayer con due veri client o collaudo visivo delle
+novità di combattimento. Revisione completa review-agent read-only: No findings.
 
 Toolchain fissata: Minecraft Java 26.3, JDK25, Loader0.19.5, Fabric API
 0.163.0+26.3, Loom1.18.4, Gradle9.7.1. Usare fabric/ come progetto Gradle

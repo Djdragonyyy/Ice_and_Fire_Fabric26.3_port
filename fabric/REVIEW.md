@@ -1,5 +1,32 @@
 # Revisione del port Fabric
 
+## Revisione 0.1.15 — 24 ottobre 2026
+
+Skill locale review-agent applicata in sola lettura senza delega al diff completo
+da208773ef1: sorgenti comuni, configurazione, input, dismount, nuovi file,
+registrazione test, versione e documentazione. No findings.
+
+Confrontati breakBlocks/isBreakable originali, soglie durezza, cooldown/drop
+originali e shootFireAtMob; letti i percorsi vanilla26.3 DismountHelper,
+LivingEntity.stopRiding/dismountVehicle e caduta. Nessun nuovo mixin comune.
+Verificati reset fra pilota/IA, portata/alleati/ostacoli, griefing e controllo dei
+fronti UP senza contare i pacchetti come tick. La distruzione fisica è limitata
+alla vegetazione, distinta dal terreno del soffio già esistente.
+
+56 JUnit,41 GameTest della mod senza fallimenti/errori (42 con baseline vanilla
+always_pass escluso dal conteggio),un test client in mondo/screenshot riusciti.
+Sette nuovi GameTest includono movimento reale del drago125giorni oltre la
+barriera di tronchi/foglie, danni, caduta dopo dismount in aria, uscita laterale,
+fallback su pilastro isolato e doppio salto con sollevamento da montato.
+
+Due errori iniziali nella preparazione dei nuovi test sono stati corretti:
+salute2000 superava il cap vanilla1024 (usata1000); il primo pilastro era vicino
+al pavimento dell'arena e offriva un'uscita laterale valida (alzato di20blocchi).
+Le asserzioni di assenza danno prima del warmup e protezione del fallback sono
+rimaste. I limiti originali di IA/attacchi aerei e multiplayer reale restano aperti;
+nessun collaudo visivo in prima persona delle nuove azioni è dichiarato.
+
+
 ## Revisione 0.1.14 — 24 ottobre 2026
 
 Skill locale review-agent applicata in sola lettura, senza delega, al diff completo

@@ -1,5 +1,46 @@
 # Prompt completo per continuare il porting su un altro PC
 
+## Checkpoint 0.1.15 — 24 ottobre 2026
+
+Ultimo messaggio utente autorizza l'uso del computer per test e annuncia due
+obiettivi, ma si interrompe prima dell'elenco. Chiarimento già richiesto:
+non inventare i due obiettivi; recepirli prima del lavoro successivo.
+
+Riscontro sulla0.1.14: drago stadio5 bloccato dagli alberi durante la difesa;
+richiesta sicurezza del dismount solo a terra, doppio salto per decollare e
+proseguimento del port. Base208773ef1, switch/pull --ff-only del ramo personale.
+
+Aggiunto DragonVegetation: dallo stadio3 apre il corridoio locale attraverso
+tronchi/foglie, con durezza2/5 originale, cooldown5tick e drop tronchi0.1
+configurabili. Rispetta mobGriefing/dragonGriefing/tamedDragonGriefing, blacklist,
+fluidi, block entity e chunk caricati. Non è il breakBlocks generale originale:
+nessuna demolizione di pietra/casse. Vale anche per legno/foglie piazzati.
+DragonMeleeGoal approccia localmente se vanilla non trova il percorso e lo
+ricalcola quando la vegetazione cambia. Collisione/dimensioni stadio5 conservate.
+
+Dismount solo con drago vivo/onGround/non flying: ricerca laterale supportata
+con DismountHelper, collisione/bordo/fluidi e corpo controllati. Se manca l'uscita,
+fallback vanilla sopra il corpo con protezione della caduta corrente tramite
+setIgnoreFallDamageFromCurrentImpulse. In aria nessuna protezione aggiunta o
+uscita a terra, resta la caduta vanilla. Nessun dorso solido, nessun mixin nuovo.
+
+DragonTakeoff riconosce due fronti UP distinti entro7tick, anche se tutti i pacchetti
+arrivano fra due tick server; restano V e spazio>20tick. Reset per stadio/discesa/
+dismount; client e server usano lo stesso input esistente, nessun nuovo payload.
+
+Avanzamento: soffio autonomo terrestre stage2+, con bersaglio visibile fuori
+portata del morso entro10*stage, warmup20/estensione40/durata stage*25.
+Riutilizza danni server, alleati, clipping, terreno e particelle. Si arresta per
+comandi/controllo/bersaglio non valido e riprende il morso vicino. Non sono migrate
+palla di fuoco autonoma o modalità aeree originali. TEST-0.1.15.md contiene prove
+ed esatti limiti; STATO-TAPPA-1.md resta il riepilogo cumulativo.
+
+Build verificata: 56 JUnit, 41 GameTest della mod (42 includendo always_pass
+vanilla escluso dal conteggio) e un test client grafico con mondo/screenshot
+superati. Nessuna prova multiplayer con due veri client o collaudo visivo delle
+novità di combattimento. Revisione completa review-agent read-only: No findings.
+
+
 ## Aggiornamento 0.1.14 — difesa autonoma, 24 ottobre 2026
 
 L'utente conferma la 0.1.13: "ho provato e funziona tutto", e chiede di continuare.

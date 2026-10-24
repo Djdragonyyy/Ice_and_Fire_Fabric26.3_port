@@ -12,6 +12,8 @@ public final class DragonCombatConfig {
     public int dragonGriefing = 0;
     public boolean tamedDragonGriefing = true;
     public boolean canDragonsHealFromBiting = true;
+    public int dragonBreakBlockCooldown = 5;
+    public double dragonBlockBreakingDropChance = 0.1;
 
     public static void load() {
         var path = FabricLoader.getInstance().getConfigDir().resolve("iceandfire-combat.json");
@@ -22,7 +24,10 @@ public final class DragonCombatConfig {
                     var parsed = gson.fromJson(reader, DragonCombatConfig.class);
                     if (parsed == null || !Double.isFinite(parsed.dragonAttackDamageFire)
                             || parsed.dragonAttackDamageFire < 0 || parsed.dragonAttackDamageFire > Float.MAX_VALUE / 5
-                            || parsed.dragonGriefing < 0 || parsed.dragonGriefing > 2) {
+                            || parsed.dragonGriefing < 0 || parsed.dragonGriefing > 2
+                            || parsed.dragonBreakBlockCooldown < 0 || parsed.dragonBreakBlockCooldown > 10000
+                            || !Double.isFinite(parsed.dragonBlockBreakingDropChance)
+                            || parsed.dragonBlockBreakingDropChance < 0 || parsed.dragonBlockBreakingDropChance > 1) {
                         throw new IllegalArgumentException("Invalid combat values");
                     }
                     current = parsed;

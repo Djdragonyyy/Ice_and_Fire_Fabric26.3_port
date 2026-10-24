@@ -2,7 +2,17 @@
 
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
-Versione corrente: **0.1.14-stage1-dev**. Prima IA difensiva autonoma: bersaglio
+Versione corrente: **0.1.15-stage1-dev**. Corridoio locale fra tronchi/foglie
+per la difesa dei draghi adulti; dismount laterale e protezione della caduta solo
+a terra; doppio salto per decollare; primo soffio autonomo terrestre a distanza.
+Istruzioni e limiti: [TEST-0.1.15.md](TEST-0.1.15.md). Tappa1 incompleta.
+
+Build verificata: 56 JUnit, 41 GameTest della mod (42 includendo always_pass
+vanilla escluso dal conteggio) e un test client grafico con mondo/screenshot
+superati. Nessuna prova multiplayer con due veri client o collaudo visivo delle
+novità di combattimento. Revisione completa review-agent read-only: No findings.
+
+Versione precedente: **0.1.14-stage1-dev**. Prima IA difensiva autonoma: bersaglio
 del proprietario, difesa sua e del drago, inseguimento terrestre e morso con
 impatto nella finestra originale dell'animazione. Se in aria atterra per combattere.
 Attacchi aerei e altri attacchi terrestri restano da migrare. Istruzioni:

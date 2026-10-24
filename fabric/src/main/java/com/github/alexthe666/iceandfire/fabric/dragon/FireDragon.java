@@ -360,7 +360,7 @@ public final class FireDragon extends TamableAnimal {
     private void tickCombat(ServerLevel server) {
         LivingEntity rider = getControllingPassenger();
         if (rider == null) {
-            tickAutonomousBite(server);
+            tickAutonomousCombat(server);
             syncCombat();
             return;
         }
@@ -404,7 +404,7 @@ public final class FireDragon extends TamableAnimal {
         syncCombat();
     }
 
-    private void tickAutonomousBite(ServerLevel server) {
+    private void tickAutonomousCombat(ServerLevel server) {
         LivingEntity target = getTarget();
         boolean active = target != null && canAttack(target) && !flying() && !isInWater();
         if (!wasAutonomousCombat) combat.reset();
@@ -413,8 +413,19 @@ public final class FireDragon extends TamableAnimal {
             combat.reset();
             autonomousBiteTarget = null;
         }
-        combat.tick(active, false, stage());
+        boolean fire = active && stage() > 1 && !withinBiteReach(target) && hasLineOfSight(target)
+                && distanceTo(target) <= 10 * stage() && combat.animation() != DragonCombatState.BITE;
+        if (!fire && combat.breathing()) combat.reset();
+        combat.tick(active, fire, stage());
         if (!active) return;
+        if (fire) {
+            if (combat.emitting()) {
+                Vec3 head = DragonFireCombat.clip(this, getEyePosition(), headPosition());
+                DragonFireCombat.breath(server, this, head, target.getEyePosition(), combat.streamProgress());
+                if (tickCount % 5 == 0) playSound(IafContent.FIRE_BREATH, 4, 1);
+            }
+            return;
+        }
         if (combat.animation() == DragonCombatState.NONE && withinBiteReach(target) && hasLineOfSight(target)) {
             combat.start(DragonCombatState.BITE);
             autonomousBiteTarget = target;
@@ -511,6 +522,30 @@ public final class FireDragon extends TamableAnimal {
     @Override protected boolean canAddPassenger(Entity passenger) {
         return couldAcceptPassenger() && passenger instanceof Player player
                 && isOwnedBy(player) && DragonGrowth.canCarryRider(ageDays());
+    }
+
+    @Override public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
+        if (isAlive() && onGround() && !flying()) {
+            double radius = (getBbWidth() + passenger.getBbWidth()) / 2 + 1;
+            for (int ring = 0; ring < 3; ring++) for (int i = 0; i < 8; i++) {
+                double angle = Math.toRadians(getYRot() + i * 45);
+                for (int dy : new int[]{0, 1, -1, -2}) {
+                    BlockPos pos = BlockPos.containing(getX() + Math.cos(angle) * (radius + ring),
+                            getY() + dy, getZ() + Math.sin(angle) * (radius + ring));
+                    if (!level().hasChunkAt(pos) || !level().hasChunkAt(pos.above(2))) continue;
+                    Vec3 safe = net.minecraft.world.entity.vehicle.DismountHelper.findSafeDismountLocation(
+                            passenger.getType(), level(), pos, true);
+                    if (safe == null) continue;
+                    var box = passenger.getBoundingBox().move(safe.subtract(passenger.position()));
+                    if (!box.intersects(getBoundingBox()) && level().getWorldBorder().isWithinBounds(box)
+                            && level().noCollision(passenger, box) && !level().containsAnyLiquid(box)) return safe;
+                }
+            }
+            // No supported side is available: keep vanilla's exit above the body,
+            // protecting only this grounded dismount's fall. Never grant this in flight.
+            passenger.setIgnoreFallDamageFromCurrentImpulse(true, passenger.position());
+        }
+        return super.getDismountLocationForPassenger(passenger);
     }
 
     @Override protected void tickRidden(Player player, Vec3 input) {

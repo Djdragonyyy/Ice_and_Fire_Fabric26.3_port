@@ -1,10 +1,30 @@
 # Stato della tappa 1 — drago di fuoco, Fabric 26.3
 
-Aggiornato per 0.1.14-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
+Aggiornato per 0.1.15-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
 Questo riepilogo distingue ciò che è nel codice da ciò che manca: build e test
 non sostituiscono il riscontro in gioco, soprattutto per grafica e multiplayer.
 L'utente ha confermato la 0.1.13 funzionante il 24 ottobre e chiesto di continuare.
-Le novità 0.1.14 richiedono il suo collaudo. Nessun passaggio alla tappa 2.
+La prova0.1.14 ha rilevato alberi e dismount: correzioni0.1.15 da collaudare. Nessun passaggio alla tappa 2.
+
+## Novità 0.1.15
+
+- Adulti stage3+: apertura del passaggio locale fra tronchi e foglie durante
+  difesa/inseguimento, secondo durezza e griefing originali; percorso ricalcolato.
+  Nessuna riduzione della dimensione stadio5 e nessun attraversamento dei blocchi.
+- Dismount laterale supportato solo a terra. Se non trova uscita, protezione
+  della caduta corrente dal corpo; in aria resta la caduta vanilla senza immunità
+  aggiunta. Nessun dorso solido o nuovo posto.
+- Doppio salto entro7tick per decollare da montato; restano V e spazio tenuto.
+- Soffio autonomo terrestre stage2+ a distanza e con linea di vista, warmup e
+  danni server originali; vicino torna al morso. Palla di fuoco autonoma e attacchi
+  aerei restano da migrare. Configurati cooldown e drop della vegetazione.
+
+Vedere TEST-0.1.15.md. Navigazione aerea fra ostacoli complessi ancora incompleta.
+
+Build verificata: 56 JUnit, 41 GameTest della mod (42 includendo always_pass
+vanilla escluso dal conteggio) e un test client grafico con mondo/screenshot
+superati. Nessuna prova multiplayer con due veri client o collaudo visivo delle
+novità di combattimento. Revisione completa review-agent read-only: No findings.
 
 ## Novità 0.1.14
 
@@ -15,7 +35,7 @@ originale dipendente dalla dimensione visiva. Un colpo riuscito per morso,
 verifiche server di distanza, linea di vista, alleati e stati di controllo.
 Seduto/NoAI/pilota/spalle interrompono; cambio bersaglio riavvia l'animazione.
 Se già in volo, atterra prima di combattere: soluzione transitoria fino alle
-modalità aeree originali. Caccia, soffio autonomo e altri attacchi non ancora migrati.
+modalità aeree originali. Caccia e altri attacchi restavano da migrare; il soffio terrestre è aggiunto nella0.1.15.
 Vedere TEST-0.1.14.md per prove automatiche e collaudo in gioco.
 
 Build riuscita: 53 JUnit, 34 GameTest della mod (più always_pass vanilla escluso)
@@ -99,7 +119,7 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 
 ## Da completare nella tappa 1
 
-- Combattimento autonomo: caccia/selezione non difensiva, soffio, attacchi terrestri mancanti e
+- Combattimento autonomo: caccia/selezione non difensiva, palla di fuoco autonoma, altri attacchi terrestri e
   modalità aeree originali (tackle, hover blast, scorch stream), reazioni e
   coordinamento con movimento e volo.
 - Raccolta e consumo del cibo dagli oggetti a terra; altre interazioni originali
@@ -121,4 +141,4 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 Restano fuori da questa consegna draghi di ghiaccio/fulmine, altre creature,
 progressione completa, ricette, strutture e generazione naturale: appartengono
 alle tappe successive. Non iniziarle prima del completamento e del riscontro
-sulla tappa 1. La 0.1.13 è confermata; collaudare ora la difesa autonoma 0.1.14.
+sulla tappa 1. La 0.1.13 è confermata; collaudare ora le novità0.1.15.

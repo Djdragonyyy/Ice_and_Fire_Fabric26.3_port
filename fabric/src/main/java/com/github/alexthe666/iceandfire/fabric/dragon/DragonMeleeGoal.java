@@ -7,6 +7,7 @@ import java.util.EnumSet;
 final class DragonMeleeGoal extends Goal {
     private final FireDragon dragon;
     private int recalculate;
+    private int vegetationDelay;
 
     DragonMeleeGoal(FireDragon dragon) {
         this.dragon = dragon;
@@ -17,7 +18,7 @@ final class DragonMeleeGoal extends Goal {
     }
     @Override public boolean canContinueToUse() { return canUse(); }
     @Override public boolean requiresUpdateEveryTick() { return true; }
-    @Override public void start() { recalculate = 0; }
+    @Override public void start() { recalculate = vegetationDelay = 0; }
     @Override public void tick() {
         var target = dragon.getTarget();
         if (target == null) return;
@@ -26,7 +27,15 @@ final class DragonMeleeGoal extends Goal {
             dragon.getNavigation().stop();
         } else if (--recalculate <= 0) {
             recalculate = 4 + dragon.getRandom().nextInt(7);
-            dragon.getNavigation().moveTo(target, 1.5);
+            if (!dragon.getNavigation().moveTo(target, 1.5)) {
+                // Vanilla cannot plan through a tree that the original dragon navigator marks breakable.
+                // Approach locally while the bounded vegetation sweep opens a normal ground path.
+                dragon.getMoveControl().setWantedPosition(target.getX(), dragon.getY(), target.getZ(), 1.5);
+            }
+        }
+        if ((!dragon.withinBiteReach(target) || !dragon.hasLineOfSight(target)) && --vegetationDelay <= 0) {
+            vegetationDelay = Math.max(1, com.github.alexthe666.iceandfire.fabric.DragonCombatConfig.current.dragonBreakBlockCooldown);
+            if (DragonVegetation.clearApproach(dragon, target)) recalculate = 0;
         }
     }
     @Override public void stop() { dragon.getNavigation().stop(); }
