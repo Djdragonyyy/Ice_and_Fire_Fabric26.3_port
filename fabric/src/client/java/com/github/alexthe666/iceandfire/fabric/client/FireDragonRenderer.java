@@ -127,6 +127,22 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
         return riderRenderPosition(state, anchor, riderScale);
     }
 
+    public record PreyRenderPose(Vec3 position, org.joml.Quaternionf rotation) {}
+    public PreyRenderPose preyRenderPose(FireDragon dragon, net.minecraft.world.entity.Mob prey, float partialTick) {
+        State state = new State(); extractRenderState(dragon, state, partialTick);
+        var model = (FireDragonPoseModel) getModel(); model.setupAnim(state);
+        var preyRenderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(prey);
+        Object preyModel = preyRenderer instanceof net.minecraft.client.renderer.entity.LivingEntityRenderer<?, ?, ?> living ? living.getModel() : null;
+        boolean horse = preyModel instanceof net.minecraft.client.model.animal.equine.HorseModel;
+        boolean upright = (prey.getBbHeight() > prey.getBbWidth() || preyModel instanceof net.minecraft.client.model.HumanoidModel)
+                && !(preyModel instanceof net.minecraft.client.model.QuadrupedModel) && !horse;
+        float yaw = net.minecraft.util.Mth.rotLerp(partialTick, prey.yRotO, prey.getYRot());
+        var matrix = DragonPreyAttachment.transform(model, state, prey.getBbWidth(), prey.getBbHeight(), yaw, upright, horse);
+        var offset = matrix.getTranslation(new org.joml.Vector3f());
+        return new PreyRenderPose(new Vec3(state.x + offset.x, state.y + offset.y, state.z + offset.z),
+                matrix.getNormalizedRotation(new org.joml.Quaternionf()));
+    }
+
     static Vec3 riderRenderPosition(State state, org.joml.Vector3f anchor) {
         return riderRenderPosition(state, anchor, 1);
     }

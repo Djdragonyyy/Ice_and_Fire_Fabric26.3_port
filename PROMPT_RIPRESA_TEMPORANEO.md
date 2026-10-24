@@ -1,12 +1,12 @@
 # Prompt temporaneo per la prossima ripresa
 
-Aggiornato il 24 ottobre 2026, checkpoint 0.1.21, nuova autorizzazione utente a proseguire nelle fasi.
+Aggiornato il 24 ottobre 2026, checkpoint 0.1.22, nuova autorizzazione utente a proseguire nelle fasi.
 Conservare fabric/HANDOFF.md: contiene lo storico e i vincoli permanenti.
 
 ---
 
 Continua il porting di Ice and Fire. Comunica in italiano. Leggi integralmente
-fabric/HANDOFF.md, fabric/README.md, fabric/REVIEW.md, fabric/TEST-0.1.21.md e gli
+fabric/HANDOFF.md, fabric/README.md, fabric/REVIEW.md, fabric/TEST-0.1.22.md e gli
 AGENTS.md applicabili. Non ricominciare da zero o sovrascrivere modifiche locali.
 
 Repository personale:
@@ -15,10 +15,12 @@ Ramo esclusivo: port/fabric-26.3. Controlla stato, remote e git log prima di
 modificare; git switch e git pull --ff-only origin port/fabric-26.3, preservando
 il lavoro locale. Verifica l'esistenza del commit base 417f5a8d2. Niente reset.
 
-Prima leggere fabric/STATO-TAPPA-1.md. Checkpoint0.1.19: riproduzione con fire_stew,
-ricerca/corteggiamento, uovo/nido, cooldown6000 salvato e protezioni del terreno.
-Uovo nato senza proprietario, raccolta/ripiazzamento lo assegnano; test fino alla
-schiusa. Uova non spingibili come originale. Conservato tutto fino alla0.1.18.
+Prima leggere fabric/STATO-TAPPA-1.md. Checkpoint0.1.22: presa/scuotimento di
+prede mob con passeggero nativo, ID separato dal pilota e UUID/tick salvati.
+Danno singolo dopo55tick, cura/fame e rilascio; cancellazioni e priorità comandi.
+Pose originali e recupero della presa dal caricatore ricorsivo. Conservati tutti
+i checkpoint precedenti: riproduzione/nido, stendardi, caccia, sonno/occhi,
+cibo, attacchi, armature, volo, controlli e proprietà. Tappa1 incompleta.
 
 ULTIMA AUTORIZZAZIONE: utente a dormire, autonomia completa, test di ogni blocco,
 proseguire il più possibile nelle fasi usando quota disponibile. Sospensione PC
@@ -29,12 +31,13 @@ Non consumare quota artificialmente o dichiarare chiuse fasi non migrate.
 Nuova richiesta supera attese di riscontro fra checkpoint, conserva ordine delle
 tappe e loro verifica. La1 è ancora incompleta.
 
-Checkpoint0.1.20: layer stendardo BodyUpper animato con colori/motivi e snapshot sincronizzato. Checkpoint0.1.21: caccia/config ricerca, difesa e target attivi prioritari, cibo raggiungibile prima di nuova caccia. Prossimi: shake prey/
-caccia, stendardo, configurazioni/interazioni/animazioni e limiti navigazione/
-acqua/lava nello stato cumulativo. Uova raccolte senza incubazione/proprietà.
-Sonno solo libero, NoAI congela automazione; targeting separato da movimento per
-difesa dal sonno. Occhi order1, armature2..5. Conservare correzioni0.1.15,
-teletrasporto richiesto, unica seduta, niente dorso solido. Punte grigie aperte.
+Prossimi: configurazioni originali ancora fisse, interazioni e animazioni
+secondarie/suoni, dettagli acqua/lava e navigazione complessa. Usare lo stato
+cumulativo; caccia/stendardo/sonno/riproduzione/presa sono già presenti, non
+ricominciare quei blocchi. Giocatori esclusi dalla presa in questa fase.
+Nessuna mutazione NoAI della preda, un solo occupante e nessun nuovo posto.
+Uova raccolte senza incubazione/proprietà. Sonno libero, targeting separato dal
+movimento per difesa dal sonno; occhi ordine1 e armature2..5. Punte grigie aperte.
 
 Toolchain fissata: Minecraft Java 26.3, JDK25, Loader0.19.5, Fabric API
 0.163.0+26.3, Loom1.18.4, Gradle9.7.1. Usare fabric/ come progetto Gradle
@@ -49,8 +52,8 @@ Cache, JDK, mondi e build non sono nel Git e vanno ricostruiti dopo un clone.
 ```
 
 Prosegui la tappa1 confrontando sempre i sorgenti originali conservati in src/.
-Prossimi blocchi: completare combattimento autonomo e altri attacchi, cibo da terra,
-interazioni e animazioni mancanti, sonno/riproduzione e layer dello stendardo.
+Prossimi blocchi: configurazioni originali residue, altre interazioni, animazioni
+secondarie e suoni; verificare lacune nello stato cumulativo.
 Il flight manager attuale non è un pathfinder aereo completo per aggirare edifici
 o grotte; acqua/lava complete e configurazioni di volo restano da migrare.
 Pianifica e verifica i comportamenti prima di dichiararli migrati.

@@ -1,6 +1,39 @@
 # Prompt completo per continuare il porting su un altro PC
 
-Verificati62 JUnit,73 GameTest della mod (74 con baseline vanilla escluso) e4 prove client con otto screenshot. Nessuna prova con due veri client.
+Verificati66 JUnit,78 GameTest della mod (79 con baseline vanilla escluso) e4 prove client con dieci screenshot. Nessuna prova con due veri client.
+
+## Checkpoint 0.1.22 — shake prey
+
+Base7eeb6cfd5. Attacco SHAKE65tick con pose grab1/2 e grab_shake1/2/3 originali;
+movimento preda da updatePreyInMouth. Prima azione nuovo target resta morso,
+poi scelta4attacchi; SHAKE tenta presa1/2, altrimenti morso. Solo libero, terra,
+stage2+, mob largo<metàcorpo, visibile/vicino e privo di altri veicoli/passeggeri.
+Giocatori esclusi intenzionalmente dalla presa in questa fase; restano solo
+piloti proprietari. Un solo occupante: pilota oppure preda, nessuna seconda sella.
+
+Presa nativa passeggero+ID sincronizzato separato dal pilota, NoAI preda invariato.
+Drago fermo, niente sonno/decollo casuale. Dopo55tick: danno2*ATTACK_DAMAGE una
+volta, cura50% se abilitata e +1fame; rilascio e recupero fino65. Comandi/NoAI,
+morte, nuovo alleato, acqua/volo o bersaglio diverso interrompono. Pilota che
+sale dopo il rilascio ha precedenza sui fotogrammi residui. Nessun cambiamento
+al dismount/immunità o al dorso. Corpo yaw allineato come originale durante presa.
+
+NBT UUID+GripTick e passeggeri vanilla, caricatore ricorsivo nativo verificato;
+riprende windup residuo. refreshDimensions prima di validare preda caricata,
+altrimenti il primo tick usa ancora dimensioni baby e la sgancia erroneamente.
+Fixture create istantaneamente devono aggiornare dimensioni e simulare anche
+l'incremento tickCount che normalmente fa ServerLevel prima di Entity.tick;
+non alterare produzione fame per adattarla a fixture manuali ferme a tick0.
+
+Aggancio visivo originale testa/collo e rotazione preda migrati con mixin client;
+nessuna copia del mob. Stato rotazione azzerato al rilascio, scala del mob
+indipendente dalla crescita del drago. Visibilità preda delegata al portatore,
+regressione frustum riprodotta e corretta; screenshot ravvicinato in mondo.
+Anteprima GUI solo drago, passeggero verificato nel mondo, shader non provati.
+
+Cinque nuovi GameTest, quattro JUnit (movimento/aggancio), regressioni posa estese e test client
+combattimento esteso a presa/passeggero/pose e statistiche. Non equivalgono a
+riavvio completo del processo con due veri client. Tappa1 ancora incompleta.
 
 ## Checkpoint 0.1.21 — caccia autonoma
 

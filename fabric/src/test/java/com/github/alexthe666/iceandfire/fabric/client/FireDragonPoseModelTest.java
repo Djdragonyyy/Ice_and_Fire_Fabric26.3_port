@@ -9,6 +9,34 @@ import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FireDragonPoseModelTest {
+    @Test void preyVisualAttachmentKeepsItsSizeAndFollowsAnimatedHead() {
+        var model = model();
+        var state = new FireDragonRenderer.State(); state.attack = 7;
+        for (float scale : new float[]{0.3F, 7F / 3, 10}) {
+            state.scale = scale; state.attackTick = 30; model.setupAnim(state);
+            var first = DragonPreyAttachment.transform(model, state, 0.9F, 1.4F, 40, false, false);
+            var dimensions = first.getScale(new org.joml.Vector3f());
+            assertEquals(1, dimensions.x, 0.0001F); assertEquals(1, dimensions.y, 0.0001F); assertEquals(1, dimensions.z, 0.0001F);
+            assertEquals(1, first.determinant(), 0.0001F, "Dragon growth must cancel before the mob's own renderer");
+            assertTrue(first.equals(DragonPreyAttachment.transform(model, state, 0.9F, 1.4F, 40, false, false), 0.00001F));
+            var a = first.getTranslation(new org.joml.Vector3f());
+            state.attackTick = 45; model.setupAnim(state);
+            var b = DragonPreyAttachment.transform(model, state, 0.9F, 1.4F, 40, false, false).getTranslation(new org.joml.Vector3f());
+            assertTrue(a.distance(b) > 0.01, "Visual prey must follow the shaking head rather than a static passenger seat");
+        }
+    }
+
+    @Test void preyVisualAnchorRotatesWithDragonAndSupportsBothBodyOrientations() {
+        var model = model(); var state = new FireDragonRenderer.State(); state.scale = 3; state.attack = 7; state.attackTick = 35;
+        model.setupAnim(state);
+        var a = DragonPreyAttachment.transform(model, state, 0.9F, 1.4F, 0, false, false).getTranslation(new org.joml.Vector3f());
+        state.bodyRot = 90;
+        var b = DragonPreyAttachment.transform(model, state, 0.9F, 1.4F, 0, false, false).getTranslation(new org.joml.Vector3f());
+        assertEquals(-a.z, b.x, 0.00001F); assertEquals(a.x, b.z, 0.00001F); assertEquals(a.y, b.y, 0.00001F);
+        var quadruped = DragonPreyAttachment.transform(model, state, 0.9F, 1.4F, 0, false, false);
+        var upright = DragonPreyAttachment.transform(model, state, 0.9F, 1.4F, 0, true, false);
+        assertFalse(quadruped.equals(upright, 0.01F), "Tall mobs and quadrupeds retain original distinct carry orientations");
+    }
     @Test void bannerFollowsOriginalBodyTransformAndKeepsWorldSizeAcrossGrowth() {
         var model = model();
         var state = new FireDragonRenderer.State();
@@ -73,10 +101,10 @@ class FireDragonPoseModelTest {
     }
     @Test void tailWingAndEatingPosesResetWithoutAccumulation() {
         var model = model();
-        for (int attack : new int[]{3, 4, 5, 6}) {
+        for (int attack : new int[]{3, 4, 5, 6, 7}) {
             var state = new FireDragonRenderer.State();
             state.attack = attack;
-            for (float tick : new float[]{0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50}) {
+            for (float tick : new float[]{0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65}) {
                 state.attackTick = tick;
                 model.setupAnim(state);
                 var first = rotations(model);
@@ -91,6 +119,8 @@ class FireDragonPoseModelTest {
         }
         assertEquals("tail2", FireDragonPoseModel.attackFrame(3, 20).from());
         assertEquals("wing_blast7", FireDragonPoseModel.attackFrame(4, 35).from());
+        assertEquals("grab2", FireDragonPoseModel.attackFrame(7, 25).from());
+        assertEquals("grab_shake3", FireDragonPoseModel.attackFrame(7, 55).from());
     }
     @Test void hoveringUsesOriginalBodyPoseAndKeepsWingCycleWithoutAccumulation() throws IOException {
         var model = model();

@@ -25,7 +25,11 @@ public final class DragonFireCombat {
     private DragonFireCombat() {}
 
     public static boolean friendly(FireDragon dragon, Entity target) {
-        if (target == dragon || target.isPassengerOfSameVehicle(dragon) || dragon.isAlliedTo(target)) return true;
+        return target.isPassengerOfSameVehicle(dragon) || protectedTarget(dragon, target);
+    }
+
+    static boolean protectedTarget(FireDragon dragon, Entity target) {
+        if (target == dragon || dragon.isAlliedTo(target)) return true;
         var owner = dragon.getOwnerReference();
         if (target instanceof LivingEntity living && dragon.isOwnedBy(living)) return true;
         if (owner != null && target instanceof OwnableEntity tame && tame.getOwnerReference() != null

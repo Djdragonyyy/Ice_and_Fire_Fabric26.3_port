@@ -1,6 +1,45 @@
 # Revisione del port Fabric
 
-Verificati62 JUnit,73 GameTest della mod (74 con baseline vanilla escluso) e4 prove client con otto screenshot. Nessuna prova con due veri client.
+Verificati66 JUnit,78 GameTest della mod (79 con baseline vanilla escluso) e4 prove client con dieci screenshot. Nessuna prova con due veri client.
+
+## Revisione 0.1.22 — 24 ottobre 2026
+
+Review-agent in sola lettura senza delega al diff completo da7eeb6cfd5: logica,
+pose, aggancio visivo, nuovi mixin, test/client e documenti. Confrontati originali
+updatePreyInMouth, doHurtTarget e LayerDragonRider, più bytecode API26.3 locale.
+
+[P2] Aggiornare dimensioni prima di validare la presa caricata — restoreGrip.
+Il caricatore ricorsivo ricostruiva UUID/passeggeri ma la scala fisica del padre
+non era ancora applicata al primo tick: la preda veniva sganciata come troppo
+grande. Corretto fuori revisione con refreshDimensions prima della validazione;
+stessa prova nativa ora riprende esattamente il tick21 dopo un salvataggio al20.
+
+[P2] Conservare la visibilità del portatore per la preda agganciata —
+DragonRiderRenderMixin.shouldRender. La preda renderizzata sulla testa poteva
+essere scartata usando il suo box fisico esterno al frustum. Nuova prova client
+ha riprodotto il difetto; delega al renderer del portatore come il layer originale,
+poi stessa asserzione superata. Non riguarda texture/culling del drago o punte grigie.
+
+Priorità del pilota dopo rilascio: il vecchio ramo SHAKE poteva ignorarlo fino
+al65. Corretto cancellando il recupero quando sale il proprietario; prova server
+verifica il posto liberato, il controllo del pilota e l'animazione annullata.
+No findings nella rilettura finale del blocco.
+
+66 JUnit,78 GameTest mod (79 con baseline vanilla escluso),4 test client. Ultima
+suite server completa prima delle modifiche soltanto client all'aggancio visivo;
+poi build/JUnit e tutte le prove client ripetute, con dieci screenshot finali.
+Il log consegnato concatena le esecuzioni pertinenti; XML server completo79,
+non il risultato filtrato4/1 usato in diagnosi. Screenshot ravvicinato in mondo
+ispezionato: preda sul capo con orientamento originale, senza entità duplicate.
+Verificati anche pulizia dello stato riusato, frustum e leggibilità della GUI.
+
+Fixture istantanee aggiornano dimensioni e incrementano tickCount come ServerLevel:
+lasciarlo a0 faceva calare artificialmente fame a ogni tick manuale. Corretto
+simulatore, mantenute asserzioni su fame51/danno singolo/cura e produzione invariata.
+RNG presa1/2 sul ramo scelto; giocatori esclusi dalla cattura in questa fase,
+solo mob e un occupante, NoAI preda mai riscritto. Salvataggio nativo UUID/tick,
+non un riavvio completo del processo. Anteprima GUI solo drago, preda verificata
+nel mondo; nessun collaudo shader esterni o con due veri client. Tappa1 incompleta.
 
 ## Revisione 0.1.21 — 24 ottobre 2026
 

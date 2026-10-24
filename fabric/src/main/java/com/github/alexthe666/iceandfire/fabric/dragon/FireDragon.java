@@ -46,6 +46,10 @@ public final class FireDragon extends TamableAnimal {
     private static final EntityDataAccessor<Integer> COMMAND = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> SLEEPING = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<ItemStack> BANNER = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.ITEM_STACK);
+    private static final EntityDataAccessor<Integer> GRIPPED_PREY = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.INT);
+    private java.util.UUID loadedPrey;
+    private int loadedGripTick;
+    private boolean gripImpactDone;
     private long sleepNotBefore;
     public float sleepProgress, prevSleepProgress;
     private BlockPos dragonHome;
@@ -124,6 +128,7 @@ public final class FireDragon extends TamableAnimal {
         builder.define(COMMAND, 0);
         builder.define(SLEEPING, false);
         builder.define(BANNER, ItemStack.EMPTY);
+        builder.define(GRIPPED_PREY, -1);
     }
 
     @Override protected void registerGoals() {
@@ -171,6 +176,7 @@ public final class FireDragon extends TamableAnimal {
         if (value) { getNavigation().stop(); seekingFood = false; }
     }
     public void setCommand(int value) {
+        if (!level().isClientSide()) releaseGrip(true);
         setDragonSleeping(false);
         entityData.set(COMMAND, Math.clamp(value, 0, 2));
         setOrderedToSit(command() == 1);
@@ -192,10 +198,11 @@ public final class FireDragon extends TamableAnimal {
     }
     boolean hasPriorityFood() { return foodGoal != null && foodGoal.canUse(); }
     public boolean canMoveAutonomously() {
-        return autonomousControlsAllowed() && !dragonSleeping();
+        return autonomousControlsAllowed() && !dragonSleeping() && attackAnimation() != DragonCombatState.SHAKE;
     }
     private boolean autonomousControlsAllowed() {
-        return isAlive() && !isNoAi() && command() != 1 && !isVehicle() && !isPassenger() && shoulderCarrier() == null;
+        return isAlive() && !isNoAi() && command() != 1 && (!isVehicle() || grippedPrey() != null)
+                && !isPassenger() && shoulderCarrier() == null;
     }
     @Override public void setTarget(LivingEntity target) {
         LivingEntity old = getTarget();
@@ -277,6 +284,7 @@ public final class FireDragon extends TamableAnimal {
     }
 
     @Override public void tick() {
+        if (!level().isClientSide() && loadedPrey != null) restoreGrip();
         Player carrier = shoulderCarrier();
         if (!level().isClientSide() && carrier != null && (!carrier.isAlive() || carrier.isRemoved()
                 || carrier.level() != level() || !isAlive() || !isOwnedBy(carrier)
@@ -367,7 +375,8 @@ public final class FireDragon extends TamableAnimal {
         if (isNoAi()) return;
         boolean supported = onGround() && !server.noCollision(this, getBoundingBox().move(0, -0.1, 0));
         if (!DragonCombatConfig.current.doDragonsSleep || !isAlive() || flying() || isInWater() || !supported
-                || isVehicle() || isPassenger() || shoulderCarrier() != null || command() != 0 || getTarget() != null || isInLove()) {
+                || isVehicle() || isPassenger() || shoulderCarrier() != null || command() != 0 || getTarget() != null || isInLove()
+                || attackAnimation() == DragonCombatState.SHAKE) {
             setDragonSleeping(false);
             return;
         }
@@ -440,6 +449,11 @@ public final class FireDragon extends TamableAnimal {
     }
 
     private void tickCombat(ServerLevel server) {
+        if (combat.animation() == DragonCombatState.SHAKE || grippedPrey() != null) {
+            tickGrip(server);
+            syncCombat();
+            return;
+        }
         LivingEntity rider = getControllingPassenger();
         if (rider == null) {
             tickAutonomousCombat(server);
@@ -544,8 +558,11 @@ public final class FireDragon extends TamableAnimal {
             return;
         }
         if (combat.animation() == DragonCombatState.NONE && withinBiteReach(target) && hasLineOfSight(target)) {
-            combat.start(nextMeleeAttack);
-            nextMeleeAttack = stage() == 1 ? DragonCombatState.BITE : new int[]{DragonCombatState.BITE, DragonCombatState.TAIL, DragonCombatState.WING}[random.nextInt(3)];
+            int chosen = nextMeleeAttack;
+            nextMeleeAttack = stage() == 1 ? DragonCombatState.BITE : new int[]{DragonCombatState.BITE, DragonCombatState.TAIL,
+                    DragonCombatState.WING, DragonCombatState.SHAKE}[random.nextInt(4)];
+            if (chosen == DragonCombatState.SHAKE && random.nextInt(2) == 0 && tryGrabPrey(target)) return;
+            combat.start(chosen == DragonCombatState.SHAKE ? DragonCombatState.BITE : chosen);
             autonomousBiteTarget = target;
             autonomousBiteHit = false;
             lastWingImpact = -1;
@@ -714,13 +731,13 @@ public final class FireDragon extends TamableAnimal {
 
     @Override protected boolean couldAcceptPassenger() {
         // Unlike canAddPassenger, vanilla checks this even for forced mounts and NBT loading.
-        // Dragons have only one passenger seat: the pilot's saddle.
+        // One occupant: the owner's pilot seat or an explicitly registered combat prey.
         return !isVehicle();
     }
 
     @Override protected boolean canAddPassenger(Entity passenger) {
-        return couldAcceptPassenger() && passenger instanceof Player player
-                && isOwnedBy(player) && DragonGrowth.canCarryRider(ageDays());
+        return couldAcceptPassenger() && (passenger instanceof Mob && passenger.getId() == entityData.get(GRIPPED_PREY)
+                || passenger instanceof Player player && isOwnedBy(player) && DragonGrowth.canCarryRider(ageDays()));
     }
 
     @Override public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
@@ -764,6 +781,8 @@ public final class FireDragon extends TamableAnimal {
     }
 
     @Override protected Vec3 getPassengerAttachmentPoint(Entity passenger, EntityDimensions dimensions, float scale) {
+        if (passenger == grippedPrey()) return DragonPreyMotion.offset(DragonGrowth.renderSize(ageDays()), getYRot(), attackAnimationTick())
+                .add(passenger.getVehicleAttachmentPoint(this));
         if (passenger != getControllingPassenger()) return super.getPassengerAttachmentPoint(passenger, dimensions, scale);
         // The default positionRider subtracts the passenger's vehicle attachment afterwards.
         // Return the seat in world units; physical SCALE is capped and must not scale it again.
@@ -927,6 +946,9 @@ public final class FireDragon extends TamableAnimal {
         output.putBoolean("Hovering", hovering());
         output.putInt("Command", command());
         output.putBoolean("Sleeping", dragonSleeping());
+        var prey = grippedPrey();
+        output.storeNullable("GrippedPrey", net.minecraft.core.UUIDUtil.CODEC, prey != null ? prey.getUUID() : loadedPrey);
+        output.putInt("GripTick", prey != null ? combat.animationTick() : loadedGripTick);
         output.putBoolean("HasHomePosition", hasDragonHome());
         if (dragonHome != null) {
             output.putInt("HomeAreaX", dragonHome.getX());
@@ -962,5 +984,77 @@ public final class FireDragon extends TamableAnimal {
         updateGrowth();
         updateArmor();
         setDragonSleeping(input.getBooleanOr("Sleeping", false) && !flying() && command() == 0);
+        loadedPrey = input.read("GrippedPrey", net.minecraft.core.UUIDUtil.CODEC).orElse(null);
+        loadedGripTick = Math.clamp(input.getIntOr("GripTick", 0), 0, 55);
+    }
+
+    public Mob grippedPrey() {
+        return getFirstPassenger() instanceof Mob mob && mob.getId() == entityData.get(GRIPPED_PREY) ? mob : null;
+    }
+
+    private boolean validPrey(LivingEntity target) {
+        // Player passengers remain exclusively the owner's pilot seat; combat capture is for mobs.
+        return target instanceof Mob && !(target instanceof FireDragon) && target.isAlive() && target.level() == level()
+                && stage() > 1 && target.getBbWidth() < getBbWidth() * 0.5F && !DragonFireCombat.protectedTarget(this, target);
+    }
+
+    boolean tryGrabPrey(LivingEntity target) {
+        if (level().isClientSide() || !canMoveOnGround() || command() != 0 || !onGround() || isVehicle() || isInWater()
+                || !validPrey(target) || target.isPassenger() || target.isVehicle() || !canAttack(target)
+                || !withinBiteReach(target) || !hasLineOfSight(target)) return false;
+        entityData.set(GRIPPED_PREY, target.getId());
+        if (!target.startRiding(this)) { entityData.set(GRIPPED_PREY, -1); return false; }
+        startGrip(0);
+        return true;
+    }
+
+    private void startGrip(int tick) {
+        combat.reset(); combat.resume(DragonCombatState.SHAKE, tick);
+        gripImpactDone = false;
+        getNavigation().stop(); setDeltaMovement(Vec3.ZERO);
+        syncCombat();
+    }
+
+    private void restoreGrip() {
+        var pending = loadedPrey;
+        loadedPrey = null;
+        // Growth attributes are loaded before vanilla's first dimension refresh.
+        refreshDimensions();
+        if (getFirstPassenger() instanceof Mob prey && pending.equals(prey.getUUID())) {
+            entityData.set(GRIPPED_PREY, prey.getId());
+            if (validPrey(prey) && !isNoAi() && command() == 0 && !flying() && !isInWater()) startGrip(loadedGripTick);
+            else releaseGrip(true);
+        }
+    }
+
+    private void tickGrip(ServerLevel server) {
+        Mob prey = grippedPrey();
+        if (!isAlive() || isNoAi() || command() != 0 || flying() || isInWater() || isPassenger() || getControllingPassenger() != null
+                || prey != null && (!validPrey(prey) || getTarget() != null && getTarget() != prey)
+                || prey == null && !gripImpactDone) { releaseGrip(true); return; }
+        getNavigation().stop(); setDeltaMovement(Vec3.ZERO); yBodyRot = getYRot();
+        combat.tick(true, false, stage());
+        if (prey != null && combat.animationTick() > 55 && !gripImpactDone) {
+            float damage = (float) getAttributeValue(Attributes.ATTACK_DAMAGE) * 2;
+            if (prey.hurtServer(server, damageSources().mobAttack(this), damage)
+                    && DragonCombatConfig.current.canDragonsHealFromBiting) heal(damage * 0.5F);
+            setHunger(hunger() + 1);
+            gripImpactDone = true;
+            releaseGrip(false);
+        }
+        if (combat.animation() == DragonCombatState.NONE) gripImpactDone = false;
+    }
+
+    private void releaseGrip(boolean reset) {
+        Mob prey = grippedPrey();
+        entityData.set(GRIPPED_PREY, -1);
+        if (prey != null) prey.stopRiding();
+        if (reset && combat.animation() == DragonCombatState.SHAKE) { combat.reset(); syncCombat(); }
+        if (reset) { gripImpactDone = false; loadedPrey = null; }
+    }
+
+    @Override public void remove(RemovalReason reason) {
+        if (reason.shouldDestroy()) releaseGrip(true);
+        super.remove(reason);
     }
 }

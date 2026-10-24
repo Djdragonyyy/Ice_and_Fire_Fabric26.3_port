@@ -2,9 +2,9 @@ package com.github.alexthe666.iceandfire.fabric.dragon;
 
 /** Timings from EntityDragonBase, EntityFireDragon and IafDragonLogic (LGPL-3.0). */
 public final class DragonCombatState {
-    public static final int NONE = 0, BITE = 1, CHARGE = 2, TAIL = 3, WING = 4, EAT = 5, TACKLE = 6;
+    public static final int NONE = 0, BITE = 1, CHARGE = 2, TAIL = 3, WING = 4, EAT = 5, TACKLE = 6, SHAKE = 7;
     public static int duration(int type) {
-        return switch (type) { case BITE -> 35; case TAIL -> 40; case WING -> 50; case EAT -> 20; default -> 30; };
+        return switch (type) { case BITE -> 35; case TAIL -> 40; case WING -> 50; case EAT -> 20; case SHAKE -> 65; default -> 30; };
     }
     public static boolean meleeImpact(int type, int tick) {
         return switch (type) {
@@ -41,6 +41,11 @@ public final class DragonCombatState {
 
     public void start(int type) {
         if (animation != type) { animation = type; animationTick = 0; }
+    }
+
+    public void resume(int type, int tick) {
+        animation = type;
+        animationTick = Math.clamp(tick, 0, duration(type) - 1);
     }
 
     public void reset() {

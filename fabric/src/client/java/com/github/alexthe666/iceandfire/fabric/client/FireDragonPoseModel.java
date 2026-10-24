@@ -42,7 +42,8 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
         for (String name : List.of("base_male", "base_female", "flying", "hovering", "sitting", "sitting_shoulder", "walk1", "walk2", "walk3", "walk4",
                 "flight1", "flight2", "flight3", "flight4", "flight5", "flight6",
                 "bite1", "bite2", "bite3", "attack_blast_charge1", "attack_blast_charge2", "attack_blast_charge3", "attack_stream_breath",
-                "tail1", "tail2", "tail3", "wing_blast1", "wing_blast2", "wing_blast3", "wing_blast4", "wing_blast5", "wing_blast6", "wing_blast7", "attack_tackle", "sleeping")) {
+                "tail1", "tail2", "tail3", "wing_blast1", "wing_blast2", "wing_blast3", "wing_blast4", "wing_blast5", "wing_blast6", "wing_blast7", "attack_tackle", "sleeping",
+                "grab1", "grab2", "grab_shake1", "grab_shake2", "grab_shake3")) {
             poses.put(name, loader.apply(name));
         }
     }
@@ -57,6 +58,12 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
 
     /** Original LayerDragonBanner attaches directly to animated BodyUpper. */
     void translateToBody(PoseStack stack) { parts.get("BodyUpper").translateAndRotate(stack); }
+    void translateToPreyBody(PoseStack stack) {
+        translateToBody(stack); parts.get("Neck1").translateAndRotate(stack);
+    }
+    void translateToPreyHead(PoseStack stack) {
+        for (String name : List.of("Neck2", "Neck3", "Head")) parts.get(name).translateAndRotate(stack);
+    }
 
     private static TabulaLoader.Model pose(ResourceManager resources, String name) {
         return TabulaLoader.loadModel(resources, IafContent.id("models/tabula/firedragon/firedragon_" + name + ".tbl"));
@@ -151,6 +158,9 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
         } else if (attack == DragonCombatState.WING) {
             names = new String[]{null, "wing_blast1", "wing_blast2", "wing_blast3", "wing_blast4", "wing_blast5", "wing_blast6", "wing_blast7", null};
             durations = new int[]{5, 5, 5, 5, 5, 5, 5, 10};
+        } else if (attack == DragonCombatState.SHAKE) {
+            names = new String[]{null, "grab1", "grab2", "grab_shake1", "grab_shake2", "grab_shake3", null};
+            durations = new int[]{15, 10, 10, 10, 10, 10};
         }
         float time = Math.max(0, tick);
         for (int i = 0; i < durations.length; i++) {
