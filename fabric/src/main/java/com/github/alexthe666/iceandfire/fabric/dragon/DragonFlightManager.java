@@ -71,6 +71,7 @@ final class DragonFlightManager {
         if (!dragon.flying()) {
             returning = wantsRoost;
             if (dragon.command() == 1) return;
+            if (dragon.seekingFood) return;
             if (wantsRoost) {
                 if (horizontalHomeDistance() > 40 && takeOff()) returning = true;
                 return;

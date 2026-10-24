@@ -9,6 +9,27 @@ import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FireDragonPoseModelTest {
+    @Test void tailWingAndEatingPosesResetWithoutAccumulation() {
+        var model = model();
+        for (int attack : new int[]{3, 4, 5}) {
+            var state = new FireDragonRenderer.State();
+            state.attack = attack;
+            for (float tick : new float[]{0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50}) {
+                state.attackTick = tick;
+                model.setupAnim(state);
+                var first = rotations(model);
+                model.setupAnim(state);
+                assertArrayEquals(first, rotations(model), 0.00001F);
+            }
+            state.attack = 0;
+            model.setupAnim(state);
+            var reset = rotations(model);
+            model.setupAnim(new FireDragonRenderer.State());
+            assertArrayEquals(reset, rotations(model), 0.00001F);
+        }
+        assertEquals("tail2", FireDragonPoseModel.attackFrame(3, 20).from());
+        assertEquals("wing_blast7", FireDragonPoseModel.attackFrame(4, 35).from());
+    }
     @Test void hoveringUsesOriginalBodyPoseAndKeepsWingCycleWithoutAccumulation() throws IOException {
         var model = model();
         var state = new FireDragonRenderer.State();

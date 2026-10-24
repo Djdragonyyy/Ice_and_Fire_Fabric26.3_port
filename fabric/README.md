@@ -2,7 +2,11 @@
 
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
-Versione corrente: **0.1.15-stage1-dev**. Corridoio locale fra tronchi/foglie
+Versione corrente: **0.1.16-stage1-dev**. Carne raccolta da terra con cammino,
+consumo/cura e animazione sincronizzata; attacchi terrestri coda/ali e palla di
+fuoco autonoma. Istruzioni: [TEST-0.1.16.md](TEST-0.1.16.md). Tappa1 incompleta.
+
+Versione precedente: **0.1.15-stage1-dev**. Corridoio locale fra tronchi/foglie
 per la difesa dei draghi adulti; dismount laterale e protezione della caduta solo
 a terra; doppio salto per decollare; primo soffio autonomo terrestre a distanza.
 Istruzioni e limiti: [TEST-0.1.15.md](TEST-0.1.15.md). Tappa1 incompleta.

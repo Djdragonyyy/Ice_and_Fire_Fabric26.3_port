@@ -1,12 +1,12 @@
 # Prompt temporaneo per la prossima ripresa
 
-Aggiornato il 24 ottobre 2026, checkpoint 0.1.15, dopo segnalazioni su alberi/dismount della0.1.14.
+Aggiornato il 24 ottobre 2026, checkpoint 0.1.16, nuova autorizzazione utente a proseguire nelle fasi.
 Conservare fabric/HANDOFF.md: contiene lo storico e i vincoli permanenti.
 
 ---
 
 Continua il porting di Ice and Fire. Comunica in italiano. Leggi integralmente
-fabric/HANDOFF.md, fabric/README.md, fabric/REVIEW.md, fabric/TEST-0.1.15.md e gli
+fabric/HANDOFF.md, fabric/README.md, fabric/REVIEW.md, fabric/TEST-0.1.16.md e gli
 AGENTS.md applicabili. Non ricominciare da zero o sovrascrivere modifiche locali.
 
 Repository personale:
@@ -15,25 +15,26 @@ Ramo esclusivo: port/fabric-26.3. Controlla stato, remote e git log prima di
 modificare; git switch e git pull --ff-only origin port/fabric-26.3, preservando
 il lavoro locale. Verifica l'esistenza del commit base 417f5a8d2. Niente reset.
 
-Prima di continuare leggere anche fabric/STATO-TAPPA-1.md. Il 24 ottobre l'utente
-ha confermato la 0.1.13 funzionante e autorizzato a proseguire. Il teletrasporto
-richiesto a150 blocchi resta autorizzato. La precedente sospensione PC era una
-richiesta specifica già eseguita: non sospendere di nuovo senza nuova richiesta.
+Prima leggere anche fabric/STATO-TAPPA-1.md. Checkpoint0.1.16: cibo a terra,
+animazione EAT, attacchi coda/ali con pose originali, palla di fuoco autonoma.
+Verifiche:58 JUnit,46 GameTest mod più baseline vanilla escluso,un test client.
+Review-agent read-only completa senza delega: No findings. Non attribuire alla
+prova client delle armature un collaudo visivo delle nuove animazioni.
 
-Checkpoint attuale: 0.1.15-stage1-dev. Difesa e morso autonomi già nella0.1.14,
-ora passaggio locale fra tronchi/foglie per adulti stage3+ (griefing/blacklist
-rispettati), dismount sicuro/protezione della caduta solo a terra e doppio salto
-entro7tick per decollare. In aria nessuna uscita a terra o immunità aggiunta;
-nessun dorso solido. Primo soffio autonomo terrestre stage2+ a distanza visibile,
-con warmup20/estensione40 e danni server già migrati. Non dichiarare migrate
-palla di fuoco autonoma, altri attacchi o modalità aeree originali.
-La0.1.13 è confermata, l'utente ha segnalato problemi dopo la0.1.14; collaudare
-le correzioni e novità0.1.15. Non sospendere il PC senza nuova richiesta.
+ULTIMA AUTORIZZAZIONE UTENTE: proseguire il più possibile attraverso tutte le
+fasi usando la quota disponibile; sospendere il PC alla fine dei test, dopo
+salvataggio/push/consegna. Non consumare quota artificialmente. La nuova richiesta
+supera l'attesa del riscontro fra checkpoint, ma non l'ordine delle fasi o la
+necessità di completarle/verificarle. Goal del thread attivo per il port completo.
+Non inventare un completamento delle fasi2..4: la1 è ancora incompleta.
 
-Build verificata: 56 JUnit, 41 GameTest della mod (42 includendo always_pass
-vanilla escluso dal conteggio) e un test client grafico con mondo/screenshot
-superati. Nessuna prova multiplayer con due veri client o collaudo visivo delle
-novità di combattimento. Revisione completa review-agent read-only: No findings.
+Restano modalità aeree, shake prey/caccia, sonno/riproduzione, stendardo, altre
+animazioni/configurazioni/interazioni e limiti elencati nello stato cumulativo.
+La palla di fuoco sceglie1/5 fra cicli di stream, non ogni tick: comportamento
+stabile esplicitato, emissione20 e cura solo del morso. Cibo a terra solo libero,
+comandi prioritari; cura foodPoints differente dalla carne data a mano.
+Conservare correzioni0.1.15, teletrasporto richiesto, unica seduta e niente dorso
+solido. Punte grigie aperte, nessun collaudo con due veri client.
 
 Toolchain fissata: Minecraft Java 26.3, JDK25, Loader0.19.5, Fabric API
 0.163.0+26.3, Loom1.18.4, Gradle9.7.1. Usare fabric/ come progetto Gradle
@@ -56,7 +57,7 @@ Pianifica e verifica i comportamenti prima di dichiararli migrati.
 
 Vincoli permanenti:
 
-- Tappa1 incompleta: non passare alla tappa2 senza completamento e riscontro.
+- Tappa1 incompleta: completarla/verificarla prima della2; avanzamento nelle fasi ora autorizzato.
 - Punte grigie ancora aperte: diagnosi e immagini già ricevute in HANDOFF.md.
   Non cambiare UV o riempire trasparenze alla cieca; non dichiararle risolte.
 - Non reintrodurre il dorso solido derivato dal ghast. Un solo pilota adulto.

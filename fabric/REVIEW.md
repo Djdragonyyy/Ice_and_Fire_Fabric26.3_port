@@ -1,5 +1,25 @@
 # Revisione del port Fabric
 
+## Revisione 0.1.16 — 24 ottobre 2026
+
+Review-agent locale applicata in sola lettura al diff completo da17364c28c,
+compresi nuovi goal/test, rendering, documenti, versione e registrazioni.
+No findings. Confrontati DragonAITargetItems, IafDragonLogic.updateDragonAttack,
+DragonTabulaModelAnimator e EntityFireDragon.shootFireAtMob, con API26.3 locali.
+Verificati stack/portata/pickup delay, stato transitorio, reset su target diverso,
+contraccolpo server, emissione20 della carica, pose e controlli già confermati.
+
+58 JUnit e46 GameTest della mod passati, più baseline vanilla escluso; un test
+client grafico in mondo/screenshot passato. Cinque nuovi GameTest con movimento,
+consumo, danni, proiettile reale, sincronizzazione e reset. Arene cibo isolate
+oltre FOLLOW_RANGE per evitare concorrenza tra draghi di test diversi.
+
+Limiti: niente prova visiva delle nuove pose, due veri client o modalità aeree.
+Selezione carica1/5 fra stream invece del ramo originale per tick, esplicitata;
+EAT chiude gradualmente in20tick, anziché troncare keyframe originali da25.
+Nessuna dichiarazione di tappa1 completa. Continuare il goal autorizzato.
+
+
 ## Revisione 0.1.15 — 24 ottobre 2026
 
 Skill locale review-agent applicata in sola lettura senza delega al diff completo

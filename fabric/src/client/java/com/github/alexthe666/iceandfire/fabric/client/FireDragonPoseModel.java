@@ -36,7 +36,8 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
         if (!Float.isFinite(seatSurface.y)) throw new IllegalStateException("Missing neck seat geometry");
         for (String name : List.of("base_male", "base_female", "flying", "hovering", "sitting", "sitting_shoulder", "walk1", "walk2", "walk3", "walk4",
                 "flight1", "flight2", "flight3", "flight4", "flight5", "flight6",
-                "bite1", "bite2", "bite3", "attack_blast_charge1", "attack_blast_charge2", "attack_blast_charge3", "attack_stream_breath")) {
+                "bite1", "bite2", "bite3", "attack_blast_charge1", "attack_blast_charge2", "attack_blast_charge3", "attack_stream_breath",
+                "tail1", "tail2", "tail3", "wing_blast1", "wing_blast2", "wing_blast3", "wing_blast4", "wing_blast5", "wing_blast6", "wing_blast7")) {
             poses.put(name, loader.apply(name));
         }
     }
@@ -128,6 +129,13 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
                 ? new String[]{null, "bite1", "bite2", "bite3", null}
                 : new String[]{null, "attack_blast_charge1", "attack_blast_charge2", "attack_blast_charge3", null};
         int[] durations = attack == DragonCombatState.BITE ? new int[]{10, 5, 5, 10} : new int[]{10, 10, 5, 5};
+        if (attack == DragonCombatState.TAIL) {
+            names = new String[]{null, "tail1", "tail2", "tail3", null};
+            durations = new int[]{10, 10, 10, 10};
+        } else if (attack == DragonCombatState.WING) {
+            names = new String[]{null, "wing_blast1", "wing_blast2", "wing_blast3", "wing_blast4", "wing_blast5", "wing_blast6", "wing_blast7", null};
+            durations = new int[]{5, 5, 5, 5, 5, 5, 5, 10};
+        }
         float time = Math.max(0, tick);
         for (int i = 0; i < durations.length; i++) {
             if (time < durations[i]) {
@@ -140,7 +148,14 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
     }
 
     private void applyCombat(FireDragonRenderer.State state) {
-        if (state.attack != DragonCombatState.NONE && !(state.firstPersonPilot && state.attack == DragonCombatState.CHARGE)) {
+        if (state.attack == DragonCombatState.EAT) {
+            float tick = state.attackTick;
+            float neck = tick < 5 ? tick / 5 : tick < 10 ? (10 - tick) / 5 : 0;
+            float jaw = tick < 5 ? 0 : tick < 10 ? (tick - 5) / 5 : tick < 15 ? 1 : Math.max(0, (20 - tick) / 5);
+            for (String name : List.of("Neck1", "Neck2")) parts.get(name).xRot += (float) Math.toRadians(18) * neck;
+            parts.get("Jaw").xRot += (float) Math.toRadians(18) * jaw;
+            parts.get("Jaw").z += 0.2F * jaw;
+        } else if (state.attack != DragonCombatState.NONE && !(state.firstPersonPilot && state.attack == DragonCombatState.CHARGE)) {
             AttackFrame frame = attackFrame(state.attack, state.attackTick);
             for (var entry : parts.entrySet()) {
                 ModelPart part = entry.getValue();
@@ -149,6 +164,8 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
                 addPoseDelta(part, from, 1 - frame.blend, true);
                 addPoseDelta(part, to, frame.blend, true);
             }
+            if (state.attack == DragonCombatState.WING)
+                parts.get("BodyUpper").y += wingLift(frame.from) * (1 - frame.blend) + wingLift(frame.to) * frame.blend;
         }
         if (state.breathProgress > 0) {
             float stream = com.github.alexthe666.iceandfire.fabric.dragon.DragonBreathVisuals.smooth(state.breathProgress / 10);
@@ -159,6 +176,11 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
                 addPoseDelta(entry.getValue(), poses.get("attack_stream_breath").parts().get(name), stream, false);
             }
         }
+    }
+
+    private static float wingLift(String pose) {
+        if (pose == null) return 0;
+        return switch (pose) { case "wing_blast2", "wing_blast7" -> -2; case "wing_blast3", "wing_blast4", "wing_blast5", "wing_blast6" -> -4; default -> 0; };
     }
 
     private static void addPoseDelta(ModelPart part, ModelPart pose, float weight, boolean position) {

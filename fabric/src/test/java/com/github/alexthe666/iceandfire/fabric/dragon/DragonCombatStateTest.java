@@ -4,6 +4,23 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DragonCombatStateTest {
+    @Test void tailAndWingFollowOriginalDurationsAndImpactWindows() {
+        for (int type : new int[]{DragonCombatState.TAIL, DragonCombatState.WING}) {
+            var combat = new DragonCombatState();
+            combat.start(type);
+            int impacts = 0;
+            for (int tick = 1; tick < DragonCombatState.duration(type); tick++) {
+                combat.tick(true, false, 3);
+                assertEquals(type, combat.animation());
+                assertEquals(type == DragonCombatState.TAIL ? tick > 20 && tick < 30
+                        : tick == 15 || tick == 25 || tick == 35, DragonCombatState.meleeImpact(type, tick));
+                if (DragonCombatState.meleeImpact(type, tick)) impacts++;
+            }
+            assertEquals(type == DragonCombatState.TAIL ? 9 : 3, impacts);
+            combat.tick(true, false, 3);
+            assertEquals(DragonCombatState.NONE, combat.animation());
+        }
+    }
     @Test void breathHasTwentyTickWarmupAndFortyTickExtension() {
         var combat = new DragonCombatState();
         for (int tick = 1; tick <= 40; tick++) {

@@ -1,5 +1,36 @@
 # Prompt completo per continuare il porting su un altro PC
 
+## Checkpoint 0.1.16 — 24 ottobre 2026
+
+L'utente ha completato i due obiettivi: proseguire il più possibile attraverso
+le fasi usando la quota disponibile e sospendere il PC alla fine dei test.
+L'autorizzazione nuova permette di avanzare oltre i precedenti checkpoint di
+riscontro, dopo aver completato/verificato la tappa corrente; non dichiarare
+completa una tappa con funzioni mancanti. Non consumare quota artificialmente.
+La sospensione è ora nuovamente autorizzata, dopo salvataggio/push/consegna.
+Goal attivo del thread creato per il port completo, nessun budget token impostato.
+
+Base17364c28c. DragonFoodGoal ricerca carne raggiungibile/visibile ogni20tick,
+segue a1 e ricalcola10tick. Solo libero affamato a terra senza target/pilota/
+spalle/NoAI; comandi prioritari, pickup delay e portata controllati. Consuma1,
+rimuove item vuoto, fame/cura foodPoints come originale DragonAITargetItems,
+senza crescita. Animazione EAT20tick sincronizzata, suono/particelle; mandibola
+chiusa progressivamente per evitare il tronco dei keyframe originali25tick.
+
+Coda40tick (impatto21..29), ali50tick (15/25/35), knockback stage*0.6 con API26.3
+DamageSource/damage. Primo attacco nuovo target resta morso; poi scelta casuale
+fra i tre dallo stage2. Solo morso cura. Pose Tabula originali tail1..3 e
+wing_blast1..7, sollevamento corpo e reset senza accumulo. Shake prey resta fuori.
+
+Palla di fuoco autonoma: probabilità1/5 fra cicli di soffio, scelta stabile durante
+carica30tick, emissione20, mira occhi con imprecisione0.0075/accelerazione0.07.
+Prima azione a distanza resta stream; distribuzione temporale diversa dal ramo
+originale per tick, dichiarata in TEST-0.1.16.md. Cambio target riavvia anche il
+warmup del soffio, evitando il riuso della carica del bersaglio precedente.
+
+Verificati 58 JUnit, 46 GameTest della mod (47 con baseline vanilla escluso) e un test client con mondo/screenshot. Revisione completa read-only review-agent senza delega: No findings. Nessun test con due veri client.
+
+
 ## Checkpoint 0.1.15 — 24 ottobre 2026
 
 Ultimo messaggio utente autorizza l'uso del computer per test e annuncia due

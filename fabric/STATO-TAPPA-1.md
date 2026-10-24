@@ -1,10 +1,22 @@
 # Stato della tappa 1 — drago di fuoco, Fabric 26.3
 
-Aggiornato per 0.1.15-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
+Aggiornato per 0.1.16-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
 Questo riepilogo distingue ciò che è nel codice da ciò che manca: build e test
 non sostituiscono il riscontro in gioco, soprattutto per grafica e multiplayer.
 L'utente ha confermato la 0.1.13 funzionante il 24 ottobre e chiesto di continuare.
 La prova0.1.14 ha rilevato alberi e dismount: correzioni0.1.15 da collaudare. Nessun passaggio alla tappa 2.
+
+## Novità 0.1.16
+
+Cibo a terra: ricerca, percorso, consumo singolo, fame/cura originali, animazione
+EAT sincronizzata. Priorità a comandi/combattimento, pickup delay/dieta/portata.
+Attacchi coda e ali con pose originali, tempi e contraccolpo; prima azione contro
+un nuovo bersaglio resta il morso. Palla di fuoco autonoma con carica stabile ed
+emissione al tick20, scelta1/5 fra cicli di soffio. TEST-0.1.16.md esplicita limiti
+e differenze temporali; shake prey e modalità aeree ancora da migrare.
+
+L'utente ora autorizza a proseguire il più possibile nelle fasi; restano ordine
+e verifiche di completamento, senza equiparare una build al port completo.
 
 ## Novità 0.1.15
 
@@ -119,10 +131,10 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 
 ## Da completare nella tappa 1
 
-- Combattimento autonomo: caccia/selezione non difensiva, palla di fuoco autonoma, altri attacchi terrestri e
+- Combattimento autonomo: caccia/selezione non difensiva, shake prey e
   modalità aeree originali (tackle, hover blast, scorch stream), reazioni e
   coordinamento con movimento e volo.
-- Raccolta e consumo del cibo dagli oggetti a terra; altre interazioni originali
+- Altre interazioni originali
   e gestione completa dell'uovo danneggiato.
 - Sonno completo e animazioni, riproduzione e ciclo collegato.
 - Comportamento completo in acqua/lava e navigazione aerea più robusta fra
@@ -141,4 +153,4 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 Restano fuori da questa consegna draghi di ghiaccio/fulmine, altre creature,
 progressione completa, ricette, strutture e generazione naturale: appartengono
 alle tappe successive. Non iniziarle prima del completamento e del riscontro
-sulla tappa 1. La 0.1.13 è confermata; collaudare ora le novità0.1.15.
+sulla tappa 1. La 0.1.13 è confermata; collaudare le novità0.1.16 mentre prosegue il port.
