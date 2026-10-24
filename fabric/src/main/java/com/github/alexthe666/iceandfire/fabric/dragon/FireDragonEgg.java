@@ -16,7 +16,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 public final class FireDragonEgg extends Mob {
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(FireDragonEgg.class, EntityDataSerializers.INT);
     private EntityReference<LivingEntity> owner;
-    private int incubationTicks;
+    private long incubationTicks;
 
     public FireDragonEgg(EntityType<? extends FireDragonEgg> type, Level level) {
         super(type, level);
@@ -51,8 +51,8 @@ public final class FireDragonEgg extends Mob {
         super.tick();
         if (!(level() instanceof ServerLevel server)) return;
         setAirSupply(200);
-        if (server.getBlockState(blockPosition()).is(BlockTags.FIRE)) incubationTicks++;
-        if (!DragonGrowth.shouldHatch(incubationTicks, DragonGrowth.DEFAULT_EGG_TIME)) return;
+        if (server.getBlockState(blockPosition()).is(BlockTags.FIRE) && incubationTicks < Long.MAX_VALUE) incubationTicks++;
+        if (!DragonGrowth.shouldHatch(incubationTicks, com.github.alexthe666.iceandfire.fabric.DragonCombatConfig.current.dragonEggTime)) return;
         FireDragon dragon = IafContent.FIRE_DRAGON.create(server, EntitySpawnReason.BREEDING);
         if (dragon == null) return;
         dragon.setVariant(variant());
@@ -71,14 +71,14 @@ public final class FireDragonEgg extends Mob {
     @Override protected void addAdditionalSaveData(ValueOutput output) {
         super.addAdditionalSaveData(output);
         output.putInt("Color", variant());
-        output.putInt("DragonAge", incubationTicks);
+        output.putLong("DragonAge", incubationTicks);
         EntityReference.store(owner, output, "Owner");
     }
 
     @Override protected void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
         setVariant(input.getIntOr("Color", 0));
-        incubationTicks = Math.max(0, input.getIntOr("DragonAge", 0));
+        incubationTicks = Math.max(0, input.getLongOr("DragonAge", 0));
         owner = EntityReference.read(input, "Owner");
     }
 }

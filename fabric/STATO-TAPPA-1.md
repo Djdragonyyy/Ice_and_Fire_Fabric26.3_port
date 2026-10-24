@@ -1,12 +1,19 @@
 # Stato della tappa 1 — drago di fuoco, Fabric 26.3
 
-Verificati66 JUnit,78 GameTest della mod (79 con baseline vanilla escluso) e4 prove client con dieci screenshot. Nessuna prova con due veri client.
+Verificati68 JUnit,80 GameTest della mod (81 con baseline vanilla escluso) e4 prove client con dieci screenshot. Nessuna prova con due veri client.
 
-Aggiornato per 0.1.22-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
+Aggiornato per 0.1.23-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
 Questo riepilogo distingue ciò che è nel codice da ciò che manca: build e test
 non sostituiscono il riscontro in gioco, soprattutto per grafica e multiplayer.
 L'utente ha confermato la 0.1.13 funzionante il 24 ottobre e chiesto di continuare.
 La prova0.1.14 ha rilevato alberi e dismount: correzioni0.1.15 da collaudare. Nessun passaggio alla tappa 2.
+
+## Novità 0.1.23
+
+Configurazioni originali salute/danno fisico/intervallo fame/tempo schiusa,
+con default e curve conservati. Vecchi JSON/NBT compatibili, contatore uova
+a64bit per soglia massima senza overflow. Ultimo checkpoint della sessione,
+poi push/consegna/sospensione; goal completo e tappa1 ancora incompleti.
 
 ## Novità 0.1.22
 
@@ -206,4 +213,4 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 Restano fuori da questa consegna draghi di ghiaccio/fulmine, altre creature,
 progressione completa, ricette, strutture e generazione naturale: appartengono
 alle tappe successive. Non iniziarle prima del completamento e del riscontro
-sulla tappa 1. La 0.1.13 è confermata; collaudare le novità0.1.22 alla ripresa del port.
+sulla tappa 1. La 0.1.13 è confermata; collaudare le novità0.1.23 alla ripresa del port.

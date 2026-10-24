@@ -56,7 +56,7 @@ public final class DragonGrowth {
         return stage(ageDays) > 2;
     }
 
-    public static boolean shouldHatch(int incubationTicks, int configuredEggTime) {
+    public static boolean shouldHatch(long incubationTicks, int configuredEggTime) {
         // The original condition is strictly greater, not greater than or equal.
         return incubationTicks > configuredEggTime;
     }

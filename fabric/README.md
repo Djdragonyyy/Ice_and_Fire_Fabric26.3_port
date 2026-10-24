@@ -1,10 +1,14 @@
 # Ice and Fire: port Fabric 26.3 in sviluppo
 
-Verificati66 JUnit,78 GameTest della mod (79 con baseline vanilla escluso) e4 prove client con dieci screenshot. Nessuna prova con due veri client.
+Verificati68 JUnit,80 GameTest della mod (81 con baseline vanilla escluso) e4 prove client con dieci screenshot. Nessuna prova con due veri client.
 
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
-Versione corrente: **0.1.22-stage1-dev**. Presa e scuotimento della preda,
+Versione corrente: **0.1.23-stage1-dev**. Configurazioni originali di salute,
+danno, fame e schiusa; default/curve conservati e incubazione senza overflow.
+[TEST-0.1.23.md](TEST-0.1.23.md). Tappa1 ancora incompleta.
+
+Versione precedente: **0.1.22-stage1-dev**. Presa e scuotimento della preda,
 pose originali, danno/cura/rilascio e ripresa dal salvataggio nativo dei passeggeri.
 Un solo occupante, giocatori esclusi dalla presa. [TEST-0.1.22.md](TEST-0.1.22.md).
 Tappa1 ancora incompleta.

@@ -1,12 +1,12 @@
 # Prompt temporaneo per la prossima ripresa
 
-Aggiornato il 24 ottobre 2026, checkpoint 0.1.22, nuova autorizzazione utente a proseguire nelle fasi.
+Aggiornato il 24 ottobre 2026, checkpoint 0.1.23, nuova autorizzazione utente a proseguire nelle fasi.
 Conservare fabric/HANDOFF.md: contiene lo storico e i vincoli permanenti.
 
 ---
 
 Continua il porting di Ice and Fire. Comunica in italiano. Leggi integralmente
-fabric/HANDOFF.md, fabric/README.md, fabric/REVIEW.md, fabric/TEST-0.1.22.md e gli
+fabric/HANDOFF.md, fabric/README.md, fabric/REVIEW.md, fabric/TEST-0.1.23.md e gli
 AGENTS.md applicabili. Non ricominciare da zero o sovrascrivere modifiche locali.
 
 Repository personale:
@@ -15,7 +15,12 @@ Ramo esclusivo: port/fabric-26.3. Controlla stato, remote e git log prima di
 modificare; git switch e git pull --ff-only origin port/fabric-26.3, preservando
 il lavoro locale. Verifica l'esistenza del commit base 417f5a8d2. Niente reset.
 
-Prima leggere fabric/STATO-TAPPA-1.md. Checkpoint0.1.22: presa/scuotimento di
+Prima leggere fabric/STATO-TAPPA-1.md. Checkpoint0.1.23: config salute/danno/fame/
+schiusa, default/vecchi JSON conservati e incubazione long compatibile con vecchi
+NBT int, soglia massima senza overflow. Fine sessione: sospensione richiesta
+dopo push/consegna. Goal completo attivo e incompleto.
+
+Checkpoint0.1.22: presa/scuotimento di
 prede mob con passeggero nativo, ID separato dal pilota e UUID/tick salvati.
 Danno singolo dopo55tick, cura/fame e rilascio; cancellazioni e priorità comandi.
 Pose originali e recupero della presa dal caricatore ricorsivo. Conservati tutti

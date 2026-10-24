@@ -1,6 +1,23 @@
 # Prompt completo per continuare il porting su un altro PC
 
-Verificati66 JUnit,78 GameTest della mod (79 con baseline vanilla escluso) e4 prove client con dieci screenshot. Nessuna prova con due veri client.
+Verificati68 JUnit,80 GameTest della mod (81 con baseline vanilla escluso) e4 prove client con dieci screenshot. Nessuna prova con due veri client.
+
+## Checkpoint 0.1.23 — configurazioni del ciclo vitale
+
+Base e7d3d4cc2. Migrati dragonHealth500, dragonAttackDamage17,
+dragonHungerTickRate3000 e dragonEggTime7200, con limiti originali e validazione.
+Vecchi JSON conservano default; filename iceandfire-combat.json invariato.
+Curve crescita originali e cap nativi Minecraft conservati, riavvio richiesto.
+Hunger modulo intervallo positivo. Schiusa strettamente oltre soglia; contatore
+incubazione long/NBT long con lettura compatibile dei vecchi int, per supportare
+anche eggTime=Integer.MAX_VALUE senza overflow. Config invalida non sovrascritta.
+
+Due JUnit e due GameTest nuovi, poi suite completa server/client. Sessione da
+chiudere dopo ultimo controllo, commit/push/pacchetto e sospensione richiesta.
+Goal completo resta attivo/incompleto: riprendere quando PC/quota disponibili;
+non iniziare processi mentre il helper di sospensione è in attesa o PC sospeso.
+Prossimi: configurazioni di volo, interazioni/animazioni/suoni, acqua/lava,
+limiti navigazione e prove multiplayer nello stato cumulativo. Tappa1 aperta.
 
 ## Checkpoint 0.1.22 — shake prey
 

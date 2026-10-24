@@ -1,6 +1,32 @@
 # Revisione del port Fabric
 
-Verificati66 JUnit,78 GameTest della mod (79 con baseline vanilla escluso) e4 prove client con dieci screenshot. Nessuna prova con due veri client.
+Verificati68 JUnit,80 GameTest della mod (81 con baseline vanilla escluso) e4 prove client con dieci screenshot. Nessuna prova con due veri client.
+
+## Revisione 0.1.23 — 24 ottobre 2026
+
+Review-agent in sola lettura senza delega al diff completo dae7d3d4cc2, inclusi
+configurazione, crescita/uovo, nuove prove, versione/build e documenti. No findings.
+Confrontati nomi/default/intervalli di ServerConfig originale; validazione
+precedente conservata ed estesa, vecchi JSON con default del costruttore.
+Controllati modulo fame positivo, valori finiti, cap nativi degli attributi,
+curve per età invariate e calcolo solo server. Native onAttributeUpdated gestisce
+anche il limite della salute quando cambia MAX_HEALTH.
+
+Incubazione long satura prima del possibile overflow, lettura NBT numerica
+compatibile int/long, scrittura long e soglia strettamente maggiore conservata.
+Prova runtime verifica sia il vecchio int sia Integer.MAX_VALUE con un altro
+tick nel fuoco e un solo piccolo per uovo. Non sono promessi valori effettivi
+degli attributi oltre i cap Minecraft o hot reload della configurazione.
+
+68 JUnit,80 GameTest della mod (81 con baseline vanilla escluso) e4 test client
+passati con il codice finale, dieci screenshot. Ispezionati nuovamente armature
+testa/coda e preda in bocca in mondo; asset originali invariati. Nessuna prova
+con due veri client o shader esterni. Tappa1 e port completo ancora aperti.
+
+Sessione chiusa dopo commit/push e pacchetto con due JAR, sorgenti/report/checksum.
+Sospensione PC richiesta e preflight API superato, helper da lanciare dopo verifica
+finale della consegna. Non avviare nuovi processi durante il conto alla rovescia
+o finché il PC resta sospeso. Alla ripresa verificare registro e nuova quota.
 
 ## Revisione 0.1.22 — 24 ottobre 2026
 

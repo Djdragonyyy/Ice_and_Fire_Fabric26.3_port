@@ -273,8 +273,8 @@ public final class FireDragon extends TamableAnimal {
     private void updateGrowth() {
         if (appliedAge == ageDays()) return;
         appliedAge = ageDays();
-        getAttribute(Attributes.MAX_HEALTH).setBaseValue(DragonGrowth.maxHealth(appliedAge, 500));
-        getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DragonGrowth.attackDamage(appliedAge, 17));
+        getAttribute(Attributes.MAX_HEALTH).setBaseValue(DragonGrowth.maxHealth(appliedAge, DragonCombatConfig.current.dragonHealth));
+        getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(DragonGrowth.attackDamage(appliedAge, DragonCombatConfig.current.dragonAttackDamage));
         getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(DragonGrowth.movementSpeed(appliedAge));
         getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(Math.min(2048, DragonCombatConfig.current.dragonTargetSearchLength));
         getAttribute(Attributes.ARMOR).setBaseValue(1 + 19 / 125F * appliedAge);
@@ -338,7 +338,7 @@ public final class FireDragon extends TamableAnimal {
             int age = entityData.get(AGE_TICKS);
             if (!entityData.get(AGING_DISABLED) && age < Integer.MAX_VALUE) entityData.set(AGE_TICKS, age + 1);
             updateGrowth();
-            if (tickCount % 3000 == 0) setHunger(hunger() - 1);
+            if (tickCount % DragonCombatConfig.current.dragonHungerTickRate == 0) setHunger(hunger() - 1);
             if (flying()) {
                 flightTicks++;
                 if (getControllingPassenger() != null && onGround() && flightTicks > 20 && !control(DragonControlPayload.UP)) {

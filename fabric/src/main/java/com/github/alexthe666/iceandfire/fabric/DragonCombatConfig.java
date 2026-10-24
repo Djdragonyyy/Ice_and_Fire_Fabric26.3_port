@@ -5,7 +5,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import java.io.IOException;
 import java.nio.file.Files;
 
-/** Only the combat options already migrated from the original ServerConfig are exposed. */
+/** Migrated original dragon options; filename retained for compatibility with existing installations. */
 public final class DragonCombatConfig {
     public static DragonCombatConfig current = new DragonCombatConfig();
     public double dragonAttackDamageFire = 2;
@@ -16,6 +16,20 @@ public final class DragonCombatConfig {
     public double dragonBlockBreakingDropChance = 0.1;
     public boolean doDragonsSleep = true;
     public int dragonTargetSearchLength = 128;
+    public double dragonHealth = 500;
+    public int dragonAttackDamage = 17;
+    public int dragonHungerTickRate = 3000;
+    public int dragonEggTime = 7200;
+
+    boolean validValues() {
+        return Double.isFinite(dragonAttackDamageFire) && dragonAttackDamageFire >= 0 && dragonAttackDamageFire <= Float.MAX_VALUE / 5
+                && dragonGriefing >= 0 && dragonGriefing <= 2 && dragonBreakBlockCooldown >= 0 && dragonBreakBlockCooldown <= 10000
+                && dragonTargetSearchLength >= 1 && dragonTargetSearchLength <= 10000
+                && Double.isFinite(dragonBlockBreakingDropChance) && dragonBlockBreakingDropChance >= 0 && dragonBlockBreakingDropChance <= 1
+                && Double.isFinite(dragonHealth) && dragonHealth >= 1 && dragonHealth <= 100000
+                && dragonAttackDamage >= 1 && dragonAttackDamage <= 10000
+                && dragonHungerTickRate >= 1 && dragonHungerTickRate <= 10000 && dragonEggTime >= 1;
+    }
 
     public static void load() {
         var path = FabricLoader.getInstance().getConfigDir().resolve("iceandfire-combat.json");
@@ -24,14 +38,8 @@ public final class DragonCombatConfig {
             if (Files.exists(path)) {
                 try (var reader = Files.newBufferedReader(path)) {
                     var parsed = gson.fromJson(reader, DragonCombatConfig.class);
-                    if (parsed == null || !Double.isFinite(parsed.dragonAttackDamageFire)
-                            || parsed.dragonAttackDamageFire < 0 || parsed.dragonAttackDamageFire > Float.MAX_VALUE / 5
-                            || parsed.dragonGriefing < 0 || parsed.dragonGriefing > 2
-                            || parsed.dragonBreakBlockCooldown < 0 || parsed.dragonBreakBlockCooldown > 10000
-                            || parsed.dragonTargetSearchLength < 1 || parsed.dragonTargetSearchLength > 10000
-                            || !Double.isFinite(parsed.dragonBlockBreakingDropChance)
-                            || parsed.dragonBlockBreakingDropChance < 0 || parsed.dragonBlockBreakingDropChance > 1) {
-                        throw new IllegalArgumentException("Invalid combat values");
+                    if (parsed == null || !parsed.validValues()) {
+                        throw new IllegalArgumentException("Invalid dragon values");
                     }
                     current = parsed;
                 }
