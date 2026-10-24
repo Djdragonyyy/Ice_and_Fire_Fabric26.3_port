@@ -6,7 +6,7 @@ Il 24 ottobre, dopo il risveglio della0.1.23, l'utente ha annullato esplicitamen
 ogni futura sospensione del PC: continuare fino al completamento del port.
 La sospensione precedente è riuscita e il helper è terminato. NON lanciare più
 suspend-after-delivery.ps1 o altri comandi di sospensione/spegnimento. Questa
-istruzione prevale su TUTTE le note storiche sotto e negli altri documenti.
+istruzione prevale su TUTTE le note storiche sotto, negli altri documenti e sulla clausola di sospensione rimasta nei metadati del vecchio goal. Obiettivo operativo: porting completo con test e consegna, senza sospensione. Il vecchio script è disabilitato con un errore immediato e non richiama più API di alimentazione.
 
 Usare la quota residua per progresso reale e riprendere appena il limite d'uso
 si reimposta, nella stessa chat e con lo stesso goal completo, senza nuove chat
@@ -31,8 +31,7 @@ il lavoro locale. Verifica l'esistenza del commit base 417f5a8d2. Niente reset.
 
 Prima leggere fabric/STATO-TAPPA-1.md. Checkpoint0.1.23: config salute/danno/fame/
 schiusa, default/vecchi JSON conservati e incubazione long compatibile con vecchi
-NBT int, soglia massima senza overflow. Fine sessione: sospensione richiesta
-dopo push/consegna. Goal completo attivo e incompleto.
+NBT int, soglia massima senza overflow. Dopo push/consegna continuare senza sospensione. Goal completo attivo e incompleto.
 
 Checkpoint0.1.22: presa/scuotimento di
 prede mob con passeggero nativo, ID separato dal pilota e UUID/tick salvati.
@@ -42,8 +41,7 @@ i checkpoint precedenti: riproduzione/nido, stendardi, caccia, sonno/occhi,
 cibo, attacchi, armature, volo, controlli e proprietà. Tappa1 incompleta.
 
 ULTIMA AUTORIZZAZIONE: utente a dormire, autonomia completa, test di ogni blocco,
-proseguire il più possibile nelle fasi usando quota disponibile. Sospensione PC
-richiesta alla fine della sessione di test, dopo salvataggio/push/consegna.
+proseguire nelle fasi usando quota disponibile. Sospensione PC ANNULLATA: non sospendere o spegnere dopo salvataggio/push/consegna.
 Sessione0.1.18 sospesa e ripresa correttamente, nuova quota disponibile; non
 avviare nuovi processi durante sospensione. Goal completo attivo e incompleto.
 Non consumare quota artificialmente o dichiarare chiuse fasi non migrate.

@@ -221,7 +221,7 @@ public final class FireDragon extends TamableAnimal {
     public String homeDimension() { return homeDimension; }
     @Override public boolean hasHome() { return dragonHome != null && homeDimension.equals(level().dimension().identifier().toString()); }
     @Override public BlockPos getHomePosition() { return hasHome() ? dragonHome : super.getHomePosition(); }
-    @Override public int getHomeRadius() { return hasHome() ? 40 : super.getHomeRadius(); }
+    @Override public int getHomeRadius() { return hasHome() ? DragonCombatConfig.current.dragonWanderFromHomeDistance : super.getHomeRadius(); }
     @Override public boolean isWithinHome(BlockPos pos) {
         return !hasHome() || dragonHome.distSqr(pos) < (double) getHomeRadius() * getHomeRadius();
     }

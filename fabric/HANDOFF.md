@@ -6,7 +6,7 @@ Il 24 ottobre, dopo il risveglio della0.1.23, l'utente ha annullato esplicitamen
 ogni futura sospensione del PC: continuare fino al completamento del port.
 La sospensione precedente è riuscita e il helper è terminato. NON lanciare più
 suspend-after-delivery.ps1 o altri comandi di sospensione/spegnimento. Questa
-istruzione prevale su TUTTE le note storiche sotto e negli altri documenti.
+istruzione prevale su TUTTE le note storiche sotto, negli altri documenti e sulla clausola di sospensione rimasta nei metadati del vecchio goal. Obiettivo operativo: porting completo con test e consegna, senza sospensione. Il vecchio script è disabilitato con un errore immediato e non richiama più API di alimentazione.
 
 Usare la quota residua per progresso reale e riprendere appena il limite d'uso
 si reimposta, nella stessa chat e con lo stesso goal completo, senza nuove chat
@@ -14,7 +14,17 @@ o lavorazioni duplicate. Non consumare quota artificialmente e non dichiarare
 completate fasi con funzioni mancanti. Al risveglio controllo quota93%; reset
 indicato dall'app24ottobre12:38:03UTC (14:38Roma). Verificare stato attuale.
 
-Verificati68 JUnit,80 GameTest della mod (81 con baseline vanilla escluso) e4 prove client con dieci screenshot. Nessuna prova con due veri client.
+Verificati 68 JUnit, 81 GameTest della mod (82 con baseline vanilla escluso) e 4 prove client con dieci screenshot. Nessuna prova con due veri client.
+
+## Checkpoint 0.1.24 — casa e quota di volo
+
+Ripresa dalla 0.1.23 dopo reset quota, nessuna sospensione futura autorizzata.
+Migrati maxDragonFlight256 (min100) e dragonWanderFromHomeDistance40 (1..10000)
+con nomi e limiti originali. Radius condiviso da restrizione terra e scelta
+casuale aerea; quota assoluta delle destinazioni autonome limitata anche dal
+mondo e dalla taglia. Nessuna barriera al pilota o modifica della velocità.
+Vecchi JSON compatibili. Nuovo GameTest salva/ricarica casa e verifica raggio,
+confine e due limiti di quota; estesa validazione JUnit. Tappa1 ancora aperta.
 
 ## Checkpoint 0.1.23 — configurazioni del ciclo vitale
 
@@ -26,8 +36,7 @@ Hunger modulo intervallo positivo. Schiusa strettamente oltre soglia; contatore
 incubazione long/NBT long con lettura compatibile dei vecchi int, per supportare
 anche eggTime=Integer.MAX_VALUE senza overflow. Config invalida non sovrascritta.
 
-Due JUnit e due GameTest nuovi, poi suite completa server/client. Sessione da
-chiudere dopo ultimo controllo, commit/push/pacchetto e sospensione richiesta.
+Due JUnit e due GameTest nuovi, poi suite completa server/client. Proseguire dopo ultimo controllo, commit/push/pacchetto; sospensione annullata.
 Goal completo resta attivo/incompleto: riprendere quando PC/quota disponibili;
 non iniziare processi mentre il helper di sospensione è in attesa o PC sospeso.
 Prossimi: configurazioni di volo, interazioni/animazioni/suoni, acqua/lava,

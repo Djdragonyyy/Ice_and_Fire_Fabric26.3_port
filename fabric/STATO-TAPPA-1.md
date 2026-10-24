@@ -6,7 +6,7 @@ Il 24 ottobre, dopo il risveglio della0.1.23, l'utente ha annullato esplicitamen
 ogni futura sospensione del PC: continuare fino al completamento del port.
 La sospensione precedente è riuscita e il helper è terminato. NON lanciare più
 suspend-after-delivery.ps1 o altri comandi di sospensione/spegnimento. Questa
-istruzione prevale su TUTTE le note storiche sotto e negli altri documenti.
+istruzione prevale su TUTTE le note storiche sotto, negli altri documenti e sulla clausola di sospensione rimasta nei metadati del vecchio goal. Obiettivo operativo: porting completo con test e consegna, senza sospensione. Il vecchio script è disabilitato con un errore immediato e non richiama più API di alimentazione.
 
 Usare la quota residua per progresso reale e riprendere appena il limite d'uso
 si reimposta, nella stessa chat e con lo stesso goal completo, senza nuove chat
@@ -14,9 +14,19 @@ o lavorazioni duplicate. Non consumare quota artificialmente e non dichiarare
 completate fasi con funzioni mancanti. Al risveglio controllo quota93%; reset
 indicato dall'app24ottobre12:38:03UTC (14:38Roma). Verificare stato attuale.
 
-Verificati68 JUnit,80 GameTest della mod (81 con baseline vanilla escluso) e4 prove client con dieci screenshot. Nessuna prova con due veri client.
+Verificati 68 JUnit, 81 GameTest della mod (82 con baseline vanilla escluso) e 4 prove client con dieci screenshot. Nessuna prova con due veri client.
 
-Aggiornato per 0.1.23-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
+## Checkpoint 0.1.24 — casa e quota di volo
+
+Ripresa dalla 0.1.23 dopo reset quota, nessuna sospensione futura autorizzata.
+Migrati maxDragonFlight256 (min100) e dragonWanderFromHomeDistance40 (1..10000)
+con nomi e limiti originali. Radius condiviso da restrizione terra e scelta
+casuale aerea; quota assoluta delle destinazioni autonome limitata anche dal
+mondo e dalla taglia. Nessuna barriera al pilota o modifica della velocità.
+Vecchi JSON compatibili. Nuovo GameTest salva/ricarica casa e verifica raggio,
+confine e due limiti di quota; estesa validazione JUnit. Tappa1 ancora aperta.
+
+Aggiornato per 0.1.24-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
 Questo riepilogo distingue ciò che è nel codice da ciò che manca: build e test
 non sostituiscono il riscontro in gioco, soprattutto per grafica e multiplayer.
 L'utente ha confermato la 0.1.13 funzionante il 24 ottobre e chiesto di continuare.
@@ -27,7 +37,7 @@ La prova0.1.14 ha rilevato alberi e dismount: correzioni0.1.15 da collaudare. Ne
 Configurazioni originali salute/danno fisico/intervallo fame/tempo schiusa,
 con default e curve conservati. Vecchi JSON/NBT compatibili, contatore uova
 a64bit per soglia massima senza overflow. Ultimo checkpoint della sessione,
-poi push/consegna/sospensione; goal completo e tappa1 ancora incompleti.
+poi push/consegna; nessuna sospensione. Goal completo e tappa1 incompleti.
 
 ## Novità 0.1.22
 

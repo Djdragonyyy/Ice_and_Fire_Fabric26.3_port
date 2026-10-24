@@ -1,10 +1,12 @@
 # Ice and Fire: port Fabric 26.3 in sviluppo
 
-Verificati68 JUnit,80 GameTest della mod (81 con baseline vanilla escluso) e4 prove client con dieci screenshot. Nessuna prova con due veri client.
+Verificati 68 JUnit, 81 GameTest della mod (82 con baseline vanilla escluso) e 4 prove client con dieci screenshot. Nessuna prova con due veri client.
 
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
-Versione corrente: **0.1.23-stage1-dev**. Configurazioni originali di salute,
+Versione corrente: **0.1.24-stage1-dev**. Configurazioni originali della quota autonoma e del raggio casa. [TEST-0.1.24.md](TEST-0.1.24.md). Nessuna sospensione del PC, annullata dall'utente.
+
+Versione precedente: **0.1.23-stage1-dev**. Configurazioni originali di salute,
 danno, fame e schiusa; default/curve conservati e incubazione senza overflow.
 [TEST-0.1.23.md](TEST-0.1.23.md). Tappa1 ancora incompleta.
 

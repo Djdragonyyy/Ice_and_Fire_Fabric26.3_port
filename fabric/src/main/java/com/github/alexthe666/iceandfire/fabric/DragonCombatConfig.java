@@ -20,6 +20,8 @@ public final class DragonCombatConfig {
     public int dragonAttackDamage = 17;
     public int dragonHungerTickRate = 3000;
     public int dragonEggTime = 7200;
+    public int maxDragonFlight = 256;
+    public int dragonWanderFromHomeDistance = 40;
 
     boolean validValues() {
         return Double.isFinite(dragonAttackDamageFire) && dragonAttackDamageFire >= 0 && dragonAttackDamageFire <= Float.MAX_VALUE / 5
@@ -28,7 +30,8 @@ public final class DragonCombatConfig {
                 && Double.isFinite(dragonBlockBreakingDropChance) && dragonBlockBreakingDropChance >= 0 && dragonBlockBreakingDropChance <= 1
                 && Double.isFinite(dragonHealth) && dragonHealth >= 1 && dragonHealth <= 100000
                 && dragonAttackDamage >= 1 && dragonAttackDamage <= 10000
-                && dragonHungerTickRate >= 1 && dragonHungerTickRate <= 10000 && dragonEggTime >= 1;
+                && dragonHungerTickRate >= 1 && dragonHungerTickRate <= 10000 && dragonEggTime >= 1
+                && maxDragonFlight >= 100 && dragonWanderFromHomeDistance >= 1 && dragonWanderFromHomeDistance <= 10000;
     }
 
     public static void load() {

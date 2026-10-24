@@ -1,5 +1,6 @@
 package com.github.alexthe666.iceandfire.fabric.dragon;
 
+import com.github.alexthe666.iceandfire.fabric.DragonCombatConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ClipContext;
@@ -19,7 +20,6 @@ final class DragonFlightManager {
     AirAttack airAttack() { return airAttack; }
     int combatTicks() { return combatTicks; }
     boolean attacking() { return combatTarget != null && !landing; }
-    static final int MAX_HEIGHT = 256;
     private final FireDragon dragon;
     private Vec3 target;
     private int hoverTicks, flyTicks, escortRecalculate, teleportDelay;
@@ -248,8 +248,9 @@ final class DragonFlightManager {
         for (int i = 0; i < 10; i++) {
             double x, z;
             if (dragon.hasHome()) {
-                x = dragon.getHomePosition().getX() + dragon.getRandom().nextInt(80) - 40 + 0.5;
-                z = dragon.getHomePosition().getZ() + dragon.getRandom().nextInt(80) - 40 + 0.5;
+                int radius = dragon.getHomeRadius();
+                x = dragon.getHomePosition().getX() + dragon.getRandom().nextInt(radius * 2) - radius + 0.5;
+                z = dragon.getHomePosition().getZ() + dragon.getRandom().nextInt(radius * 2) - radius + 0.5;
             } else {
                 double radius = 12 * (0.7 * DragonGrowth.renderSize(dragon.ageDays()) / 3);
                 double angle = Math.toRadians(dragon.yBodyRot) + 3.15
@@ -268,7 +269,7 @@ final class DragonFlightManager {
         }
         return null;
     }
-    private int maxHeight() { return Math.min(MAX_HEIGHT, dragon.level().getMaxY() - (int) Math.ceil(dragon.getBbHeight()) - 1); }
+    int maxHeight() { return Math.min(DragonCombatConfig.current.maxDragonFlight, dragon.level().getMaxY() - (int) Math.ceil(dragon.getBbHeight()) - 1); }
     private Vec3 clampHeight(Vec3 pos) { return new Vec3(pos.x, Math.min(pos.y, maxHeight()), pos.z); }
     private boolean canReach(Vec3 destination) {
         Vec3 offset = destination.subtract(dragon.position());

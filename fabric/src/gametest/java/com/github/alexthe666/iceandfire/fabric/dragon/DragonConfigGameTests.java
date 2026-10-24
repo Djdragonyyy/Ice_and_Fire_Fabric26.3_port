@@ -16,6 +16,29 @@ import net.minecraft.world.phys.Vec3;
 public class DragonConfigGameTests {
     private static void require(boolean ok, String message) { if (!ok) throw new AssertionError(message); }
     @GameTest
+    public void configuredHomeRadiusAndFlightCeilingRespectWorldBounds(GameTestHelper h) {
+        var old = DragonCombatConfig.current;
+        try {
+            var config = new DragonCombatConfig(); config.maxDragonFlight = 100; config.dragonWanderFromHomeDistance = 8;
+            DragonCombatConfig.current = config;
+            var d = IafContent.FIRE_DRAGON.create(h.getLevel(), EntitySpawnReason.TRIGGERED);
+            var home = h.absolutePos(new BlockPos(2, 2, 2));
+            var output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, h.getLevel().registryAccess());
+            d.saveWithoutId(output);
+            output.putBoolean("HasHomePosition", true);
+            output.putInt("HomeAreaX", home.getX()); output.putInt("HomeAreaY", home.getY()); output.putInt("HomeAreaZ", home.getZ());
+            output.putString("HomeDimension", h.getLevel().dimension().identifier().toString());
+            d.load(TagValueInput.create(ProblemReporter.DISCARDING, h.getLevel().registryAccess(), output.buildResult()));
+            require(d.getHomeRadius() == 8 && d.isWithinHome(Vec3.atCenterOf(home).add(7, 0, 0))
+                    && !d.isWithinHome(Vec3.atCenterOf(home).add(8, 0, 0)), "Loaded home uses configured strict radius");
+            require(d.flightManager.maxHeight() == 100, "Configured absolute flight ceiling");
+            config.maxDragonFlight = Integer.MAX_VALUE;
+            require(d.flightManager.maxHeight() == h.getLevel().getMaxY() - (int) Math.ceil(d.getBbHeight()) - 1,
+                    "Native world ceiling still leaves room for the dragon body");
+        } finally { DragonCombatConfig.current = old; }
+        h.succeed();
+    }
+    @GameTest
     public void configuredGrowthStatsAndHungerDriveRealAttributesAndTicks(GameTestHelper h) {
         var old = DragonCombatConfig.current;
         try {

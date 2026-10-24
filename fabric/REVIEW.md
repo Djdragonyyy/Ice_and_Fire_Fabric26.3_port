@@ -1,6 +1,22 @@
 # Revisione del port Fabric
 
-Verificati68 JUnit,80 GameTest della mod (81 con baseline vanilla escluso) e4 prove client con dieci screenshot. Nessuna prova con due veri client.
+Verificati 68 JUnit, 81 GameTest della mod (82 con baseline vanilla escluso) e 4 prove client con dieci screenshot. Nessuna prova con due veri client.
+
+## Revisione 0.1.24 — 24 ottobre 2026
+
+Review-agent in sola lettura, senza delega: diff completo da5377c308f, inclusi
+configurazione, manager/casa, test, versione/build e tutti i documenti nuovi.
+No findings. Default/intervalli confrontati con ServerConfig originale;
+nextInt riceve raggio positivo e raggio*2 resta entro int. Soglie40 di ritorno
+al nido e durata hovering conservate; nessun caricamento chunk aggiunto.
+Quota autonoma limitata da mondo e altezza fisica, nessuna barriera al pilota.
+
+68 JUnit,81 GameTest mod (82 con baseline vanilla escluso),4 test client e
+10 screenshot finali; build completa riuscita. Ispezionati armature testa/coda
+in GUI e preda in bocca in mondo. Nessuna prova con due veri client. Tappa1
+ancora incompleta. La sospensione è annullata dall'utente: helper locale
+sostituito con errore immediato, istruzioni operative corrette e automazione
+già priva di sospensione. Continuare dopo checkpoint e consegna.
 
 ## Revisione 0.1.23 — 24 ottobre 2026
 
