@@ -8,6 +8,13 @@ import net.minecraft.world.phys.Vec3;
 final class DragonFlightSteering {
     record Step(Vec3 acceleration, float yaw, double speed) {}
 
+    static Step towardsWaypoint(Vec3 offset, float yaw, double speed, boolean intermediate) {
+        // A local point on a distant journey must not apply the final-arrival slowdown.
+        if (intermediate && offset.lengthSqr() > 1.0E-6)
+            offset = offset.normalize().scale(Math.max(50, offset.length()));
+        return towards(offset, yaw, speed);
+    }
+
     static Step towards(Vec3 offset, float yaw, double speed) {
         double plane = offset.horizontalDistance();
         double horizontalScale = plane < 1.0e-6 ? 0 : Math.clamp(1 - Math.abs(offset.y * 0.7) / plane, 0.2, 1);

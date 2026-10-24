@@ -1,10 +1,12 @@
 # Ice and Fire: port Fabric 26.3 in sviluppo
 
-Verificati 73 JUnit, 102 GameTest della mod (103 includendo la baseline vanilla) e 7 prove client con diciassette screenshot. Nessuna prova con due veri client.
+Verificati 75 JUnit, 109 GameTest della mod (110 includendo la baseline vanilla) e 7 prove client con diciassette screenshot. Nessuna prova con due veri client.
 
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
-Versione corrente: **0.1.29-stage1-dev**. Ruggiti/aura, pose e voci originali, battito d'ali configurabile e audio HOSTILE. [TEST-0.1.29.md](TEST-0.1.29.md). Tappa1 incompleta.
+Versione corrente: **0.1.30-stage1-dev**. Navigazione del corpo completo, deviazioni locali e prova reale dello stadio5 oltre una parete fino all'atterraggio. [TEST-0.1.30.md](TEST-0.1.30.md). Tappa1 incompleta.
+
+Versione precedente: **0.1.29-stage1-dev**. Ruggiti/aura, pose e voci originali, battito d'ali configurabile e audio HOSTILE. [TEST-0.1.29.md](TEST-0.1.29.md). Tappa1 incompleta.
 
 Versione precedente: **0.1.28-stage1-dev**. Cristallo fuoco: legame persistente, richiamo stessa entità e caricamento temporaneo del chunk sorgente. [TEST-0.1.28.md](TEST-0.1.28.md). Tappa1 incompleta.
 
@@ -202,7 +204,7 @@ originali, cavalcatura e controlli, spalle, inventario/armature/stendardi,
 alimentazione/comandi, combattimento terrestre/aereo e soffio, effetti sul
 terreno, seguito/recupero150blocchi, volo libero/ritorno al nido, sonno/palpebre,
 riproduzione, caccia/presa delle prede, corno/flauto/cristallo e configurazioni
-migrate. La0.1.29 aggiunge ruggiti/aura e battiti d'ali originali.
+migrate. La0.1.29 aggiunge ruggiti/aura e battiti d'ali originali. La0.1.30 aggiunge navigazione del corpo completo e deviazioni locali.
 
 Restano navigazione complessa e comportamento completo acqua/lava, dettagli di
 parità delle interazioni/combattimento/riproduzione/sonno/configurazioni,

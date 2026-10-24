@@ -1,5 +1,22 @@
 # Stato della tappa 1 — drago di fuoco, Fabric 26.3
 
+## Checkpoint 0.1.30 — navigazione aerea del corpo completo
+
+Controllo del volume fisico lungo ogni tratto, chunk già caricati, quote/bordo;
+deviazioni sopra/laterali e frenata ai cambi di direzione. Percorsi validi
+conservati invece di ricominciare la salita. Collisioni fisiche native mantenute,
+compresa la discesa libera quando un altro asse è bloccato. Comandi/bersagli
+invalidano la cache. Percorsi lontani per tratti locali32 quando oltre64, senza
+rallentamento artificiale della crociera; ricontrolli limitati.
+
+Sette prove nuove native isolate e cinque regressioni aeree passate senza allentare
+le asserzioni sul danno. Lo stadio5 supera realmente una parete e atterra vicino
+al proprietario, con corpo vivo/dimensioni/collisioni controllati a ogni tick attivo.
+Suite finale75JUnit/109GameTest mod (110 con baseline)/7client e17immagini,
+tutta passata. Vedere TEST-0.1.30.md. Prossimi acqua/lava e altre parità.
+Tappa1 e port completi ancora aperti. Nessuna sospensione/spegnimento.
+
+
 ## Checkpoint 0.1.29 — ruggiti, effetti e battito d'ali
 
 Ruggito normale40/epico60tick, sei pose Tabula e voci originali per età;
@@ -31,7 +48,7 @@ o lavorazioni duplicate. Non consumare quota artificialmente e non dichiarare
 completate fasi con funzioni mancanti. Al risveglio controllo quota93%; reset
 indicato dall'app24ottobre12:38:03UTC (14:38Roma). Verificare stato attuale.
 
-Verificati 73 JUnit, 102 GameTest della mod (103 includendo la baseline vanilla) e 7 prove client con diciassette screenshot. Nessuna prova con due veri client.
+Verificati 75 JUnit, 109 GameTest della mod (110 includendo la baseline vanilla) e 7 prove client con diciassette screenshot. Nessuna prova con due veri client.
 
 ## Checkpoint 0.1.28 — cristallo e caricamento dei draghi
 
@@ -118,7 +135,7 @@ mondo e dalla taglia. Nessuna barriera al pilota o modifica della velocità.
 Vecchi JSON compatibili. Nuovo GameTest salva/ricarica casa e verifica raggio,
 confine e due limiti di quota; estesa validazione JUnit. Tappa1 ancora aperta.
 
-Aggiornato per 0.1.29-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
+Aggiornato per 0.1.30-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
 Questo riepilogo distingue ciò che è nel codice da ciò che manca: build e test
 non sostituiscono il riscontro in gioco, soprattutto per grafica e multiplayer.
 L'utente ha confermato la 0.1.13 funzionante il 24 ottobre e chiesto di continuare.
@@ -346,6 +363,11 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
     precedenza dei comportamenti attivi. Battito d'ali, campioni originali e
     distanza audio configurabile; categoria HOSTILE. Vedere TEST-0.1.29.md.
 
+26. Navigazione aerea con controllo dell'intero volume fisico e deviazioni
+    locali sopra/ai lati, cache e frenata; tratti limitati per mete lontane.
+    Lo stadio5 supera una parete e atterra vivo senza attraversare blocchi.
+    Collisioni native e regole separate per caduta del giocatore conservate.
+
 ## Da completare nella tappa 1
 
 - Combattimento autonomo: ulteriori dettagli di presa e
@@ -353,9 +375,9 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
   coordinamento con movimento e volo.
 - Altre interazioni originali e dettagli del ciclo delle uova.
 - Ulteriori dettagli/parità di riproduzione e sonno originali.
-- Comportamento completo in acqua/lava e navigazione aerea più robusta fra
-  edifici, alberi e grotte. Il manager attuale verifica spazio e visibilità,
-  ma non aggira qualsiasi ostacolo complesso.
+- Comportamento completo in acqua/lava e ulteriori casi complessi di navigazione.
+  La0.1.30 include corpo completo e deviazioni locali; labirinti/grotte e
+  assetti stretti restano da collaudare, senza dichiarare un pathfinder universale.
 - Passeggeri nell'anteprima GUI; differenze visive complete maschio/femmina,
   animazioni secondarie/attacchi, ulteriori suoni e particelle ancora mancanti.
 - Configurazioni originali non ancora esposte; integrazione DragonForge ed
@@ -369,6 +391,6 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 Restano fuori da questa consegna draghi di ghiaccio/fulmine, altre creature,
 progressione completa, ricette, strutture e generazione naturale: appartengono
 alle tappe successive. Non iniziarle prima del completamento e del riscontro
-sulla tappa 1. La 0.1.13 è confermata; collaudare le novità successive, ora fino alla0.1.29.
+sulla tappa 1. La 0.1.13 è confermata; collaudare le novità successive, ora fino alla0.1.30.
 
 Nota operativa24ottobre: ripresa effettiva alle22:12Roma dopo reset; automazione stessa chat riportata a controllo5min. Sessione in corso, nessuna sospensione.

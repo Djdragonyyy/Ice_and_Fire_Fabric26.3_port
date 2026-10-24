@@ -6,6 +6,21 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DragonFlightSteeringTest {
+    @Test void intermediateLegRetainsOriginalDistantCruiseAccelerationAndHeading() {
+        for (Vec3 offset : new Vec3[]{new Vec3(0, 0, 32), new Vec3(8, 8, 8), new Vec3(-8, -8, 8)}) {
+            var original = DragonFlightSteering.towards(offset.scale(20), 37, 1.2);
+            var local = DragonFlightSteering.towardsWaypoint(offset, 37, 1.2, true);
+            assertEquals(0, original.acceleration().distanceTo(local.acceleration()), 1.0E-9);
+            assertEquals(original.yaw(), local.yaw()); assertEquals(original.speed(), local.speed());
+        }
+    }
+    @Test void finalLegKeepsArrivalSlowdownAndCoincidentIntermediateRemainsFinite() {
+        Vec3 offset = new Vec3(0, 0, 4);
+        var last = DragonFlightSteering.towardsWaypoint(offset, 0, 1.2, false);
+        assertEquals(DragonFlightSteering.towards(offset, 0, 1.2), last);
+        assertTrue(DragonFlightSteering.towardsWaypoint(offset, 0, 1.2, true).acceleration().length() > last.acceleration().length());
+        assertEquals(Vec3.ZERO, DragonFlightSteering.towardsWaypoint(Vec3.ZERO, 0, 0, true).acceleration());
+    }
     @Test void steepTargetsMustNotStallHorizontalFlight() {
         var step = DragonFlightSteering.towards(new Vec3(8, 16, 0), -90, 1);
         assertTrue(step.acceleration().x > 0, "Steep wandering targets still require forward progress");

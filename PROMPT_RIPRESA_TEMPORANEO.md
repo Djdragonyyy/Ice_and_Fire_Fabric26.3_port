@@ -1,5 +1,22 @@
 # Prompt temporaneo per la prossima ripresa
 
+## Checkpoint 0.1.30 — navigazione aerea del corpo completo
+
+Controllo del volume fisico lungo ogni tratto, chunk già caricati, quote/bordo;
+deviazioni sopra/laterali e frenata ai cambi di direzione. Percorsi validi
+conservati invece di ricominciare la salita. Collisioni fisiche native mantenute,
+compresa la discesa libera quando un altro asse è bloccato. Comandi/bersagli
+invalidano la cache. Percorsi lontani per tratti locali32 quando oltre64, senza
+rallentamento artificiale della crociera; ricontrolli limitati.
+
+Sette prove nuove native isolate e cinque regressioni aeree passate senza allentare
+le asserzioni sul danno. Lo stadio5 supera realmente una parete e atterra vicino
+al proprietario, con corpo vivo/dimensioni/collisioni controllati a ogni tick attivo.
+Suite finale75JUnit/109GameTest mod (110 con baseline)/7client e17immagini,
+tutta passata. Vedere TEST-0.1.30.md. Prossimi acqua/lava e altre parità.
+Tappa1 e port completi ancora aperti. Nessuna sospensione/spegnimento.
+
+
 ## Checkpoint 0.1.29 — ruggiti, effetti e battito d'ali
 
 Ruggito normale40/epico60tick, sei pose Tabula e voci originali per età;
@@ -31,13 +48,13 @@ o lavorazioni duplicate. Non consumare quota artificialmente e non dichiarare
 completate fasi con funzioni mancanti. Al risveglio controllo quota93%; reset
 indicato dall'app24ottobre12:38:03UTC (14:38Roma). Verificare stato attuale.
 
-Aggiornato il 24 ottobre 2026, checkpoint 0.1.29, nuova autorizzazione utente a proseguire nelle fasi.
+Aggiornato il 24 ottobre 2026, checkpoint 0.1.30, nuova autorizzazione utente a proseguire nelle fasi.
 Conservare fabric/HANDOFF.md: contiene lo storico e i vincoli permanenti.
 
 ---
 
 Continua il porting di Ice and Fire. Comunica in italiano. Leggi integralmente
-fabric/HANDOFF.md, fabric/README.md, fabric/REVIEW.md, fabric/TEST-0.1.29.md e gli
+fabric/HANDOFF.md, fabric/README.md, fabric/REVIEW.md, fabric/TEST-0.1.30.md e gli
 AGENTS.md applicabili. Non ricominciare da zero o sovrascrivere modifiche locali.
 
 Repository personale:

@@ -1,5 +1,33 @@
 # Revisione del port Fabric
 
+## Revisione 0.1.30 — 24 ottobre 2026
+
+Skill review-agent in sola lettura, senza delega, sul diff da bcd14643f: nuovi
+helper di volume/percorso, manager e sterzata, nuove prove, versione e documenti.
+Confrontati gestore originale e API/bytecode26.3. Correzioni fuori dalla revisione:
+cache che ricominciava la salita; blocco artificiale di tutti gli assi che
+interrompeva la discesa e la transizione dell'attacco aereo; limite del singolo
+controllo che non deve rifiutare un'intenzione di ritorno a casa lontana.
+
+Movimento/collisioni native conservati, nessuna dimensione ridotta o blocco
+attraversato. Passate cinque regressioni aeree originali senza allentare danni
+o tempi. Aggiunte prove numeriche per conservare accelerazione di crociera
+sui punti intermedi e rallentamento solo all'arrivo reale. Volume/chunk/bordo
+verificati prima delle query; nessun percorso illimitato o nuovo chunk richiesto.
+
+L'asserzione sul drago vivo ha inoltre individuato un problema della fixture:
+GameTestInfo.succeed() nativo scarta immediatamente le entità, mentre un callback
+onEachTick dello stesso tick può ancora eseguire. Diagnostica: salute20,
+removalDISCARDED e spazio libero. Osservatore limitato alla prova attiva e ultimo
+controllo vivo/dimensioni/collisioni PRIMA del successo. Immunità del corpo alla
+caduta era già presente e non è stata modificata; nuova prova confronta atterraggio
+del drago e danno reale del giocatore smontato in aria. Sette prove nuove isolate
+passate; l'adulto è distanziato per isolare la sua aura dalle altre arene.
+
+Suite finale75JUnit/109GameTest mod più baseline/7client/17immagini passata. Rilettura conclusiva read-only del diff completo e nuovi file: No findings. Restano
+labirinti/grotte e due client reali; nessuna dichiarazione di tappa1 completa.
+
+
 ## Revisione 0.1.29 — 24 ottobre 2026
 
 Applicata la skill review-agent in sola lettura e senza delega sul diff completo
@@ -19,7 +47,7 @@ libero, perché seduto cancella un bersaglio non difensivo prima di quel control
 Restano non provati ascolto manuale e due client veri; earplugs è solo riconosciuto
 per ID, l'oggetto appartiene alla fase3. Nessuna parità completa della tappa1.
 
-Verificati 73 JUnit, 102 GameTest della mod (103 includendo la baseline vanilla) e 7 prove client con diciassette screenshot. Nessuna prova con due veri client.
+Verificati 75 JUnit, 109 GameTest della mod (110 includendo la baseline vanilla) e 7 prove client con diciassette screenshot. Nessuna prova con due veri client.
 
 ## Revisione 0.1.28 — 24 ottobre 2026
 

@@ -3,9 +3,7 @@ package com.github.alexthe666.iceandfire.fabric.dragon;
 import com.github.alexthe666.iceandfire.fabric.DragonCombatConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 /** Server flight/escort/roost paths adapted from IafDragonLogic,
@@ -21,16 +19,18 @@ final class DragonFlightManager {
     int combatTicks() { return combatTicks; }
     boolean attacking() { return combatTarget != null && !landing; }
     private final FireDragon dragon;
+    private final DragonFlightPath path;
     private Vec3 target;
     private int hoverTicks, flyTicks, escortRecalculate, teleportDelay;
     private boolean landing, returning;
     private double speed = 0.2;
 
-    DragonFlightManager(FireDragon dragon) { this.dragon = dragon; }
+    DragonFlightManager(FireDragon dragon) { this.dragon = dragon; this.path = new DragonFlightPath(dragon); }
     Vec3 target() { return target; }
     boolean returning() { return returning; }
 
     void reset() {
+        path.reset();
         target = null;
         hoverTicks = flyTicks = escortRecalculate = teleportDelay = 0;
         landing = returning = false;
@@ -39,6 +39,7 @@ final class DragonFlightManager {
         combatTicks = 0;
     }
     void commandChanged() {
+        path.reset();
         target = null;
         returning = false;
         landing = dragon.command() == 1 && dragon.flying();
@@ -142,6 +143,7 @@ final class DragonFlightManager {
     }
 
     void beginAirAttack(LivingEntity enemy, AirAttack mode) {
+        path.reset();
         combatTarget = enemy;
         airAttack = mode;
         combatTicks = 0;
@@ -201,16 +203,24 @@ final class DragonFlightManager {
     }
 
     private void steer(double minimumSpeed) {
-        speed = Math.max(speed, minimumSpeed);
-        var step = DragonFlightSteering.towards(target.subtract(dragon.position()), dragon.getYRot(), speed);
+        Vec3 waypoint = path.next(target);
+        if (waypoint == null) { landing = true; land(); return; }
+        boolean corner = path.detouring() && dragon.position().distanceToSqr(waypoint) < 16;
+        speed = corner ? Math.min(speed, 0.4) : Math.max(speed, minimumSpeed);
+        var step = DragonFlightSteering.towardsWaypoint(waypoint.subtract(dragon.position()), dragon.getYRot(), speed, path.intermediate());
         speed = step.speed();
         dragon.setYRot(step.yaw());
         dragon.yBodyRot = dragon.yHeadRot = step.yaw();
-        if (dragon.position().distanceToSqr(target) <= 1) dragon.setDeltaMovement(dragon.getDeltaMovement().scale(0.5));
-        dragon.setDeltaMovement(dragon.getDeltaMovement().add(step.acceleration()));
-        if (target.y > dragon.getY() + 1) dragon.setDeltaMovement(dragon.getDeltaMovement().add(0, 0.1, 0));
+        Vec3 motion = dragon.getDeltaMovement();
+        if (corner || dragon.position().distanceToSqr(waypoint) <= 1) motion = motion.scale(corner ? 0.6 : 0.5);
+        motion = motion.add(step.acceleration());
+        if (waypoint.y > dragon.getY() + 1) motion = motion.add(0, 0.1, 0);
+        // Native swept movement clips blocked axes while preserving free vertical motion.
+        // Stopping all axes here would freeze a descending dragon at the edge of an obstacle.
+        dragon.setDeltaMovement(motion);
     }
     private void land() {
+        path.reset();
         target = null;
         dragon.setAutonomousFlight(true, true);
         dragon.setDeltaMovement(dragon.getDeltaMovement().multiply(0.5, 1, 0.5).add(0, -0.25, 0));
@@ -272,15 +282,6 @@ final class DragonFlightManager {
     int maxHeight() { return Math.min(DragonCombatConfig.current.maxDragonFlight, dragon.level().getMaxY() - (int) Math.ceil(dragon.getBbHeight()) - 1); }
     private Vec3 clampHeight(Vec3 pos) { return new Vec3(pos.x, Math.min(pos.y, maxHeight()), pos.z); }
     private boolean canReach(Vec3 destination) {
-        Vec3 offset = destination.subtract(dragon.position());
-        // Check every traversed chunk before raycasting; never request new chunks for AI.
-        int samples = Math.max(1, (int) Math.ceil(offset.length() / 8));
-        for (int i = 0; i <= samples; i++) {
-            if (!dragon.level().hasChunkAt(BlockPos.containing(dragon.position().add(offset.scale((double) i / samples))))) return false;
-        }
-        if (!dragon.level().noCollision(dragon, dragon.getBoundingBox().move(offset))) return false;
-        Vec3 from = dragon.position().add(0, dragon.getBbHeight() / 2, 0);
-        return dragon.level().clip(new ClipContext(from, from.add(offset), ClipContext.Block.COLLIDER,
-                ClipContext.Fluid.NONE, dragon)).getType() == HitResult.Type.MISS;
+        return path.reaches(destination);
     }
 }
