@@ -1,12 +1,18 @@
 # Stato della tappa 1 — drago di fuoco, Fabric 26.3
 
-Verificati61 JUnit,66 GameTest della mod (67 con baseline vanilla escluso) e3 prove client con sei screenshot ispezionati. Nessuna prova con due veri client.
+Verificati62 JUnit,67 GameTest della mod (68 con baseline vanilla escluso) e4 prove client con otto screenshot. Nessuna prova con due veri client.
 
-Aggiornato per 0.1.19-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
+Aggiornato per 0.1.20-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
 Questo riepilogo distingue ciò che è nel codice da ciò che manca: build e test
 non sostituiscono il riscontro in gioco, soprattutto per grafica e multiplayer.
 L'utente ha confermato la 0.1.13 funzionante il 24 ottobre e chiesto di continuare.
 La prova0.1.14 ha rilevato alberi e dismount: correzioni0.1.15 da collaudare. Nessun passaggio alla tappa 2.
+
+## Novità 0.1.20
+
+Stendardo sul corpo animato con colori e motivi vanilla, dimensione indipendente
+dalla crescita, sincronizzazione fuori dalla GUI, salvataggio/rimozione senza
+duplicazione. Prove server, matematica e quarto test client con screenshot.
 
 ## Novità 0.1.19
 
@@ -143,7 +149,7 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
    apertura Maiusc+mano vuota, GUI originale, anteprima e statistiche;
    controlli di accesso/distanza, shift-click, salvataggio e rilascio alla morte.
    32 armature, otto materiali per quattro parti, bonus e overlay sincronizzati.
-   Lo stendardo è conservato nello slot ma il suo layer grafico manca ancora.
+   Stendardo sul corpo animato, componenti sincronizzati e renderer vanilla completo.
 10. Alimentazione manuale con carne: fame e cura, consumo corretto anche in
     creativo e rifiuto se sazio/sano. Pasto del drago per crescere; pasto malaticcio
     per bloccare la crescita e curare; pasto creativo per assegnare proprietà.
@@ -171,7 +177,7 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 - Comportamento completo in acqua/lava e navigazione aerea più robusta fra
   edifici, alberi e grotte. Il manager attuale verifica spazio e visibilità,
   ma non aggira qualsiasi ostacolo complesso.
-- Layer dello stendardo; palpebre, differenze visive complete maschio/femmina,
+- Palpebre, differenze visive complete maschio/femmina,
   animazioni secondarie/attacchi, suoni e particelle ancora mancanti.
 - Configurazioni originali non ancora esposte; integrazione DragonForge ed
   esplosioni opzionali del combattimento.
@@ -184,4 +190,4 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 Restano fuori da questa consegna draghi di ghiaccio/fulmine, altre creature,
 progressione completa, ricette, strutture e generazione naturale: appartengono
 alle tappe successive. Non iniziarle prima del completamento e del riscontro
-sulla tappa 1. La 0.1.13 è confermata; collaudare le novità0.1.19 alla ripresa del port.
+sulla tappa 1. La 0.1.13 è confermata; collaudare le novità0.1.20 alla ripresa del port.

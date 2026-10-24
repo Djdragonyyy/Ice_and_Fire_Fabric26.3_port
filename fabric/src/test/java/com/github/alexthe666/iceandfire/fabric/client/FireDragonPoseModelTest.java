@@ -9,6 +9,33 @@ import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FireDragonPoseModelTest {
+    @Test void bannerFollowsOriginalBodyTransformAndKeepsWorldSizeAcrossGrowth() {
+        var model = model();
+        var state = new FireDragonRenderer.State();
+        for (float progress : new float[]{0, 10, 20}) {
+            state.flyProgress = progress;
+            state.hoverProgress = progress;
+            state.sleepProgress = 20 - progress;
+            model.setupAnim(state);
+            org.joml.Vector3f normalizedAnchor = null;
+            for (float scale : new float[]{0.3F, 1, 3, 10}) {
+                var actual = new com.mojang.blaze3d.vertex.PoseStack();
+                actual.scale(scale, scale, scale);
+                DragonBannerLayer.applyAttachment(model, scale, actual);
+                var anchor = actual.last().pose().transformPosition(new org.joml.Vector3f()).div(scale);
+                if (normalizedAnchor == null) normalizedAnchor = anchor;
+                else assertEquals(0, normalizedAnchor.distance(anchor), 0.00001F,
+                        "Attachment location must scale with dragon while the item keeps its world size");
+                assertEquals(1, actual.last().pose().transformDirection(new org.joml.Vector3f(0, 1, 0)).length(), 0.00001F,
+                        "Banner size must not multiply with uncapped stage-five render scale");
+                var body = new com.mojang.blaze3d.vertex.PoseStack();
+                model.translateToBody(body);
+                var bodyUp = body.last().pose().transformDirection(new org.joml.Vector3f(0, 1, 0)).normalize();
+                var bannerUp = actual.last().pose().transformDirection(new org.joml.Vector3f(0, 1, 0)).normalize();
+                assertEquals(-1, bodyUp.dot(bannerUp), 0.00001F, "Original banner flips relative to animated body");
+            }
+        }
+    }
     @Test void sleepPoseMatchesOriginalAndEyeModelKeepsOnlyHeadFront() throws IOException {
         var model = model();
         var state = new FireDragonRenderer.State();

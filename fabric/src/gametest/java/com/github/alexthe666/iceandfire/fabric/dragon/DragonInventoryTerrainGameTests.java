@@ -20,6 +20,31 @@ import net.minecraft.world.level.storage.TagValueOutput;
 public class DragonInventoryTerrainGameTests {
     private static void require(boolean condition, String message) { if (!condition) throw new AssertionError(message); }
 
+    @GameTest
+    public void bannerSnapshotPreservesPatternsWithoutDuplicatingInventory(GameTestHelper helper) {
+        var dragon = IafContent.FIRE_DRAGON.create(helper.getLevel(), EntitySpawnReason.TRIGGERED);
+        var banner = new ItemStack(Items.BANNER.yellow());
+        var patterns = new net.minecraft.world.level.block.entity.BannerPatternLayers.Builder()
+                .addIfRegistered(helper.getLevel().registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.BANNER_PATTERN),
+                        net.minecraft.world.level.block.entity.BannerPatterns.CROSS, net.minecraft.world.item.DyeColor.BLUE).build();
+        banner.set(DataComponents.BANNER_PATTERNS, patterns);
+        banner.set(DataComponents.CUSTOM_NAME, Component.literal("Dragon standard"));
+        dragon.dragonInventory.setItem(0, banner);
+        require(ItemStack.isSameItemSameComponents(banner, dragon.dragonBanner()), "Render snapshot retains banner color, pattern and name");
+        dragon.dragonBanner().setCount(0);
+        require(dragon.dragonInventory.getItem(0).getCount() == 1 && !dragon.dragonBanner().isEmpty(), "Render snapshot cannot mutate stored banner");
+        var output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, helper.getLevel().registryAccess());
+        dragon.saveWithoutId(output);
+        var restored = IafContent.FIRE_DRAGON.create(helper.getLevel(), EntitySpawnReason.TRIGGERED);
+        restored.load(TagValueInput.create(ProblemReporter.DISCARDING, helper.getLevel().registryAccess(), output.buildResult()));
+        require(ItemStack.isSameItemSameComponents(banner, restored.dragonBanner()), "Load rebuilds visual snapshot from authoritative inventory");
+        var removed = restored.dragonInventory.removeItem(0, 1);
+        require(removed.getCount() == 1 && restored.dragonBanner().isEmpty(), "Removing item clears visual snapshot");
+        restored.dragonInventory.setItem(0, new ItemStack(Items.STICK));
+        require(restored.dragonBanner().isEmpty(), "Invalid inventory data cannot render a held item on dragon");
+        helper.succeed();
+    }
+
     @GameTest(structure = "iceandfire:flight_arena", padding = 12)
     public void damagedEggReturnsExactlyOneItemOfItsVariant(GameTestHelper helper) {
         for (int variant = 0; variant < 4; variant++) {

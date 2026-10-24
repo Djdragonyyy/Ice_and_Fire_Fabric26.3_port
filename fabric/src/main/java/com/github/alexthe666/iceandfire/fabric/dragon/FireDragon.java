@@ -45,6 +45,7 @@ public final class FireDragon extends TamableAnimal {
     private static final EntityDataAccessor<Integer> SHOULDER_SLOT = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> COMMAND = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> SLEEPING = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<ItemStack> BANNER = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.ITEM_STACK);
     private long sleepNotBefore;
     public float sleepProgress, prevSleepProgress;
     private BlockPos dragonHome;
@@ -121,6 +122,7 @@ public final class FireDragon extends TamableAnimal {
         builder.define(SHOULDER_SLOT, 0);
         builder.define(COMMAND, 0);
         builder.define(SLEEPING, false);
+        builder.define(BANNER, ItemStack.EMPTY);
     }
 
     @Override protected void registerGoals() {
@@ -409,6 +411,8 @@ public final class FireDragon extends TamableAnimal {
 
     private void updateArmor() {
         if (level().isClientSide()) return;
+        ItemStack banner = dragonInventory.getItem(0);
+        entityData.set(BANNER, DragonArmorItem.fits(banner, 0) ? banner.copyWithCount(1) : ItemStack.EMPTY);
         int packed = 0;
         double bonus = 1;
         for (int slot = 0; slot < 4; slot++) {
@@ -420,6 +424,9 @@ public final class FireDragon extends TamableAnimal {
         entityData.set(ARMOR_PARTS, packed);
         getAttribute(Attributes.ARMOR).setBaseValue(1 + 19 / 125F * ageDays() + bonus);
     }
+
+    /** Render snapshot only; inventory remains the sole persisted/drop source. */
+    public ItemStack dragonBanner() { return entityData.get(BANNER).copy(); }
 
     @Override protected void dropCustomDeathLoot(ServerLevel server, net.minecraft.world.damagesource.DamageSource source, boolean recentlyHit) {
         super.dropCustomDeathLoot(server, source, recentlyHit);

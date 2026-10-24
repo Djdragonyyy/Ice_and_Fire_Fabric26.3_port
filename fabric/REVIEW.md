@@ -1,6 +1,28 @@
 # Revisione del port Fabric
 
-Verificati61 JUnit,66 GameTest della mod (67 con baseline vanilla escluso) e3 prove client con sei screenshot ispezionati. Nessuna prova con due veri client.
+Verificati62 JUnit,67 GameTest della mod (68 con baseline vanilla escluso) e4 prove client con otto screenshot. Nessuna prova con due veri client.
+
+## Revisione 0.1.20 — 24 ottobre 2026
+
+Review-agent in sola lettura senza delega al diff completo da6a20582f3: layer,
+stato server/client, nuovi test e documenti. Confrontati LayerDragonBanner
+originale e API ItemStackRenderState/InventoryScreen26.3 dai JAR locali.
+
+[P2] Conservare la scala reale quando la GUI normalizza state.scale —
+FireDragonRenderer.extractRenderState / DragonBannerLayer.submit.
+Il primo screenshot mostrava uno stendardo troppo grande sopra la cornice: il
+layer usava state.scale già riscritto a1 dalla GUI. Corretto fuori revisione
+con bannerDragonScale immutata dalla normalizzazione, senza alterare la scala
+in mondo. Ripetuti build/JUnit e tutte e4 le prove client; screenshot corretto
+ispezionato, stendardo nel riquadro e componenti ancora presenti. Rilettura finale:
+No findings.
+
+62 JUnit e67 GameTest mod passati (68 con baseline vanilla escluso).4 test client,
+otto screenshot; server verificato prima dell'ultima correzione solo client,
+poi build/JUnit/client ripetuti con codice finale. Log concatenato contiene le
+esecuzioni pertinenti. Verificati snapshot difensivo, singola fonte inventario,
+load/removal, colori/motivi tracciati, invisibilità e scala costante del mondo.
+Nessuna prova con due veri client o pacchetti grafici esterni. Tappa1 incompleta.
 
 ## Revisione 0.1.19 — 24 ottobre 2026
 

@@ -1,10 +1,15 @@
 # Ice and Fire: port Fabric 26.3 in sviluppo
 
-Verificati61 JUnit,66 GameTest della mod (67 con baseline vanilla escluso) e3 prove client con sei screenshot ispezionati. Nessuna prova con due veri client.
+Verificati62 JUnit,67 GameTest della mod (68 con baseline vanilla escluso) e4 prove client con otto screenshot. Nessuna prova con due veri client.
 
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
-Versione corrente: **0.1.19-stage1-dev**. Riproduzione con stufato di fuoco,
+Versione corrente: **0.1.20-stage1-dev**. Stendardo sul corpo animato con
+colori/motivi vanilla e sincronizzazione fuori dalla GUI. Unica fonte salvata
+e rilasciata resta lo slot inventario. [TEST-0.1.20.md](TEST-0.1.20.md).
+Tappa1 ancora incompleta.
+
+Versione precedente: **0.1.19-stage1-dev**. Riproduzione con stufato di fuoco,
 corteggiamento, uovo/nido e cooldown salvato. Protezioni del terreno e prova
 completa da uovo nato a schiusa con nuovo proprietario. [TEST-0.1.19.md](TEST-0.1.19.md).
 Tappa1 ancora incompleta, autonomia continua secondo autorizzazione utente.

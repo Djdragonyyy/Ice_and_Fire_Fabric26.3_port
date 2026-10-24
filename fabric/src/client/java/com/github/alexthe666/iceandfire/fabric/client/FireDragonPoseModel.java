@@ -55,6 +55,9 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
         return stack.last().pose().transformPosition(new Vector3f(seatSurface));
     }
 
+    /** Original LayerDragonBanner attaches directly to animated BodyUpper. */
+    void translateToBody(PoseStack stack) { parts.get("BodyUpper").translateAndRotate(stack); }
+
     private static TabulaLoader.Model pose(ResourceManager resources, String name) {
         return TabulaLoader.loadModel(resources, IafContent.id("models/tabula/firedragon/firedragon_" + name + ".tbl"));
     }

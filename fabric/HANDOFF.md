@@ -1,6 +1,19 @@
 # Prompt completo per continuare il porting su un altro PC
 
-Verificati61 JUnit,66 GameTest della mod (67 con baseline vanilla escluso) e3 prove client con sei screenshot ispezionati. Nessuna prova con due veri client.
+Verificati62 JUnit,67 GameTest della mod (68 con baseline vanilla escluso) e4 prove client con otto screenshot. Nessuna prova con due veri client.
+
+## Checkpoint 0.1.20 — stendardo
+
+Base6a20582f3. LayerDragonBanner originale migrato a render state/submit26.3:
+BodyUpper animato, offset(0,-0.2,0.4), rotazioneX180 e scala inversa del drago.
+Renderer vanilla dello stendardo conserva colori/motivi. Inventario0 resta unica
+fonte salvata/drop; snapshot ItemStack sincronizzato con copia difensiva, anche
+a menu chiuso. Caricamento ricrea lo snapshot; rimozione/invalidi lo svuotano.
+Invisibilità nasconde il layer. Nuova prova server, matematica e quarto test
+client con pattern due strati, equipaggiamento/rimozione e screenshot reali.
+
+Prossimi: caccia e shake prey, acqua/lava/configurazioni e animazioni mancanti.
+Tappa1 ancora incompleta. Autonomia continua; sospensione richiesta a fine test.
 
 ## Checkpoint 0.1.19 — riproduzione
 

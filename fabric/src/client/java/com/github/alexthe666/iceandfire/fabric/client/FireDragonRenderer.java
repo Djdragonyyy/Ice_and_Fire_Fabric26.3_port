@@ -38,12 +38,15 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
         boolean sleeping;
         boolean firstPersonPilot;
         int armor;
+        float bannerDragonScale;
+        final net.minecraft.client.renderer.item.ItemStackRenderState banner = new net.minecraft.client.renderer.item.ItemStackRenderState();
     }
 
     public FireDragonRenderer(EntityRendererProvider.Context context) {
         super(context, new FireDragonPoseModel(context.getResourceManager()), 1F);
         addLayer(new DragonEyesLayer(this, new FireDragonPoseModel(context.getResourceManager(), true)));
         addLayer(new DragonArmorLayer(this));
+        addLayer(new DragonBannerLayer(this));
     }
 
     @Override public State createRenderState() { return new State(); }
@@ -52,6 +55,8 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
         super.extractRenderState(dragon, state, partialTick);
         state.variant = dragon.variant();
         state.armor = dragon.armorParts();
+        Minecraft.getInstance().getItemModelResolver().updateForLiving(state.banner, dragon.dragonBanner(),
+                net.minecraft.world.item.ItemDisplayContext.NONE, dragon);
         state.stage = dragon.stage();
         state.flying = dragon.flying();
         state.male = dragon.male();
@@ -92,6 +97,8 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
         // The legacy renderer used renderSize / 3; the entity's bounding-box
         // scale is separately capped at seven in the original implementation.
         state.scale = DragonGrowth.renderSize(dragon.ageDays()) / 3F;
+        // Inventory preview normalizes state.scale after extraction; retain the real scale for the item ratio.
+        state.bannerDragonScale = state.scale;
     }
 
     static float viewPitch(float flightPitch, boolean firstPersonRider) {
