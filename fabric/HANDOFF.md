@@ -1,5 +1,36 @@
 # Prompt completo per continuare il porting su un altro PC
 
+## Aggiornamento 0.1.14 — difesa autonoma, 24 ottobre 2026
+
+L'utente conferma la 0.1.13: "ho provato e funziona tutto", e chiede di continuare.
+La sospensione del PC richiesta per la consegna precedente è già stata eseguita;
+non è un'autorizzazione permanente a sospendere nelle riprese successive.
+Ramo personale port/fabric-26.3 aggiornato con switch/pull --ff-only, base05846b062.
+
+Migrati i goal difensivi originali OwnerHurtTarget/OwnerHurtByTarget/HurtByTarget,
+priorità1/2/3. FireDragon.canAttack controlla movimento autonomo, bersaglio vivo,
+stessa dimensione, proprietario/alleati/animali dello stesso proprietario e
+creativo/spettatore. Target oltre FOLLOW_RANGE o non validi eliminati.
+DragonMeleeGoal priorità5 insegue a1.5, ricalcola4..10tick, guarda il bersaglio e
+si ferma nella portata originale renderSize*0.2574*2+2. Il morso usa35tick e
+finestra16..24 di IafDragonLogic, un danno riuscito per animazione, con verifica
+all'impatto di distanza/visibilità e cura opzionale. Cambio bersaglio azzera la
+carica; seduto/NoAI/pilota/spalle interrompono. Stato sincronizzato già esistente,
+nessun nuovo dato persistente e nessuna modifica agli asset originali.
+
+Il flight manager, con un bersaglio, interrompe la destinazione wander/escort
+e atterra prima di attaccare a terra. È un comportamento transitorio, non parità
+con tackle/hover blast/scorch stream. Mancano caccia, soffio autonomo e attacchi
+terrestri restanti: proseguire questi blocchi nella tappa1, senza avviare la2.
+Vedere TEST-0.1.14.md e STATO-TAPPA-1.md.
+
+Build riuscita: 53 JUnit, 34 GameTest della mod (più always_pass vanilla escluso)
+e una prova client con mondo e screenshot superati. Revisione completa secondo
+review-agent in sola lettura senza delega: No findings. Nessun test con due client.
+Conservati controlli e attacchi del pilota,
+teletrasporto richiesto, unica seduta, nessun dorso ghast. Punte grigie aperte.
+
+
 ## Aggiornamento 0.1.13 — correzioni richieste, 23 ottobre 2026
 
 Ripresa da8476a4143 sul ramo port/fabric-26.3. Utente segnala head/tail invisibili

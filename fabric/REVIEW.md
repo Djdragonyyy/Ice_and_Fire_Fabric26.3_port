@@ -1,5 +1,29 @@
 # Revisione del port Fabric
 
+## Revisione 0.1.14 — 24 ottobre 2026
+
+Skill locale review-agent applicata in sola lettura, senza delega, al diff completo
+rispetto a05846b062, inclusi file nuovi, integrazione goal, temporizzazioni,
+flight manager, test, versione e documentazione. No findings.
+
+Confrontati EntityDragonBase.registerGoals, DragonAIAttackMelee e la finestra
+16..24 di IafDragonLogic.updateDragonAttack, più i percorsi delle API vanilla26.3
+nei JAR locali. Controllati ingresso/uscita da pilota, seduto/NoAI/spalle,
+cambio/rimozione target, visibilità, protezione alleati e interazione col volo.
+
+Build e verifica finali:53 JUnit senza fallimenti/errori,34 GameTest della mod
+senza fallimenti (35 totali includendo always_pass vanilla escluso dal conteggio),
+un test client grafico con mondo temporaneo/32icone/GUI head-tail superato.
+Sette nuovi GameTest con movimento, selezione target e danni server effettivi.
+Il bersaglio offensivo del proprietario è simulato tramite la sua memoria di
+attacco vanilla; le prove difensive applicano realmente danno a proprietario/drago.
+
+Lacune: nessuna prova visiva del combattimento né due veri client. In aria il
+drago atterra prima di combattere, comportamento transitorio esplicito; non sono
+migrati attacchi aerei, caccia o soffio autonomo. Tappa1 incompleta, punte aperte.
+La0.1.13 è ora confermata dall'utente; le novità0.1.14 richiedono suo collaudo.
+
+
 ## Armature e seguito 0.1.13 — 23 ottobre 2026
 
 Review-agent applicata in sola lettura al diff completo da8476a4143, inclusi

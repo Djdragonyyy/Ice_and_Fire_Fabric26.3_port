@@ -1,10 +1,26 @@
 # Stato della tappa 1 — drago di fuoco, Fabric 26.3
 
-Aggiornato per 0.1.13-stage1-dev, 23 ottobre 2026. La tappa 1 è ancora incompleta.
+Aggiornato per 0.1.14-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
 Questo riepilogo distingue ciò che è nel codice da ciò che manca: build e test
 non sostituiscono il riscontro in gioco, soprattutto per grafica e multiplayer.
-L'ultima versione esplicitamente confermata dall'utente prima di queste prove era
-la 0.1.10. Nessun passaggio alla tappa 2 in questo checkpoint.
+L'utente ha confermato la 0.1.13 funzionante il 24 ottobre e chiesto di continuare.
+Le novità 0.1.14 richiedono il suo collaudo. Nessun passaggio alla tappa 2.
+
+## Novità 0.1.14
+
+Prima difesa autonoma: priorità originali per bersaglio attaccato dal proprietario,
+aggressore del proprietario e aggressore del drago. Percorso terrestre 1.5,
+aggiornamento 4..10 tick, sguardo, morso di 35 tick con impatto 16..24 e portata
+originale dipendente dalla dimensione visiva. Un colpo riuscito per morso,
+verifiche server di distanza, linea di vista, alleati e stati di controllo.
+Seduto/NoAI/pilota/spalle interrompono; cambio bersaglio riavvia l'animazione.
+Se già in volo, atterra prima di combattere: soluzione transitoria fino alle
+modalità aeree originali. Caccia, soffio autonomo e altri attacchi non ancora migrati.
+Vedere TEST-0.1.14.md per prove automatiche e collaudo in gioco.
+
+Build riuscita: 53 JUnit, 34 GameTest della mod (più always_pass vanilla escluso)
+e una prova client con mondo e screenshot superati. Revisione completa secondo
+review-agent in sola lettura senza delega: No findings. Nessun test con due client.
 
 ## Modifiche richieste per la 0.1.13
 
@@ -77,10 +93,13 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 13. Prima configurazione del combattimento, risorse originali selezionate,
     licenza/attribuzioni, test numerici e GameTest nel runtime Fabric. Prove client
     separate; mondi e mod di test esclusi dal JAR distribuito.
+14. Difesa autonoma del drago e del proprietario, assistenza al suo attacco,
+    inseguimento a terra e morso temporizzato; interruzione per comandi e controllo,
+    protezione alleati e atterraggio prima dello scontro terrestre.
 
 ## Da completare nella tappa 1
 
-- Combattimento autonomo: selezione bersagli, attacchi terrestri mancanti e
+- Combattimento autonomo: caccia/selezione non difensiva, soffio, attacchi terrestri mancanti e
   modalità aeree originali (tackle, hover blast, scorch stream), reazioni e
   coordinamento con movimento e volo.
 - Raccolta e consumo del cibo dagli oggetti a terra; altre interazioni originali
@@ -102,4 +121,4 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 Restano fuori da questa consegna draghi di ghiaccio/fulmine, altre creature,
 progressione completa, ricette, strutture e generazione naturale: appartengono
 alle tappe successive. Non iniziarle prima del completamento e del riscontro
-sulla tappa 1. Prima si verificano le correzioni richieste per questa versione.
+sulla tappa 1. La 0.1.13 è confermata; collaudare ora la difesa autonoma 0.1.14.

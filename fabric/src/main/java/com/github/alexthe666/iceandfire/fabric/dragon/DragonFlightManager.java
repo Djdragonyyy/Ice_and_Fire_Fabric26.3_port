@@ -62,6 +62,12 @@ final class DragonFlightManager {
             if (DragonEscortTeleport.tryTeleport(dragon)) return;
         }
         boolean wantsRoost = wantsRoost();
+        // Until aerial attacks are migrated, finish landing to engage a threat on foot.
+        // A target must never be chased using the unrelated wander/escort destination.
+        if (dragon.getTarget() != null) {
+            if (dragon.flying()) { landing = true; land(); }
+            return;
+        }
         if (!dragon.flying()) {
             returning = wantsRoost;
             if (dragon.command() == 1) return;

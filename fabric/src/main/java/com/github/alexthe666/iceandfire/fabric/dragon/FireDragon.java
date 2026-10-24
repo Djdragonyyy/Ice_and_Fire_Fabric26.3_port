@@ -14,6 +14,9 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -51,6 +54,8 @@ public final class FireDragon extends TamableAnimal {
         }
     };
     private final DragonCombatState combat = new DragonCombatState();
+    private LivingEntity autonomousBiteTarget;
+    private boolean autonomousBiteHit, wasAutonomousCombat;
     final DragonFlightManager flightManager = new DragonFlightManager(this);
     public float hoverProgress, prevHoverProgress;
     public float breathProgress, prevBreathProgress;
@@ -112,6 +117,7 @@ public final class FireDragon extends TamableAnimal {
         goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
         goalSelector.addGoal(3, new DragonReturnToRoostGoal(this));
         goalSelector.addGoal(4, new DragonEscortGoal(this));
+        goalSelector.addGoal(5, new DragonMeleeGoal(this));
         goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1) {
             { setInterval(20); }
             @Override public boolean canUse() { return canMoveOnGround() && command() != 2 && (level().isBrightOutside() || !hasHome()) && !flightManager.wantsRoost() && super.canUse(); }
@@ -119,6 +125,10 @@ public final class FireDragon extends TamableAnimal {
         });
         goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 8));
         goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+        // Same defensive priorities as EntityDragonBase; hunting is migrated separately.
+        targetSelector.addGoal(1, new OwnerHurtTargetGoal(this));
+        targetSelector.addGoal(2, new OwnerHurtByTargetGoal(this));
+        targetSelector.addGoal(3, new HurtByTargetGoal(this));
     }
 
     public int ageDays() { return DragonGrowth.days(entityData.get(AGE_TICKS)); }
@@ -135,6 +145,16 @@ public final class FireDragon extends TamableAnimal {
         setOrderedToSit(command() == 1);
         flightManager.commandChanged();
         getNavigation().stop();
+        if (command() == 1) setTarget(null);
+    }
+    @Override public boolean canAttack(LivingEntity target) {
+        return canMoveAutonomously() && target != null && target.isAlive() && target.level() == level()
+                && !DragonFireCombat.friendly(this, target) && super.canAttack(target);
+    }
+    boolean withinBiteReach(LivingEntity target) {
+        // IafDragonLogic.updateDragonAttack: render-size reach, not the capped collision scale.
+        double reach = DragonGrowth.renderSize(ageDays()) * 0.2574 * 2 + 2;
+        return distanceToSqr(target) < reach * reach;
     }
     public boolean canMoveOnGround() {
         return canMoveAutonomously() && !flying();
@@ -231,7 +251,12 @@ public final class FireDragon extends TamableAnimal {
                 launchPending = true;
             }
         }
-        if (level() instanceof ServerLevel) flightManager.tick();
+        if (level() instanceof ServerLevel) {
+            LivingEntity target = getTarget();
+            if (target != null && (!canAttack(target)
+                    || distanceTo(target) > getAttributeValue(Attributes.FOLLOW_RANGE))) setTarget(null);
+            flightManager.tick();
+        }
         // Flight must be active before vanilla processes this tick's ridden movement.
         setNoGravity(flying() || carrier != null);
         super.tick();
@@ -334,6 +359,14 @@ public final class FireDragon extends TamableAnimal {
 
     private void tickCombat(ServerLevel server) {
         LivingEntity rider = getControllingPassenger();
+        if (rider == null) {
+            tickAutonomousBite(server);
+            syncCombat();
+            return;
+        }
+        if (wasAutonomousCombat) combat.reset();
+        wasAutonomousCombat = false;
+        autonomousBiteTarget = null;
         boolean active = isAlive() && rider != null && DragonGrowth.canCarryRider(ageDays()) && !isInWater();
         boolean fire = active && control(DragonControlPayload.FIRE);
         combat.tick(active, fire, stage());
@@ -368,6 +401,39 @@ public final class FireDragon extends TamableAnimal {
                 if (tickCount % 5 == 0) playSound(IafContent.FIRE_BREATH, 4, 1);
             }
         }
+        syncCombat();
+    }
+
+    private void tickAutonomousBite(ServerLevel server) {
+        LivingEntity target = getTarget();
+        boolean active = target != null && canAttack(target) && !flying() && !isInWater();
+        if (!wasAutonomousCombat) combat.reset();
+        wasAutonomousCombat = true;
+        if (!active || autonomousBiteTarget != null && autonomousBiteTarget != target) {
+            combat.reset();
+            autonomousBiteTarget = null;
+        }
+        combat.tick(active, false, stage());
+        if (!active) return;
+        if (combat.animation() == DragonCombatState.NONE && withinBiteReach(target) && hasLineOfSight(target)) {
+            combat.start(DragonCombatState.BITE);
+            autonomousBiteTarget = target;
+            autonomousBiteHit = false;
+        }
+        // Original impact window is ticks 16..24. One successful hit per bite,
+        // with reach, visibility and ownership checked again at the impact.
+        if (combat.animation() == DragonCombatState.BITE && combat.animationTick() > 15
+                && combat.animationTick() < 25 && !autonomousBiteHit
+                && autonomousBiteTarget == target && withinBiteReach(target) && hasLineOfSight(target)) {
+            float damage = (int) getAttributeValue(Attributes.ATTACK_DAMAGE);
+            if (target.hurtServer(server, damageSources().mobAttack(this), damage)) {
+                autonomousBiteHit = true;
+                if (DragonCombatConfig.current.canDragonsHealFromBiting) heal(damage * 0.1F);
+            }
+        }
+    }
+
+    private void syncCombat() {
         entityData.set(BREATHING, combat.breathing());
         entityData.set(ATTACK, combat.animation());
         entityData.set(ATTACK_TICK, combat.animationTick());

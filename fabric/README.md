@@ -2,13 +2,24 @@
 
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
-Versione corrente: **0.1.13-stage1-dev**. Corretti gli overlay testa/coda tramite
+Versione corrente: **0.1.14-stage1-dev**. Prima IA difensiva autonoma: bersaglio
+del proprietario, difesa sua e del drago, inseguimento terrestre e morso con
+impatto nella finestra originale dell'animazione. Se in aria atterra per combattere.
+Attacchi aerei e altri attacchi terrestri restano da migrare. Istruzioni:
+[TEST-0.1.14.md](TEST-0.1.14.md). Tappa 1 ancora incompleta.
+
+Build riuscita: 53 JUnit, 34 GameTest della mod (più always_pass vanilla escluso)
+e una prova client con mondo e screenshot superati. Revisione completa secondo
+review-agent in sola lettura senza delega: No findings. Nessun test con due client.
+
+Versione precedente: **0.1.13-stage1-dev**, confermata funzionante dall'utente
+il 24 ottobre 2026. Corretti gli overlay testa/coda tramite
 ordine di disegno; verifica grafica nel client con confronto prima/dopo e 32 icone.
 Seguito terrestre/aereo più rapido e stabile, recupero con teletrasporto sicuro
 a150 blocchi, volo autonomo libero/seguimi verificato con movimento reale.
 53 JUnit, 27 GameTest della mod e una prova client con mondo/screenshot.
 [TEST-0.1.13.md](TEST-0.1.13.md) e [riepilogo cumulativo della tappa1](STATO-TAPPA-1.md).
-Tappa1 incompleta: attendere il riscontro su queste correzioni prima di proseguire.
+Il riscontro consente ora di proseguire la tappa 1.
 
 Versione precedente: **0.1.12-stage1-dev**. Volo autonomo dallo stadio 2,
 hovering e posa originale, seguito in aria senza teletrasporto, atterraggio su
