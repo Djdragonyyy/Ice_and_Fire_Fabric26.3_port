@@ -1,5 +1,22 @@
 # Prompt completo per continuare il porting su un altro PC
 
+## Checkpoint 0.1.29 — ruggiti, effetti e battito d'ali
+
+Ruggito normale40/epico60tick, sei pose Tabula e voci originali per età;
+pitch aggiuntivo del corpo epico interpolato. Trigger casuale1/500 e reazione
+al danno1/4, con precedenza di combattimento/pasto/sonno/pilota/NoAI/spalla.
+Aura adulti con zona expandTowards positiva originale30/60, forza a proprietario
+e pet, debolezza agli altri, esclusione draghi di stadio uguale/superiore.
+Riconosciuto ID earplugs per il ramo epico; oggetto ancora della fase3.
+Battito d'ali originale al ciclo2, quattro OGG e configurazione originale
+dragonFlapNoiseDistance4 (0..10000); broadcast server unico, audio HOSTILE.
+
+Suite finale ripetuta sul codice definitivo:73JUnit,102GameTest mod più baseline,
+7prove client e17immagini, tutte passate. Vedere TEST-0.1.29.md.
+Ripresa effettiva24ottobre22:12 dopo reset quota, controlli5min ripristinati.
+Non sospendere/spegnere. Prossimi: acqua/lava e navigazione complessa, oltre alle
+lacune cumulative. Tappa1 e port completo restano aperti.
+
 ## Ultima istruzione utente — niente sospensione, ripresa al reset
 
 Il 24 ottobre, dopo il risveglio della0.1.23, l'utente ha annullato esplicitamente
@@ -14,7 +31,7 @@ o lavorazioni duplicate. Non consumare quota artificialmente e non dichiarare
 completate fasi con funzioni mancanti. Al risveglio controllo quota93%; reset
 indicato dall'app24ottobre12:38:03UTC (14:38Roma). Verificare stato attuale.
 
-Verificati 70 JUnit, 99 GameTest della mod (100 con baseline vanilla escluso) e 6 prove client con quindici screenshot. Nessuna prova con due veri client.
+Verificati 73 JUnit, 102 GameTest della mod (103 includendo la baseline vanilla) e 7 prove client con diciassette screenshot. Nessuna prova con due veri client.
 
 ## Checkpoint 0.1.28 — cristallo e caricamento dei draghi
 
@@ -1009,4 +1026,4 @@ terminale PowerShell/VS Code dell'utente o il client Git autenticato; non estrar
 e non aggirare i controlli. Verificare che il commit di questo handoff sia effettivamente remoto
 prima di cambiare PC: senza push riuscito il nuovo clone non contiene queste modifiche.
 
-Nota operativa24ottobre: utente richiede usare quota residua e prossima ripresa alle22:12Roma. Reset app22:12:11; automazione alle22:12:20, poi ripristinare controllo5min. Nessuna sospensione.
+Nota operativa24ottobre: ripresa effettiva alle22:12Roma dopo reset; automazione stessa chat riportata a controllo5min. Sessione in corso, nessuna sospensione.

@@ -82,5 +82,6 @@
   "item.iceandfire.summoning_crystal.desc_0": "Right click on a dragon to bind it",
   "item.iceandfire.summoning_crystal.desc_1": "Use when bound to teleport dragon",
   "message.iceandfire.dragonTeleport": "This dragon has been teleported.",
-  "message.iceandfire.noDragonTeleport": "§cCould not find a dragon bound to this crystal."
+  "message.iceandfire.noDragonTeleport": "§cCould not find a dragon bound to this crystal.",
+  "iceandfire.sound.subtitle.firedragon_roar": "Fire Dragon roars"
 }

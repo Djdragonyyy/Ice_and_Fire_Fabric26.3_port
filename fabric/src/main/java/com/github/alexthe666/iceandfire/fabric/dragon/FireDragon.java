@@ -69,6 +69,7 @@ public final class FireDragon extends TamableAnimal {
     private int lastWingImpact = -1;
     private int eatingTicks;
     private int speakingTicks;
+    private int roarAnimation, roarTicks;
     boolean seekingFood;
     private DragonFoodGoal foodGoal;
     private LivingEntity previousAutonomousTarget;
@@ -102,6 +103,43 @@ public final class FireDragon extends TamableAnimal {
     }
 
     private int voiceIndex() { return stage() < 3 ? 0 : stage() == 3 ? 1 : 2; }
+    @Override public net.minecraft.sounds.SoundSource getSoundSource() { return net.minecraft.sounds.SoundSource.HOSTILE; }
+    public net.minecraft.sounds.SoundEvent getRoarSound() { return IafContent.FIRE_ROAR[voiceIndex()]; }
+
+    public void roar() { roar(random.nextBoolean()); }
+
+    /** Original roar poses, voice and adult aura; combat keeps priority over this idle reaction. */
+    public void roar(boolean epic) {
+        if (!(level() instanceof ServerLevel server) || !canRoar() || roarTicks > 0) return;
+        roarAnimation = epic ? DragonCombatState.EPIC_ROAR : DragonCombatState.ROAR;
+        roarTicks = DragonCombatState.duration(roarAnimation);
+        speakingTicks = 0;
+        playSound(getRoarSound(), getSoundVolume() + (epic ? 3 + Math.max(0, stage() - 2) : 2 + Math.max(0, stage() - 3)),
+                getVoicePitch() * (epic ? 0.7F : 1));
+        if (stage() <= 3) return;
+        int size = (stage() - 3) * 30;
+        // Keep the original expandTowards region, including its directional extent.
+        for (var entity : server.getEntities(this, getBoundingBox().expandTowards(size, size, size))) {
+            if (!(entity instanceof LivingEntity living) || living instanceof FireDragon dragon && dragon.stage() >= stage()) continue;
+            boolean owner = getOwnerReference() != null && getOwnerReference().matches(living);
+            boolean pet = living instanceof TamableAnimal animal && isTame() && animal.isTame()
+                    && getOwnerReference() != null && animal.getOwnerReference() != null
+                    && getOwnerReference().getUUID().equals(animal.getOwnerReference().getUUID());
+            // Earplugs are recognized by their original registry id; the item itself belongs to phase 3.
+            boolean earplugs = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(living.getItemBySlot(EquipmentSlot.HEAD).getItem())
+                    .equals(IafContent.id("earplugs"));
+            if (!owner && !pet && epic && earplugs) continue;
+            living.addEffect(new net.minecraft.world.effect.MobEffectInstance(owner || pet
+                    ? net.minecraft.world.effect.MobEffects.STRENGTH : net.minecraft.world.effect.MobEffects.WEAKNESS,
+                    (epic ? 50 : 30) * size));
+        }
+    }
+
+    private boolean canRoar() {
+        return isAlive() && !isNoAi() && !dragonSleeping() && shoulderCarrier() == null
+                && combat.animation() == DragonCombatState.NONE && !combat.breathing() && eatingTicks == 0
+                && getTarget() == null && getControllingPassenger() == null;
+    }
     @Override public int getAmbientSoundInterval() { return 90; }
     @Override protected net.minecraft.sounds.SoundEvent getAmbientSound() { return IafContent.FIRE_IDLE[voiceIndex()]; }
     @Override protected net.minecraft.sounds.SoundEvent getHurtSound(net.minecraft.world.damagesource.DamageSource source) { return IafContent.FIRE_HURT[voiceIndex()]; }
@@ -117,7 +155,7 @@ public final class FireDragon extends TamableAnimal {
         super.playHurtSound(source);
     }
     private void startSpeaking() {
-        if (!isNoAi() && !dragonSleeping() && speakingTicks == 0 && combat.animation() == DragonCombatState.NONE
+        if (!isNoAi() && !dragonSleeping() && speakingTicks == 0 && roarTicks == 0 && combat.animation() == DragonCombatState.NONE
                 && !combat.breathing() && eatingTicks == 0) speakingTicks = DragonCombatState.duration(DragonCombatState.SPEAK);
     }
 
@@ -246,7 +284,10 @@ public final class FireDragon extends TamableAnimal {
     }
     @Override public boolean hurtServer(ServerLevel server, net.minecraft.world.damagesource.DamageSource source, float damage) {
         boolean hurt = super.hurtServer(server, source, damage);
-        if (hurt) { setDragonSleeping(false); sleepNotBefore = level().getGameTime() + 20; }
+        if (hurt) {
+            setDragonSleeping(false); sleepNotBefore = level().getGameTime() + 20;
+            if (source.getEntity() != null && random.nextInt(4) == 0) roar();
+        }
         return hurt;
     }
     public boolean hasDragonHome() { return dragonHome != null; }
@@ -367,6 +408,9 @@ public final class FireDragon extends TamableAnimal {
         // orderedToSit is a server-only vanilla field; COMMAND is synchronized to observers.
         sitProgress = Math.clamp(sitProgress + (command() == 1 && !flying() && !dragonSleeping() ? 0.5F : -0.5F), 0, 20);
         if (level().isClientSide()) walkCycle = walkCycle < 39 ? walkCycle + 1 : 0;
+        // Original common update checks cycle 2 before advancing it; broadcast only on the server.
+        if (!level().isClientSide() && isAlive() && flying() && flightCycle == 2 && DragonCombatConfig.current.dragonFlapNoiseDistance > 0)
+            playSound(IafContent.DRAGON_FLIGHT, DragonCombatConfig.current.dragonFlapNoiseDistance, getVoicePitch());
         flightCycle = flightCycle < 58 ? flightCycle + 2 : 0;
         if (!level().isClientSide()) {
             int age = entityData.get(AGE_TICKS);
@@ -674,10 +718,14 @@ public final class FireDragon extends TamableAnimal {
         boolean eating = eatingTicks > 0 && combat.animation() == DragonCombatState.NONE && !combat.breathing();
         boolean tackle = flying() && canMoveAutonomously() && getTarget() != null
                 && flightManager.attacking() && flightManager.airAttack() == DragonFlightManager.AirAttack.TACKLE;
+        if (!canRoar()) roarTicks = 0;
+        if (roarTicks == 0 && speakingTicks == 0 && canRoar() && level() instanceof ServerLevel server
+                && server.getEntity(getUUID()) == this && random.nextInt(500) == 0) roar();
         if (!isAlive() || isNoAi() || dragonSleeping() || combat.animation() != DragonCombatState.NONE || combat.breathing() || eating || tackle) speakingTicks = 0;
-        boolean speaking = speakingTicks > 0;
-        entityData.set(ATTACK, tackle ? DragonCombatState.TACKLE : eating ? DragonCombatState.EAT : speaking ? DragonCombatState.SPEAK : combat.animation());
-        entityData.set(ATTACK_TICK, tackle ? Math.min(40, flightManager.combatTicks()) : eating ? 20 - eatingTicks : speaking ? 20 - speakingTicks : combat.animationTick());
+        boolean speaking = speakingTicks > 0 && roarTicks == 0;
+        entityData.set(ATTACK, tackle ? DragonCombatState.TACKLE : eating ? DragonCombatState.EAT : roarTicks > 0 ? roarAnimation : speaking ? DragonCombatState.SPEAK : combat.animation());
+        entityData.set(ATTACK_TICK, tackle ? Math.min(40, flightManager.combatTicks()) : eating ? 20 - eatingTicks : roarTicks > 0 ? DragonCombatState.duration(roarAnimation) - roarTicks : speaking ? 20 - speakingTicks : combat.animationTick());
+        if (roarTicks > 0) roarTicks--;
         if (eatingTicks > 0) eatingTicks--;
         if (speakingTicks > 0) speakingTicks--;
     }

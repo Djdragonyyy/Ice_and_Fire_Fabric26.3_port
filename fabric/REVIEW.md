@@ -1,6 +1,25 @@
 # Revisione del port Fabric
 
-Verificati 70 JUnit, 99 GameTest della mod (100 con baseline vanilla escluso) e 6 prove client con quindici screenshot. Nessuna prova con due veri client.
+## Revisione 0.1.29 — 24 ottobre 2026
+
+Applicata la skill review-agent in sola lettura e senza delega sul diff completo
+rispetto ad a8b92e794, compresi nuovi GameTest/client, risorse, config e documenti.
+Confrontati EntityDragonBase.roar, IafDragonLogic, EntityFireDragon e le sei pose
+nell'animatore originale. Rilevato e corretto fuori dalla revisione il cursore
+audio: Entity.getSoundSource() nativo restituisce NEUTRAL, l'originale HOSTILE.
+Aggiunta asserzione nel runtime e ripetuta la suite completa sul codice finale: tutta passata. Nuova revisione read-only dopo correzione: No findings.
+
+Le precedenze di attacchi/pilota e il blocco NoAI sono intenzionali: il ruggito
+cosmetico non sostituisce un'offensiva. Le prove di fine combattimento ora
+ammettono anche i due stati cosmetici nuovi, mantenendo le asserzioni su danni,
+bersagli, finestra d'impatto e NoAI. La fixture di durata ammette SPEAK dopo il
+ruggito (un suono da danno può seguire); la fixture di interruzione usa comando
+libero, perché seduto cancella un bersaglio non difensivo prima di quel controllo.
+
+Restano non provati ascolto manuale e due client veri; earplugs è solo riconosciuto
+per ID, l'oggetto appartiene alla fase3. Nessuna parità completa della tappa1.
+
+Verificati 73 JUnit, 102 GameTest della mod (103 includendo la baseline vanilla) e 7 prove client con diciassette screenshot. Nessuna prova con due veri client.
 
 ## Revisione 0.1.28 — 24 ottobre 2026
 

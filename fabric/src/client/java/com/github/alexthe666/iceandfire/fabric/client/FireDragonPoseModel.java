@@ -43,7 +43,8 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
                 "flight1", "flight2", "flight3", "flight4", "flight5", "flight6",
                 "bite1", "bite2", "bite3", "attack_blast_charge1", "attack_blast_charge2", "attack_blast_charge3", "attack_stream_breath",
                 "tail1", "tail2", "tail3", "wing_blast1", "wing_blast2", "wing_blast3", "wing_blast4", "wing_blast5", "wing_blast6", "wing_blast7", "attack_tackle", "sleeping",
-                "grab1", "grab2", "grab_shake1", "grab_shake2", "grab_shake3")) {
+                "grab1", "grab2", "grab_shake1", "grab_shake2", "grab_shake3",
+                "roar1", "roar2", "roar3", "epic_roar1", "epic_roar2", "epic_roar3")) {
             poses.put(name, loader.apply(name));
         }
     }
@@ -161,6 +162,12 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
         } else if (attack == DragonCombatState.SHAKE) {
             names = new String[]{null, "grab1", "grab2", "grab_shake1", "grab_shake2", "grab_shake3", null};
             durations = new int[]{15, 10, 10, 10, 10, 10};
+        } else if (attack == DragonCombatState.ROAR) {
+            names = new String[]{null, "roar1", "roar2", "roar3", null};
+            durations = new int[]{10, 10, 10, 10};
+        } else if (attack == DragonCombatState.EPIC_ROAR) {
+            names = new String[]{null, "epic_roar1", "epic_roar2", "epic_roar3", "epic_roar2", "epic_roar3", null};
+            durations = new int[]{10, 10, 10, 10, 10, 10};
         }
         float time = Math.max(0, tick);
         for (int i = 0; i < durations.length; i++) {
@@ -203,6 +210,12 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
             }
             if (state.attack == DragonCombatState.WING)
                 parts.get("BodyUpper").y += wingLift(frame.from) * (1 - frame.blend) + wingLift(frame.to) * frame.blend;
+            if (state.attack == DragonCombatState.EPIC_ROAR) {
+                // Same additional BodyUpper pitch as the original five keyframes.
+                float[] pitch = {0, -0.1F, -0.2F, -0.2F, -0.2F, -0.1F, 0};
+                int segment = Math.clamp((int) (state.attackTick / 10), 0, 5);
+                if (state.attackTick < 60) parts.get("BodyUpper").xRot += pitch[segment] * (1 - frame.blend) + pitch[segment + 1] * frame.blend;
+            }
         }
         if (state.breathProgress > 0) {
             float stream = com.github.alexthe666.iceandfire.fabric.dragon.DragonBreathVisuals.smooth(state.breathProgress / 10);

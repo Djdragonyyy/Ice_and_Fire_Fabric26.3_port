@@ -23,6 +23,7 @@ public final class DragonCombatConfig {
     public int maxDragonFlight = 256;
     public int dragonWanderFromHomeDistance = 40;
     public int dragonFluteDistance = 4;
+    public int dragonFlapNoiseDistance = 4;
     public boolean chunkLoadSummonCrystal = true;
 
     boolean validValues() {
@@ -34,7 +35,8 @@ public final class DragonCombatConfig {
                 && dragonAttackDamage >= 1 && dragonAttackDamage <= 10000
                 && dragonHungerTickRate >= 1 && dragonHungerTickRate <= 10000 && dragonEggTime >= 1
                 && maxDragonFlight >= 100 && dragonWanderFromHomeDistance >= 1 && dragonWanderFromHomeDistance <= 10000
-                && dragonFluteDistance >= 0 && dragonFluteDistance <= 10000;
+                && dragonFluteDistance >= 0 && dragonFluteDistance <= 10000
+                && dragonFlapNoiseDistance >= 0 && dragonFlapNoiseDistance <= 10000;
     }
 
     public static void load() {

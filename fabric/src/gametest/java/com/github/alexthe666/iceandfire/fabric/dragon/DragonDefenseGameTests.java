@@ -76,7 +76,7 @@ public class DragonDefenseGameTests {
         h.runAfterDelay(60, () -> {
             float damage = (int) d.getAttributeValue(Attributes.ATTACK_DAMAGE);
             require(Math.abs(v.getHealth() - (200 - damage)) < 0.01
-                    && (d.attackAnimation() == DragonCombatState.NONE || d.attackAnimation() == DragonCombatState.SPEAK),
+                    && (d.attackAnimation() == DragonCombatState.NONE || d.attackAnimation() == DragonCombatState.SPEAK || d.attackAnimation() == DragonCombatState.ROAR || d.attackAnimation() == DragonCombatState.EPIC_ROAR),
                     "Sit cancels offensive animation and further damage; idle speech remains allowed");
             h.succeed();
         });
@@ -147,7 +147,7 @@ public class DragonDefenseGameTests {
         });
         h.runAfterDelay(35, d::playAmbientSound);
         h.runAfterDelay(40, () -> {
-            require(d.getTarget() == null && d.attackAnimation() == DragonCombatState.SPEAK,
+            require(d.getTarget() == null && (d.attackAnimation() == DragonCombatState.SPEAK || d.attackAnimation() == DragonCombatState.ROAR || d.attackAnimation() == DragonCombatState.EPIC_ROAR),
                     "Removed victim cancels combat while explicit ambient speech remains cosmetic: target=" + d.getTarget() + " animation=" + d.attackAnimation());
             h.succeed();
         });

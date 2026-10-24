@@ -1,5 +1,22 @@
 # Prompt temporaneo per la prossima ripresa
 
+## Checkpoint 0.1.29 — ruggiti, effetti e battito d'ali
+
+Ruggito normale40/epico60tick, sei pose Tabula e voci originali per età;
+pitch aggiuntivo del corpo epico interpolato. Trigger casuale1/500 e reazione
+al danno1/4, con precedenza di combattimento/pasto/sonno/pilota/NoAI/spalla.
+Aura adulti con zona expandTowards positiva originale30/60, forza a proprietario
+e pet, debolezza agli altri, esclusione draghi di stadio uguale/superiore.
+Riconosciuto ID earplugs per il ramo epico; oggetto ancora della fase3.
+Battito d'ali originale al ciclo2, quattro OGG e configurazione originale
+dragonFlapNoiseDistance4 (0..10000); broadcast server unico, audio HOSTILE.
+
+Suite finale ripetuta sul codice definitivo:73JUnit,102GameTest mod più baseline,
+7prove client e17immagini, tutte passate. Vedere TEST-0.1.29.md.
+Ripresa effettiva24ottobre22:12 dopo reset quota, controlli5min ripristinati.
+Non sospendere/spegnere. Prossimi: acqua/lava e navigazione complessa, oltre alle
+lacune cumulative. Tappa1 e port completo restano aperti.
+
 ## Ultima istruzione utente — niente sospensione, ripresa al reset
 
 Il 24 ottobre, dopo il risveglio della0.1.23, l'utente ha annullato esplicitamente
@@ -14,13 +31,13 @@ o lavorazioni duplicate. Non consumare quota artificialmente e non dichiarare
 completate fasi con funzioni mancanti. Al risveglio controllo quota93%; reset
 indicato dall'app24ottobre12:38:03UTC (14:38Roma). Verificare stato attuale.
 
-Aggiornato il 24 ottobre 2026, checkpoint 0.1.28, nuova autorizzazione utente a proseguire nelle fasi.
+Aggiornato il 24 ottobre 2026, checkpoint 0.1.29, nuova autorizzazione utente a proseguire nelle fasi.
 Conservare fabric/HANDOFF.md: contiene lo storico e i vincoli permanenti.
 
 ---
 
 Continua il porting di Ice and Fire. Comunica in italiano. Leggi integralmente
-fabric/HANDOFF.md, fabric/README.md, fabric/REVIEW.md, fabric/TEST-0.1.28.md e gli
+fabric/HANDOFF.md, fabric/README.md, fabric/REVIEW.md, fabric/TEST-0.1.29.md e gli
 AGENTS.md applicabili. Non ricominciare da zero o sovrascrivere modifiche locali.
 
 Repository personale:

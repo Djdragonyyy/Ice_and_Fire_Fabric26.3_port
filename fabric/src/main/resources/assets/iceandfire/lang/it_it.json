@@ -82,5 +82,6 @@
   "item.iceandfire.summoning_crystal.desc_0": "Lega il cristallo al tuo drago con clic destro.",
   "item.iceandfire.summoning_crystal.desc_1": "Usalo su un blocco per richiamarlo.",
   "message.iceandfire.dragonTeleport": "Drago richiamato.",
-  "message.iceandfire.noDragonTeleport": "Impossibile richiamare il drago."
+  "message.iceandfire.noDragonTeleport": "Impossibile richiamare il drago.",
+  "iceandfire.sound.subtitle.firedragon_roar": "Il drago di fuoco ruggisce"
 }

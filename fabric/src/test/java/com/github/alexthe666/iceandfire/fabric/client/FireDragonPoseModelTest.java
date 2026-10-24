@@ -403,6 +403,33 @@ class FireDragonPoseModelTest {
         assertEquals(z, jaw.z, 0.00001);
     }
 
+    @Test void roarKeyframesUseOriginalSequenceAndReturnToIdle() {
+        var model = model(); var state = new FireDragonRenderer.State(); state.male = true;
+        model.setupAnim(state); var idle = rotations(model);
+        for (int type : new int[]{9, 10}) {
+            String prefix = type == 9 ? "roar" : "epic_roar";
+            assertEquals(prefix + "1", FireDragonPoseModel.attackFrame(type, 10).from());
+            assertEquals(prefix + "2", FireDragonPoseModel.attackFrame(type, 20).from());
+            assertEquals(prefix + "3", FireDragonPoseModel.attackFrame(type, 30).from());
+            state.attack = type; state.attackTick = 20; model.setupAnim(state);
+            assertFalse(java.util.Arrays.equals(idle, rotations(model)), "Original roar visibly changes pose");
+            var active = rotations(model); model.setupAnim(state);
+            assertArrayEquals(active, rotations(model), 0.00001F, "Repeated frame cannot accumulate pitch");
+            state.attackTick = type == 9 ? 40 : 60; model.setupAnim(state);
+            assertArrayEquals(idle, rotations(model), 0.00001F, "End of roar returns to original pose");
+        }
+    }
+
+    @Test void epicRoarAddsOriginalBodyPitchAndInterpolatesContinuously() {
+        var model = model(); var state = new FireDragonRenderer.State(); state.male = true;
+        state.attack = 10;
+        for (int boundary : new int[]{10, 20, 30, 40, 50, 60}) {
+            state.attackTick = boundary - 0.0001F; model.setupAnim(state); var before = rotations(model);
+            state.attackTick = boundary; model.setupAnim(state);
+            assertArrayEquals(before, rotations(model), 0.001F, "Continuous epic roar boundary " + boundary);
+        }
+    }
+
     private static float[] rotations(FireDragonPoseModel model) {
         var parts = model.root().getAllParts();
         float[] result = new float[parts.size() * 3];

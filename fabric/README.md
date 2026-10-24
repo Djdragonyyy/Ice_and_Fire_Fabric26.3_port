@@ -1,10 +1,12 @@
 # Ice and Fire: port Fabric 26.3 in sviluppo
 
-Verificati 70 JUnit, 99 GameTest della mod (100 con baseline vanilla escluso) e 6 prove client con quindici screenshot. Nessuna prova con due veri client.
+Verificati 73 JUnit, 102 GameTest della mod (103 includendo la baseline vanilla) e 7 prove client con diciassette screenshot. Nessuna prova con due veri client.
 
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
-Versione corrente: **0.1.28-stage1-dev**. Cristallo fuoco: legame persistente, richiamo stessa entità e caricamento temporaneo del chunk sorgente. [TEST-0.1.28.md](TEST-0.1.28.md). Tappa1 incompleta.
+Versione corrente: **0.1.29-stage1-dev**. Ruggiti/aura, pose e voci originali, battito d'ali configurabile e audio HOSTILE. [TEST-0.1.29.md](TEST-0.1.29.md). Tappa1 incompleta.
+
+Versione precedente: **0.1.28-stage1-dev**. Cristallo fuoco: legame persistente, richiamo stessa entità e caricamento temporaneo del chunk sorgente. [TEST-0.1.28.md](TEST-0.1.28.md). Tappa1 incompleta.
 
 Versione precedente: **0.1.27-stage1-dev**. Flauto originale con configurazione e palpebre con texture originali. [TEST-0.1.27.md](TEST-0.1.27.md). Tappa1 incompleta.
 
@@ -194,22 +196,21 @@ una prova che la tappa sia completa o che il gameplay sia corretto.
 
 ## Implementato e ancora da fare
 
-Presenti e compilati: separazione client/comune, registrazioni Fabric, quattro uova, incubazione
-nel fuoco, trasferimento del proprietario alla schiusa, crescita, statistiche di base, salvataggio
-dei primi stati, pasto del drago, interazione per salire dal terzo stadio, controlli di volo,
-modelli/texture originali e interpolazione iniziale delle pose di movimento.
+Lo stato cumulativo aggiornato è in [STATO-TAPPA-1.md](STATO-TAPPA-1.md).
+Il port include uova/crescita, proprietà/persistenza, drago di fuoco con modelli
+originali, cavalcatura e controlli, spalle, inventario/armature/stendardi,
+alimentazione/comandi, combattimento terrestre/aereo e soffio, effetti sul
+terreno, seguito/recupero150blocchi, volo libero/ritorno al nido, sonno/palpebre,
+riproduzione, caccia/presa delle prede, corno/flauto/cristallo e configurazioni
+migrate. La0.1.29 aggiunge ruggiti/aura e battiti d'ali originali.
 
-Da completare prima di chiudere la tappa 1:
-
-- Completare il combattimento originale oltre al primo passaggio R/G: altri attacchi,
-  IA autonoma, DragonForge ed esplosioni opzionali; verificare in gioco la fiamma originale,
-  le conversioni in blocchi carbonizzati e la distruzione dell'area da proiettile della 0.1.9.
-- IA originale e volo autonomo, comportamento in acqua/lava, posizione del cavaliere e discesa sicura.
-- Completare le interazioni oltre all'inventario 0.1.9; layer dello stendardo, alimentazione
-  completa, comandi e gestione dell'uovo danneggiato.
-- Animazioni di attacco, animazioni secondarie, occhi, differenze visive maschio/femmina, suoni e particelle.
-- Configurazione originale: questo checkpoint usa ancora i valori predefiniti per le regole estratte.
-- Test di persistenza e rete in un vero mondo/server e verifica visiva di animazioni e cavalcatura.
+Restano navigazione complessa e comportamento completo acqua/lava, dettagli di
+parità delle interazioni/combattimento/riproduzione/sonno/configurazioni,
+DragonForge ed esplosioni opzionali, passeggeri nell'anteprima GUI, ulteriori
+animazioni/effetti e diagnosi delle punte grigie. Occorre il collaudo finale
+in gioco e con due client veri su server dedicato. La suite automatica non
+sostituisce queste prove e la tappa1 resta aperta. Altri draghi/creature,
+progressione e generazione naturale appartengono alle tappe successive.
 
 ## Procedura di accettazione della tappa 1
 

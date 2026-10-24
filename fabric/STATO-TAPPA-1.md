@@ -1,5 +1,22 @@
 # Stato della tappa 1 — drago di fuoco, Fabric 26.3
 
+## Checkpoint 0.1.29 — ruggiti, effetti e battito d'ali
+
+Ruggito normale40/epico60tick, sei pose Tabula e voci originali per età;
+pitch aggiuntivo del corpo epico interpolato. Trigger casuale1/500 e reazione
+al danno1/4, con precedenza di combattimento/pasto/sonno/pilota/NoAI/spalla.
+Aura adulti con zona expandTowards positiva originale30/60, forza a proprietario
+e pet, debolezza agli altri, esclusione draghi di stadio uguale/superiore.
+Riconosciuto ID earplugs per il ramo epico; oggetto ancora della fase3.
+Battito d'ali originale al ciclo2, quattro OGG e configurazione originale
+dragonFlapNoiseDistance4 (0..10000); broadcast server unico, audio HOSTILE.
+
+Suite finale ripetuta sul codice definitivo:73JUnit,102GameTest mod più baseline,
+7prove client e17immagini, tutte passate. Vedere TEST-0.1.29.md.
+Ripresa effettiva24ottobre22:12 dopo reset quota, controlli5min ripristinati.
+Non sospendere/spegnere. Prossimi: acqua/lava e navigazione complessa, oltre alle
+lacune cumulative. Tappa1 e port completo restano aperti.
+
 ## Ultima istruzione utente — niente sospensione, ripresa al reset
 
 Il 24 ottobre, dopo il risveglio della0.1.23, l'utente ha annullato esplicitamente
@@ -14,7 +31,7 @@ o lavorazioni duplicate. Non consumare quota artificialmente e non dichiarare
 completate fasi con funzioni mancanti. Al risveglio controllo quota93%; reset
 indicato dall'app24ottobre12:38:03UTC (14:38Roma). Verificare stato attuale.
 
-Verificati 70 JUnit, 99 GameTest della mod (100 con baseline vanilla escluso) e 6 prove client con quindici screenshot. Nessuna prova con due veri client.
+Verificati 73 JUnit, 102 GameTest della mod (103 includendo la baseline vanilla) e 7 prove client con diciassette screenshot. Nessuna prova con due veri client.
 
 ## Checkpoint 0.1.28 — cristallo e caricamento dei draghi
 
@@ -101,7 +118,7 @@ mondo e dalla taglia. Nessuna barriera al pilota o modifica della velocità.
 Vecchi JSON compatibili. Nuovo GameTest salva/ricarica casa e verifica raggio,
 confine e due limiti di quota; estesa validazione JUnit. Tappa1 ancora aperta.
 
-Aggiornato per 0.1.28-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
+Aggiornato per 0.1.29-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
 Questo riepilogo distingue ciò che è nel codice da ciò che manca: build e test
 non sostituiscono il riscontro in gioco, soprattutto per grafica e multiplayer.
 L'utente ha confermato la 0.1.13 funzionante il 24 ottobre e chiesto di continuare.
@@ -308,7 +325,7 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
     compatibilità vecchi JSON e incubazione64bit; altre impostazioni restano.
 21. Voci originali ambientali/ferita/morte per fascia d'età e SPEAK20tick sulla
     mandibola. File audio originali invariati; NoAI e animazioni prioritarie
-    interrompono la posa cosmetica. Ruggiti/effetti ancora da completare.
+    interrompono la posa cosmetica. Ruggiti/effetti e battito d'ali aggiunti nella0.1.29; altri dettagli restano.
 22. Corno riutilizzabile del drago: salvataggio nativo nel componente oggetto,
     raccolta/rilascio e UUID/inventario persistenti, tooltip e icone originali.
     Proprietà, permessi, ostacoli, corpo completo e UUID caricati controllati;
@@ -325,6 +342,10 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
     abilitato, richieste indipendenti e cleanup/ticket condivisi. Prova reale di
     scaricamento/ricaricamento e sincronizzazione client completa passate.
 
+25. Ruggiti normale/epico con pose/voci originali e aura degli adulti, con
+    precedenza dei comportamenti attivi. Battito d'ali, campioni originali e
+    distanza audio configurabile; categoria HOSTILE. Vedere TEST-0.1.29.md.
+
 ## Da completare nella tappa 1
 
 - Combattimento autonomo: ulteriori dettagli di presa e
@@ -336,7 +357,7 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
   edifici, alberi e grotte. Il manager attuale verifica spazio e visibilità,
   ma non aggira qualsiasi ostacolo complesso.
 - Passeggeri nell'anteprima GUI; differenze visive complete maschio/femmina,
-  animazioni secondarie/attacchi, ruggiti/altri suoni e particelle ancora mancanti.
+  animazioni secondarie/attacchi, ulteriori suoni e particelle ancora mancanti.
 - Configurazioni originali non ancora esposte; integrazione DragonForge ed
   esplosioni opzionali del combattimento.
 - Difetto delle punte grigie ancora aperto: non è stato risolto né modificato
@@ -348,6 +369,6 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 Restano fuori da questa consegna draghi di ghiaccio/fulmine, altre creature,
 progressione completa, ricette, strutture e generazione naturale: appartengono
 alle tappe successive. Non iniziarle prima del completamento e del riscontro
-sulla tappa 1. La 0.1.13 è confermata; collaudare le novità successive, ora fino alla0.1.28.
+sulla tappa 1. La 0.1.13 è confermata; collaudare le novità successive, ora fino alla0.1.29.
 
-Nota operativa24ottobre: utente richiede usare quota residua e prossima ripresa alle22:12Roma. Reset app22:12:11; automazione alle22:12:20, poi ripristinare controllo5min. Nessuna sospensione.
+Nota operativa24ottobre: ripresa effettiva alle22:12Roma dopo reset; automazione stessa chat riportata a controllo5min. Sessione in corso, nessuna sospensione.

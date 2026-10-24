@@ -88,7 +88,7 @@ public class DragonFoodAttackGameTests {
             require(observer.attackAnimation() == DragonCombatState.EAT, "Observer receives eating animation");
         });
         h.runAfterDelay(25, () -> {
-            require(d.attackAnimation() == DragonCombatState.NONE || d.attackAnimation() == DragonCombatState.SPEAK,
+            require(d.attackAnimation() == DragonCombatState.NONE || d.attackAnimation() == DragonCombatState.SPEAK || d.attackAnimation() == DragonCombatState.ROAR || d.attackAnimation() == DragonCombatState.EPIC_ROAR,
                     "Eating animation ends after twenty ticks; a new idle voice is not eating");
             h.succeed();
         });

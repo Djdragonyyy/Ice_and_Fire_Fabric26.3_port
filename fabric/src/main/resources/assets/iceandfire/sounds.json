@@ -171,5 +171,64 @@
       }
     ],
     "subtitle": "iceandfire.sound.subtitle.dragonflute"
+  },
+  "firedragon_child_roar": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "iceandfire:mobs/dragon/fire/child_die_0",
+        "volume": 0.4
+      }
+    ],
+    "subtitle": "iceandfire.sound.subtitle.firedragon_roar"
+  },
+  "firedragon_teen_roar": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "iceandfire:mobs/dragon/fire/teen_roar_0",
+        "volume": 0.4
+      },
+      {
+        "name": "iceandfire:mobs/dragon/fire/teen_roar_1",
+        "volume": 0.4
+      }
+    ],
+    "subtitle": "iceandfire.sound.subtitle.firedragon_roar"
+  },
+  "firedragon_adult_roar": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "iceandfire:mobs/dragon/fire/adult_roar_0",
+        "volume": 0.4
+      },
+      {
+        "name": "iceandfire:mobs/dragon/fire/adult_roar_1",
+        "volume": 0.4
+      }
+    ],
+    "subtitle": "iceandfire.sound.subtitle.firedragon_roar"
+  },
+  "dragon_flight": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "iceandfire:mobs/dragon/flight_0",
+        "volume": 0.4
+      },
+      {
+        "name": "iceandfire:mobs/dragon/flight_1",
+        "volume": 0.4
+      },
+      {
+        "name": "iceandfire:mobs/dragon/flight_2",
+        "volume": 0.4
+      },
+      {
+        "name": "iceandfire:mobs/dragon/flight_3",
+        "volume": 0.4
+      }
+    ]
   }
 }
