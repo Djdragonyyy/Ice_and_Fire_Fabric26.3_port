@@ -173,7 +173,7 @@ public class DragonDefenseGameTests {
     }
 
     @GameTest(structure = "iceandfire:flight_arena", maxTicks = 160, padding = 12, skyAccess = true)
-    public void airborneDefenseLandsBeforeGroundAttack(GameTestHelper h) {
+    public void airborneDefenseUsesCombatFlightAndDamagesThreat(GameTestHelper h) {
         floor(h);
         var d = dragon(h, null, 25);
         d.setPos(d.position().add(0, 8, 0));
@@ -182,9 +182,10 @@ public class DragonDefenseGameTests {
         var v = victim(h, d.position().add(3, -8, 0));
         h.getLevel().addFreshEntity(d);
         d.setTarget(v);
+        d.flightManager.beginAirAttack(v, DragonFlightManager.AirAttack.HOVER_BLAST);
         h.runAfterDelay(110, () -> {
-            require(!d.flying() && d.onGround(), "Threat interrupts wandering flight and causes actual landing");
-            require(v.getHealth() < 200, "Landed dragon engages threat");
+            require(d.flying(), "Airborne defense keeps its combat flight instead of forced landing");
+            require(v.getHealth() < 200, "Combat flight actually damages its threat");
             h.succeed();
         });
     }

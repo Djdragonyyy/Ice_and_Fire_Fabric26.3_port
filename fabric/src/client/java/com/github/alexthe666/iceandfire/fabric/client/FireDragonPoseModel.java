@@ -37,7 +37,7 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
         for (String name : List.of("base_male", "base_female", "flying", "hovering", "sitting", "sitting_shoulder", "walk1", "walk2", "walk3", "walk4",
                 "flight1", "flight2", "flight3", "flight4", "flight5", "flight6",
                 "bite1", "bite2", "bite3", "attack_blast_charge1", "attack_blast_charge2", "attack_blast_charge3", "attack_stream_breath",
-                "tail1", "tail2", "tail3", "wing_blast1", "wing_blast2", "wing_blast3", "wing_blast4", "wing_blast5", "wing_blast6", "wing_blast7")) {
+                "tail1", "tail2", "tail3", "wing_blast1", "wing_blast2", "wing_blast3", "wing_blast4", "wing_blast5", "wing_blast6", "wing_blast7", "attack_tackle")) {
             poses.put(name, loader.apply(name));
         }
     }
@@ -148,7 +148,11 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
     }
 
     private void applyCombat(FireDragonRenderer.State state) {
-        if (state.attack == DragonCombatState.EAT) {
+        if (state.attack == DragonCombatState.TACKLE) {
+            float weight = Math.clamp(state.attackTick / 40F, 0, 1);
+            for (var entry : parts.entrySet())
+                addPoseDelta(entry.getValue(), poses.get("attack_tackle").parts().get(entry.getKey()), weight, true);
+        } else if (state.attack == DragonCombatState.EAT) {
             float tick = state.attackTick;
             float neck = tick < 5 ? tick / 5 : tick < 10 ? (10 - tick) / 5 : 0;
             float jaw = tick < 5 ? 0 : tick < 10 ? (tick - 5) / 5 : tick < 15 ? 1 : Math.max(0, (20 - tick) / 5);

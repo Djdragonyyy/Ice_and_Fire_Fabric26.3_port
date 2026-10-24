@@ -62,6 +62,7 @@ public final class FireDragon extends TamableAnimal {
     boolean seekingFood;
     private LivingEntity previousAutonomousTarget;
     private boolean rangedChargePending, autonomousCharging;
+    private DragonFlightManager.AirAttack previousAirAttack;
     final DragonFlightManager flightManager = new DragonFlightManager(this);
     public float hoverProgress, prevHoverProgress;
     public float breathProgress, prevBreathProgress;
@@ -413,6 +414,16 @@ public final class FireDragon extends TamableAnimal {
 
     private void tickAutonomousCombat(ServerLevel server) {
         LivingEntity target = getTarget();
+        if (target != null && flying() && canAttack(target) && !isInWater()) {
+            tickAirCombat(server, target);
+            return;
+        }
+        if (previousAirAttack != null) {
+            combat.reset();
+            previousAutonomousTarget = null;
+            rangedChargePending = autonomousCharging = false;
+        }
+        previousAirAttack = null;
         boolean active = target != null && canAttack(target) && !flying() && !isInWater();
         if (!wasAutonomousCombat) combat.reset();
         wasAutonomousCombat = true;
@@ -498,11 +509,48 @@ public final class FireDragon extends TamableAnimal {
         playSound(IafContent.FIRE_BREATH, 4, 1);
     }
 
+    private void tickAirCombat(ServerLevel server, LivingEntity target) {
+        if (!flightManager.attacking()) { combat.reset(); return; }
+        var mode = flightManager.airAttack();
+        if (!wasAutonomousCombat || previousAutonomousTarget != target || previousAirAttack != mode) combat.reset();
+        wasAutonomousCombat = true;
+        previousAutonomousTarget = target;
+        previousAirAttack = mode;
+        autonomousBiteTarget = null;
+        rangedChargePending = autonomousCharging = false;
+        boolean visible = hasLineOfSight(target);
+        if (mode == DragonFlightManager.AirAttack.TACKLE) {
+            combat.reset();
+            if (visible && getBoundingBox().inflate(2).intersects(target.getBoundingBox())) {
+                target.hurtServer(server, damageSources().mobAttack(this), stage() * 3);
+                setAutonomousFlight(false, false);
+                flightManager.reset();
+            }
+            return;
+        }
+        boolean ranged = visible && distanceTo(target) <= 10 * stage();
+        if (!ranged) { combat.reset(); return; }
+        if (mode == DragonFlightManager.AirAttack.HOVER_BLAST) {
+            combat.tick(true, false, stage());
+            if (combat.animation() == DragonCombatState.NONE) combat.start(DragonCombatState.CHARGE);
+            else if (combat.animationTick() == 20) shootAutonomousCharge(server, target);
+        } else {
+            combat.tick(true, true, stage());
+            if (combat.emitting()) {
+                Vec3 head = DragonFireCombat.clip(this, getEyePosition(), headPosition());
+                DragonFireCombat.breath(server, this, head, target.getEyePosition(), combat.streamProgress());
+                if (tickCount % 5 == 0) playSound(IafContent.FIRE_BREATH, 4, 1);
+            }
+        }
+    }
+
     private void syncCombat() {
         entityData.set(BREATHING, combat.breathing());
         boolean eating = eatingTicks > 0 && combat.animation() == DragonCombatState.NONE && !combat.breathing();
-        entityData.set(ATTACK, eating ? DragonCombatState.EAT : combat.animation());
-        entityData.set(ATTACK_TICK, eating ? 20 - eatingTicks : combat.animationTick());
+        boolean tackle = flying() && canMoveAutonomously() && getTarget() != null
+                && flightManager.attacking() && flightManager.airAttack() == DragonFlightManager.AirAttack.TACKLE;
+        entityData.set(ATTACK, tackle ? DragonCombatState.TACKLE : eating ? DragonCombatState.EAT : combat.animation());
+        entityData.set(ATTACK_TICK, tackle ? Math.min(40, flightManager.combatTicks()) : eating ? 20 - eatingTicks : combat.animationTick());
         if (eatingTicks > 0) eatingTicks--;
     }
 

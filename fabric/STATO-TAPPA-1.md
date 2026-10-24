@@ -1,10 +1,20 @@
 # Stato della tappa 1 — drago di fuoco, Fabric 26.3
 
-Aggiornato per 0.1.16-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
+Aggiornato per 0.1.17-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
 Questo riepilogo distingue ciò che è nel codice da ciò che manca: build e test
 non sostituiscono il riscontro in gioco, soprattutto per grafica e multiplayer.
 L'utente ha confermato la 0.1.13 funzionante il 24 ottobre e chiesto di continuare.
 La prova0.1.14 ha rilevato alberi e dismount: correzioni0.1.15 da collaudare. Nessun passaggio alla tappa 2.
+
+## Novità 0.1.17
+
+Tre modalità aeree: tackle con tuffo/danno/atterraggio, hover blast con quota e
+proiettili, scorch stream con passaggi/inversione/soffio. Decollo per bersaglio
+in quota, stage2+. Posa tackle originale e reset fra attacchi aerei e terrestri.
+Percorsi bloccati: atterraggio, senza sparare durante la discesa. Restano i limiti
+di navigazione fra edifici/grotte e alcune temporizzazioni/configurazioni originali.
+Due prove client separate, incluse le pose di coda e ali in combattimento reale
+con screenshot e leggibilità della GUI; non multiplayer con due veri client.
 
 ## Novità 0.1.16
 
@@ -13,7 +23,7 @@ EAT sincronizzata. Priorità a comandi/combattimento, pickup delay/dieta/portata
 Attacchi coda e ali con pose originali, tempi e contraccolpo; prima azione contro
 un nuovo bersaglio resta il morso. Palla di fuoco autonoma con carica stabile ed
 emissione al tick20, scelta1/5 fra cicli di soffio. TEST-0.1.16.md esplicita limiti
-e differenze temporali; shake prey e modalità aeree ancora da migrare.
+e differenze temporali; shake prey ancora da migrare; modalità aeree aggiunte nella0.1.17.
 
 L'utente ora autorizza a proseguire il più possibile nelle fasi; restano ordine
 e verifiche di completamento, senza equiparare una build al port completo.
@@ -132,7 +142,7 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 ## Da completare nella tappa 1
 
 - Combattimento autonomo: caccia/selezione non difensiva, shake prey e
-  modalità aeree originali (tackle, hover blast, scorch stream), reazioni e
+  parità delle configurazioni/temporizzazioni originali, reazioni e
   coordinamento con movimento e volo.
 - Altre interazioni originali
   e gestione completa dell'uovo danneggiato.
@@ -153,4 +163,4 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 Restano fuori da questa consegna draghi di ghiaccio/fulmine, altre creature,
 progressione completa, ricette, strutture e generazione naturale: appartengono
 alle tappe successive. Non iniziarle prima del completamento e del riscontro
-sulla tappa 1. La 0.1.13 è confermata; collaudare le novità0.1.16 mentre prosegue il port.
+sulla tappa 1. La 0.1.13 è confermata; collaudare le novità0.1.17 mentre prosegue il port.

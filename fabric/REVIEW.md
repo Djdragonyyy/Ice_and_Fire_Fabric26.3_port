@@ -1,5 +1,30 @@
 # Revisione del port Fabric
 
+## Revisione 0.1.17 — 24 ottobre 2026
+
+Review-agent locale in sola lettura senza delega al diff completo daed4537539,
+inclusi server, pose, GUI, nuove prove client/server e documenti. Confrontati
+IafDragonFlightManager/IafDragonLogic/EntityFireDragon e API GUI26.3 locali.
+
+[P2] Azzerare la carica nel passaggio aria-terra — FireDragon.tickAutonomousCombat.
+La carica hover blast poteva proseguire come animazione vuota sulla terra per
+il bersaglio invariato. Corretto fuori revisione azzerando stato e precedente
+bersaglio alla transizione; nuovo GameTest richiede morso con carica fresca
+entro2tick. Rilettura finale: No findings.
+
+Prova grafica delle pose estese ha motivato il ritaglio esplicito della preview
+al riquadro GUI. Test client legge pixel chiari di tutte le sei righe delle
+statistiche sia durante coda sia durante ali; screenshot ispezionati.
+
+58 JUnit,51 GameTest mod (più always_pass escluso) e2 test client passati.
+Cinque nuove prove server includono movimento/danno, proiettile, inversione,
+decollo per bersaglio in quota e reset della carica aria/terra. Aggiornato il
+vecchio fallback di difesa aerea per richiedere attacco effettivo in volo.
+Limiti espliciti: selezione modalità180tick, vettore scorch max30 e navigazione
+lineare con atterraggio se bloccata; non è parità completa del pathfinder.
+Nessuna prova con due veri client o grafica dei tre attacchi aerei in mondo.
+
+
 ## Revisione 0.1.16 — 24 ottobre 2026
 
 Review-agent locale applicata in sola lettura al diff completo da17364c28c,

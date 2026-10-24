@@ -1,5 +1,30 @@
 # Prompt completo per continuare il porting su un altro PC
 
+## Checkpoint 0.1.17 — 24 ottobre 2026
+
+Baseed4537539. Migrati i percorsi di combattimento aereo di IafDragonFlightManager:
+TACKLE verso la sommità del bersaglio, danno stage*3 a contatto/visibilità e
+ritorno a terra; HOVER_BLAST a quota5+stage*2, offset20 e cariche con emissione20;
+SCORCH_STREAM lungo il vettore iniziale, inversione e soffio server. Decollo per
+bersaglio con deltaY>5 dallo stage2; pilota sempre3. Posa attack_tackle sincronizzata.
+Scelta nuova modalità ogni180tick e vettore scorch max30 sono semplificazioni
+esplicite del port. Destinazione/linea/chunk controllati, fallback atterraggio se
+rotta bloccata con attacchi sospesi. Non è un pathfinder per aggirare edifici.
+
+Corretto il passaggio aria->terra: reset della carica prima del nuovo morso,
+provato entro2tick con regressione dedicata. Le rotte senza target riprendono i
+normali comportamenti. Il precedente obbligo transitorio di atterrare per ogni
+bersaglio è superato dalle modalità aeree; aggiornato il relativo GameTest.
+
+Aggiunto secondo test client: mondo/arena reale, server in combattimento,
+attesa sincronizzazione pose TAIL/WING e screenshot GPU, poi stop da seduto.
+Anteprima GUI limitata con scissor al riquadro: la posa estesa non deve coprire
+le statistiche. Test legge pixel di ogni riga delle due schermate. Screenshot
+ispezionati: coda e ali visibili, nuove prove non equivalgono a due veri client.
+
+Build verificata:58 JUnit,51 GameTest mod (52 con baseline vanilla escluso),due test client in mondi temporanei con screenshot e verifica pixel delle statistiche. Nessun collaudo con due veri client.
+
+
 ## Checkpoint 0.1.16 — 24 ottobre 2026
 
 L'utente ha completato i due obiettivi: proseguire il più possibile attraverso

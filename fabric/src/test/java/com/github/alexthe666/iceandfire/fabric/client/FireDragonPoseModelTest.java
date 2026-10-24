@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class FireDragonPoseModelTest {
     @Test void tailWingAndEatingPosesResetWithoutAccumulation() {
         var model = model();
-        for (int attack : new int[]{3, 4, 5}) {
+        for (int attack : new int[]{3, 4, 5, 6}) {
             var state = new FireDragonRenderer.State();
             state.attack = attack;
             for (float tick : new float[]{0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50}) {

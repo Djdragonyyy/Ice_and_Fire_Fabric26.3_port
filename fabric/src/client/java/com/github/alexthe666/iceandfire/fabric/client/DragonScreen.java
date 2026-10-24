@@ -19,9 +19,12 @@ final class DragonScreen extends AbstractContainerScreen<DragonMenu> {
         if (dragon != null) {
             // 26.3 already normalizes render-state scale to one inside this helper.
             // Dividing again by physical dragon scale made adults shrink to three pixels/unit.
-            InventoryScreen.extractEntityInInventoryFollowsMouse(graphics, leftPos + 25, topPos + 5,
-                    leftPos + 150, topPos + 70, 23,
-                    0.0625F, mouseX, mouseY, dragon);
+            graphics.enableScissor(leftPos + 25, topPos + 5, leftPos + 150, topPos + 70);
+            try {
+                InventoryScreen.extractEntityInInventoryFollowsMouse(graphics, leftPos + 25, topPos + 5,
+                        leftPos + 150, topPos + 70, 23,
+                        0.0625F, mouseX, mouseY, dragon);
+            } finally { graphics.disableScissor(); }
             graphics.centeredText(font, dragon.getDisplayName(), leftPos + 88, topPos + 75, 0xffffffff);
             graphics.centeredText(font, Component.translatable("gui.iceandfire.health", (int) dragon.getHealth(), (int) dragon.getMaxHealth()), leftPos + 88, topPos + 84, 0xffffffff);
             graphics.centeredText(font, Component.translatable(dragon.male() ? "gui.iceandfire.male" : "gui.iceandfire.female"), leftPos + 88, topPos + 93, 0xffffffff);

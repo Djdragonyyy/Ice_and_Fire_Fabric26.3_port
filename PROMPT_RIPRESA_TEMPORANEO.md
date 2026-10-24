@@ -1,12 +1,12 @@
 # Prompt temporaneo per la prossima ripresa
 
-Aggiornato il 24 ottobre 2026, checkpoint 0.1.16, nuova autorizzazione utente a proseguire nelle fasi.
+Aggiornato il 24 ottobre 2026, checkpoint 0.1.17, nuova autorizzazione utente a proseguire nelle fasi.
 Conservare fabric/HANDOFF.md: contiene lo storico e i vincoli permanenti.
 
 ---
 
 Continua il porting di Ice and Fire. Comunica in italiano. Leggi integralmente
-fabric/HANDOFF.md, fabric/README.md, fabric/REVIEW.md, fabric/TEST-0.1.16.md e gli
+fabric/HANDOFF.md, fabric/README.md, fabric/REVIEW.md, fabric/TEST-0.1.17.md e gli
 AGENTS.md applicabili. Non ricominciare da zero o sovrascrivere modifiche locali.
 
 Repository personale:
@@ -15,11 +15,11 @@ Ramo esclusivo: port/fabric-26.3. Controlla stato, remote e git log prima di
 modificare; git switch e git pull --ff-only origin port/fabric-26.3, preservando
 il lavoro locale. Verifica l'esistenza del commit base 417f5a8d2. Niente reset.
 
-Prima leggere anche fabric/STATO-TAPPA-1.md. Checkpoint0.1.16: cibo a terra,
+Prima leggere anche fabric/STATO-TAPPA-1.md. Checkpoint0.1.17: modalità aeree tackle/hover blast/scorch stream, cibo a terra,
 animazione EAT, attacchi coda/ali con pose originali, palla di fuoco autonoma.
-Verifiche:58 JUnit,46 GameTest mod più baseline vanilla escluso,un test client.
+Verifiche:58 JUnit,51 GameTest mod più baseline vanilla escluso,due test client.
 Review-agent read-only completa senza delega: No findings. Non attribuire alla
-prova client delle armature un collaudo visivo delle nuove animazioni.
+prova delle armature un test multiplayer: la seconda prova mostra coda/ali, con pixel GUI.
 
 ULTIMA AUTORIZZAZIONE UTENTE: proseguire il più possibile attraverso tutte le
 fasi usando la quota disponibile; sospendere il PC alla fine dei test, dopo
@@ -28,7 +28,7 @@ supera l'attesa del riscontro fra checkpoint, ma non l'ordine delle fasi o la
 necessità di completarle/verificarle. Goal del thread attivo per il port completo.
 Non inventare un completamento delle fasi2..4: la1 è ancora incompleta.
 
-Restano modalità aeree, shake prey/caccia, sonno/riproduzione, stendardo, altre
+Restano shake prey/caccia, sonno/riproduzione, stendardo, altre
 animazioni/configurazioni/interazioni e limiti elencati nello stato cumulativo.
 La palla di fuoco sceglie1/5 fra cicli di stream, non ogni tick: comportamento
 stabile esplicitato, emissione20 e cura solo del morso. Cibo a terra solo libero,

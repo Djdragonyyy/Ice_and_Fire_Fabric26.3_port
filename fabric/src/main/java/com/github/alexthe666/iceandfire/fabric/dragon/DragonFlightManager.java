@@ -10,6 +10,15 @@ import net.minecraft.world.phys.Vec3;
 /** Server flight/escort/roost paths adapted from IafDragonLogic,
  * IafDragonFlightManager and DragonUtils (LGPL-3.0). Combat remains separate. */
 final class DragonFlightManager {
+    enum AirAttack { TACKLE, HOVER_BLAST, SCORCH_STREAM }
+    private AirAttack airAttack = AirAttack.TACKLE;
+    private LivingEntity combatTarget;
+    private Vec3 scorchOffset = Vec3.ZERO;
+    private boolean scorchReverse;
+    private int combatTicks;
+    AirAttack airAttack() { return airAttack; }
+    int combatTicks() { return combatTicks; }
+    boolean attacking() { return combatTarget != null && !landing; }
     static final int MAX_HEIGHT = 256;
     private final FireDragon dragon;
     private Vec3 target;
@@ -26,6 +35,8 @@ final class DragonFlightManager {
         hoverTicks = flyTicks = escortRecalculate = teleportDelay = 0;
         landing = returning = false;
         speed = 0.2;
+        combatTarget = null;
+        combatTicks = 0;
     }
     void commandChanged() {
         target = null;
@@ -62,12 +73,14 @@ final class DragonFlightManager {
             if (DragonEscortTeleport.tryTeleport(dragon)) return;
         }
         boolean wantsRoost = wantsRoost();
-        // Until aerial attacks are migrated, finish landing to engage a threat on foot.
-        // A target must never be chased using the unrelated wander/escort destination.
         if (dragon.getTarget() != null) {
-            if (dragon.flying()) { landing = true; land(); }
+            if (!dragon.flying()) {
+                if (Math.abs(dragon.getTarget().getY() - dragon.getY()) > 5 && takeOff())
+                    beginAirAttack(dragon.getTarget(), AirAttack.values()[dragon.getRandom().nextInt(3)]);
+            } else tickCombatFlight(dragon.getTarget());
             return;
         }
+        combatTarget = null;
         if (!dragon.flying()) {
             returning = wantsRoost;
             if (dragon.command() == 1) return;
@@ -125,7 +138,70 @@ final class DragonFlightManager {
         }
         if (owner != null && owner.onGround() && owner.position().subtract(dragon.position()).horizontalDistance()
                 < Math.max(4, dragon.getBbWidth() + 2)) { landing = true; land(); return; }
-        speed = Math.max(speed, owner != null && dragon.distanceTo(owner) > 20 ? 1.2 : 0.6);
+        steer(owner != null && dragon.distanceTo(owner) > 20 ? 1.2 : 0.6);
+    }
+
+    void beginAirAttack(LivingEntity enemy, AirAttack mode) {
+        combatTarget = enemy;
+        airAttack = mode;
+        combatTicks = 0;
+        landing = returning = false;
+        target = null;
+        scorchReverse = false;
+        scorchOffset = enemy.position().subtract(dragon.position()).multiply(1, 0, 1);
+        if (scorchOffset.horizontalDistance() < 6) scorchOffset = new Vec3(12, 0, 0);
+        if (scorchOffset.length() > 30) scorchOffset = scorchOffset.normalize().scale(30);
+    }
+
+    private void tickCombatFlight(LivingEntity enemy) {
+        dragon.getNavigation().stop();
+        if (!dragon.canAttack(enemy) || dragon.command() == 1) { landing = true; land(); return; }
+        if (landing) { land(); return; }
+        if (combatTarget != enemy || combatTicks >= 180)
+            beginAirAttack(enemy, AirAttack.values()[dragon.getRandom().nextInt(3)]);
+        combatTicks++;
+        // Preserve the original takeoff hover before starting the attack route.
+        if (!dragon.hovering()) hoverTicks = 40;
+        if (dragon.hovering() && hoverTicks < 40) {
+            hoverTicks++;
+            dragon.setDeltaMovement(dragon.getDeltaMovement().multiply(0.8, 1, 0.8).add(0, 0.08, 0));
+            return;
+        }
+        double height = 5 + dragon.stage() * 2;
+        if (airAttack == AirAttack.TACKLE) {
+            target = clampHeight(enemy.position().add(0, enemy.getBbHeight(), 0));
+        } else if (airAttack == AirAttack.HOVER_BLAST) {
+            double plane = enemy.position().subtract(dragon.position()).horizontalDistance();
+            if (target == null || plane < 4 || plane > 30 || !canReach(target)) {
+                target = null;
+                for (int i = 0; i < 10 && target == null; i++) {
+                    Vec3 candidate = clampHeight(enemy.position().add(dragon.getRandom().nextInt(20) - 10,
+                            height, dragon.getRandom().nextInt(20) - 10));
+                    if (canReach(candidate)) target = candidate;
+                }
+            }
+        } else {
+            Vec3 offset = scorchReverse ? scorchOffset.scale(-1) : scorchOffset;
+            target = clampHeight(enemy.position().add(offset).add(0, height, 0));
+            if (dragon.position().distanceToSqr(target) < 100) {
+                scorchReverse = !scorchReverse;
+                target = clampHeight(enemy.position().add(scorchReverse ? scorchOffset.scale(-1) : scorchOffset).add(0, height, 0));
+            }
+        }
+        if (target == null || !canReach(target)) { landing = true; land(); return; }
+        if (dragon.horizontalCollision) {
+            dragon.setDeltaMovement(dragon.getDeltaMovement().multiply(0, 1, 0));
+            beginAirAttack(enemy, AirAttack.HOVER_BLAST);
+            return;
+        }
+        boolean hold = airAttack == AirAttack.HOVER_BLAST && dragon.position().distanceToSqr(target) < 9;
+        dragon.setAutonomousFlight(true, hold);
+        if (hold) dragon.setDeltaMovement(dragon.getDeltaMovement().scale(0.6));
+        else steer(airAttack == AirAttack.SCORCH_STREAM ? 1.2 : 0.8);
+    }
+
+    private void steer(double minimumSpeed) {
+        speed = Math.max(speed, minimumSpeed);
         var step = DragonFlightSteering.towards(target.subtract(dragon.position()), dragon.getYRot(), speed);
         speed = step.speed();
         dragon.setYRot(step.yaw());

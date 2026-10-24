@@ -2,7 +2,14 @@
 
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
-Versione corrente: **0.1.16-stage1-dev**. Carne raccolta da terra con cammino,
+Versione corrente: **0.1.17-stage1-dev**. Combattimento aereo autonomo con tuffo,
+hover blast e scorch stream; decollo verso bersagli elevati e reset aria/terra.
+Nuova prova client delle pose coda/ali e anteprima ritagliata. Istruzioni:
+[TEST-0.1.17.md](TEST-0.1.17.md). Tappa1 incompleta.
+
+Build verificata:58 JUnit,51 GameTest mod (52 con baseline vanilla escluso),due test client in mondi temporanei con screenshot e verifica pixel delle statistiche. Nessun collaudo con due veri client.
+
+Versione precedente: **0.1.16-stage1-dev**. Carne raccolta da terra con cammino,
 consumo/cura e animazione sincronizzata; attacchi terrestri coda/ali e palla di
 fuoco autonoma. Istruzioni: [TEST-0.1.16.md](TEST-0.1.16.md). Tappa1 incompleta.
 
