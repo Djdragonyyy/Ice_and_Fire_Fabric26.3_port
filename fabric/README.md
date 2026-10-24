@@ -1,10 +1,12 @@
 # Ice and Fire: port Fabric 26.3 in sviluppo
 
-Verificati 75 JUnit, 109 GameTest della mod (110 includendo la baseline vanilla) e 7 prove client con diciassette screenshot. Nessuna prova con due veri client.
+Verificati 77 JUnit, 112 GameTest della mod (113 includendo la baseline vanilla) e 8 prove client con diciassette screenshot. Nessuna prova con due veri client.
 
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
-Versione corrente: **0.1.30-stage1-dev**. Navigazione del corpo completo, deviazioni locali e prova reale dello stadio5 oltre una parete fino all'atterraggio. [TEST-0.1.30.md](TEST-0.1.30.md). Tappa1 incompleta.
+Versione corrente: **0.1.31-stage1-dev**. Acqua/lava e controlli verificati con vero client. [TEST-0.1.31.md](TEST-0.1.31.md). Tappa1 incompleta.
+
+Versione precedente: **0.1.30-stage1-dev**. Navigazione del corpo completo, deviazioni locali e prova reale dello stadio5 oltre una parete fino all'atterraggio. [TEST-0.1.30.md](TEST-0.1.30.md). Tappa1 incompleta.
 
 Versione precedente: **0.1.29-stage1-dev**. Ruggiti/aura, pose e voci originali, battito d'ali configurabile e audio HOSTILE. [TEST-0.1.29.md](TEST-0.1.29.md). Tappa1 incompleta.
 

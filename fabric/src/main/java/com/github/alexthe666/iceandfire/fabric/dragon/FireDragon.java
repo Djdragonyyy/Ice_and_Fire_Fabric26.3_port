@@ -100,6 +100,12 @@ public final class FireDragon extends TamableAnimal {
     public FireDragon(EntityType<? extends FireDragon> type, Level level) {
         super(type, level);
         setPersistenceRequired();
+        setPathfindingMalus(net.minecraft.world.level.pathfinder.PathType.FIRE, 0);
+        setPathfindingMalus(net.minecraft.world.level.pathfinder.PathType.LAVA, 8);
+    }
+
+    @Override public boolean isInWater() {
+        return super.isInWater() && getFluidHeight(net.minecraft.tags.FluidTags.WATER) > stage() / 2;
     }
 
     private int voiceIndex() { return stage() < 3 ? 0 : stage() == 3 ? 1 : 2; }
@@ -193,7 +199,13 @@ public final class FireDragon extends TamableAnimal {
     }
 
     @Override protected void registerGoals() {
-        goalSelector.addGoal(0, new FloatGoal(this));
+        goalSelector.addGoal(0, new FloatGoal(this) {
+            @Override public boolean canUse() {
+                // 26.3's default goal queries raw fluid height, bypassing the original stage threshold.
+                return FireDragon.this.isInWater() && getFluidHeight(net.minecraft.tags.FluidTags.WATER) > getFluidJumpThreshold()
+                        || isInLava();
+            }
+        });
         goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
         goalSelector.addGoal(2, new DragonMateGoal(this));
         goalSelector.addGoal(3, new DragonReturnToRoostGoal(this));
@@ -758,7 +770,26 @@ public final class FireDragon extends TamableAnimal {
             setDeltaMovement(0, getDeltaMovement().y, 0);
             return;
         }
-        if (!flying()) { launchPending = false; super.travel(input); return; }
+        if (isInLava() && getControllingPassenger() == null && isEffectiveAi()) {
+            moveRelative(getSpeed(), input); move(MoverType.SELF, getDeltaMovement());
+            setDeltaMovement(getDeltaMovement().scale(0.7)); return;
+        }
+        if (!flying()) {
+            launchPending = false;
+            if (isInLava() && getControllingPassenger() instanceof Player pilot) {
+                if (isLocalInstanceAuthoritative()) {
+                    if (control(DragonControlPayload.UP) && control(DragonControlPayload.DOWN))
+                        setDeltaMovement(getDeltaMovement().multiply(1, 0.3, 1));
+                    setSpeed(DragonFluidMotion.lavaSpeed(getAttributeValue(Attributes.MOVEMENT_SPEED), pilot.isSprinting()));
+                    moveRelative(getSpeed(), input); move(MoverType.SELF, getDeltaMovement());
+                    Vec3 motion = getDeltaMovement();
+                    if (horizontalCollision) motion = new Vec3(motion.x, 0.2, motion.z);
+                    setDeltaMovement(motion.scale(0.7));
+                } else setDeltaMovement(Vec3.ZERO);
+                return;
+            }
+            super.travel(input); return;
+        }
         if (getControllingPassenger() == null) {
             launchPending = false;
             if (isLocalInstanceAuthoritative()) {
@@ -858,10 +889,13 @@ public final class FireDragon extends TamableAnimal {
     }
 
     @Override protected float getRiddenSpeed(Player player) {
+        if (!flying() && isInLava()) return DragonFluidMotion.lavaSpeed(getAttributeValue(Attributes.MOVEMENT_SPEED), player.isSprinting());
         return (float) getAttributeValue(Attributes.MOVEMENT_SPEED);
     }
 
     @Override protected Vec3 getRiddenInput(Player player, Vec3 input) {
+        if (!flying() && (isInWater() || isInLava()))
+            return new Vec3(player.xxa, DragonFluidMotion.vertical(isInLava(), control(DragonControlPayload.UP), control(DragonControlPayload.DOWN)), player.zza);
         return new Vec3(player.xxa * 0.5F, 0, player.zza < 0 ? player.zza * 0.25F : player.zza);
     }
 

@@ -60,7 +60,7 @@ public class DragonSleepGameTests {
             require(!d.dragonSleeping(), "Damage wakes immediately");
         });
         h.runAfterDelay(50, () -> {
-            require(!d.dragonSleeping() && d.getTarget() == attacker && attacker.getHealth() < 200, "Awakened dragon actually retaliates");
+            require(!d.dragonSleeping() && d.getTarget() == attacker && attacker.getHealth() < 200, "Awakened dragon actually retaliates: sleeping=" + d.dragonSleeping() + ", target=" + (d.getTarget() == attacker) + ", health=" + attacker.getHealth() + ", distance=" + d.distanceTo(attacker) + ", removed=" + attacker.isRemoved());
             h.succeed();
         });
     }

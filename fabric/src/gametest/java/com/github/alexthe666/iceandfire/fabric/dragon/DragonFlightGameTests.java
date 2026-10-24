@@ -82,10 +82,18 @@ public class DragonFlightGameTests {
         dragon.flightManager.tick();
         require(dragon.flying() && dragon.hovering(), "Original random wandering trigger can start flight");
         var start = dragon.position();
+        double[] maximumHorizontalExcursion = {0};
+        boolean[] finished = {false};
         helper.getLevel().addFreshEntity(dragon);
+        helper.onEachTick(() -> {
+            if (!finished[0]) maximumHorizontalExcursion[0] = Math.max(maximumHorizontalExcursion[0],
+                    dragon.position().subtract(start).horizontalDistance());
+        });
         helper.runAfterDelay(85, () -> {
+            // Wandering may circle back: measure actual excursion, not only the final displacement.
             require(dragon.flying() && dragon.getY() > start.y + 8
-                    && dragon.position().subtract(start).horizontalDistance() > 1, "Wandering must climb and fly horizontally: start=" + start + " actual=" + dragon.position() + " flying=" + dragon.flying() + " target=" + dragon.flightManager.target() + " ticks=" + dragon.tickCount);
+                    && maximumHorizontalExcursion[0] > 1, "Wandering must climb and fly horizontally: start=" + start + " actual=" + dragon.position() + " maximumExcursion=" + maximumHorizontalExcursion[0] + " flying=" + dragon.flying() + " target=" + dragon.flightManager.target() + " ticks=" + dragon.tickCount);
+            finished[0] = true;
             helper.succeed();
         });
     }

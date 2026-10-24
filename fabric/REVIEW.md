@@ -1,5 +1,18 @@
 # Revisione del port Fabric
 
+## Revisione 0.1.31 — 25 ottobre 2026
+
+Skill review-agent, sola lettura e senza delega, diff da6e1d3a6ee e tutti i nuovi
+file. Confrontati sorgenti originali e bytecode26.3 per fluidi, FloatGoal e
+client authority. No findings sul codice definitivo. Correzioni fuori revisione:
+fixture acqua/lava svuotata prima del cambio liquido per evitare solidificazione;
+client attende assestamento fisico prima della misura. Test wandering registra
+massima escursione invece del solo punto finale, mantenendo soglie/scadenza.
+Il fallimento iniziale del contrattacco non e stato riprodotto nelle sette prove
+isolate e nelle due successive suite complete; diagnostica aggiunta, asserzioni
+invariate. Rischio intermittente da monitorare. Suite finale completa passata:
+77JUnit/112modGameTest/8client,17immagini. Restano superficie lava e due client reali.
+
 ## Revisione 0.1.30 — 24 ottobre 2026
 
 Skill review-agent in sola lettura, senza delega, sul diff da bcd14643f: nuovi

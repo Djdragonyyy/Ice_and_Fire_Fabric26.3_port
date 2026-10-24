@@ -1,5 +1,19 @@
 # Stato della tappa 1 — drago di fuoco, Fabric 26.3
 
+## Checkpoint 0.1.31 — acqua e lava
+
+Soglia originale di immersione per stadio, goal di galleggiamento coerente,
+comandi verticali originali del pilota e movimento in lava con sprint/attrito.
+Verificata autorita del vero client e posizione registrata sul server.
+Suite finale:77JUnit,112GameTest mod (113 con baseline),8client,17immagini;
+build completa riuscita in8m35s. Vedere TEST-0.1.31.md per precedenti fallimenti
+e correzione della misura del wandering, senza cambiare produzione o scadenze.
+Restano superficie lava, moltiplicatori di velocita, altre parita originali,
+navigazione complessa e due veri client. Tappa1 e port completo ancora aperti.
+Prossimo lavoro studiato nel file locale phase32-preparation.txt, fuori repo.
+Non sospendere o spegnere il PC. Ripresa automatica stessa chat al reset.
+
+
 ## Checkpoint 0.1.30 — navigazione aerea del corpo completo
 
 Controllo del volume fisico lungo ogni tratto, chunk già caricati, quote/bordo;
