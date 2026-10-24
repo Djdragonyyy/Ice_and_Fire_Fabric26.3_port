@@ -23,6 +23,7 @@ public final class DragonCombatConfig {
     public int maxDragonFlight = 256;
     public int dragonWanderFromHomeDistance = 40;
     public int dragonFluteDistance = 4;
+    public boolean chunkLoadSummonCrystal = true;
 
     boolean validValues() {
         return Double.isFinite(dragonAttackDamageFire) && dragonAttackDamageFire >= 0 && dragonAttackDamageFire <= Float.MAX_VALUE / 5

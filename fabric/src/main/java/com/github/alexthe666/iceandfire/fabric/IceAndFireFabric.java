@@ -13,6 +13,7 @@ public final class IceAndFireFabric implements ModInitializer {
     public void onInitialize() {
         DragonCombatConfig.load();
         IafContent.initialize();
+        com.github.alexthe666.iceandfire.fabric.dragon.CrystalSummons.initialize();
         DragonControlPayload.initialize();
         com.github.alexthe666.iceandfire.fabric.dragon.DragonBreathPayload.initialize();
         LOGGER.info("Ice and Fire Fabric port: development build; milestone 1 is not complete.");

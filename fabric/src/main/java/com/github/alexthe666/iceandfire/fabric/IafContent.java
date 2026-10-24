@@ -47,6 +47,8 @@ public final class IafContent {
             new com.github.alexthe666.iceandfire.fabric.dragon.DragonHornItem(properties("dragon_horn")));
     public static final Item DRAGON_FLUTE = Registry.register(BuiltInRegistries.ITEM, id("dragon_flute"),
             new com.github.alexthe666.iceandfire.fabric.dragon.DragonFluteItem(properties("dragon_flute")));
+    public static final Item SUMMONING_CRYSTAL = Registry.register(BuiltInRegistries.ITEM, id("summoning_crystal_fire"),
+            new com.github.alexthe666.iceandfire.fabric.dragon.SummoningCrystalItem(properties("summoning_crystal_fire")));
     public static final Item FIRE_STEW = registerItem("fire_stew", properties("fire_stew"));
     public static final Item[] FIRE_EGGS = {
             registerEggItem("dragonegg_red", 0), registerEggItem("dragonegg_green", 1),
@@ -129,6 +131,7 @@ public final class IafContent {
                     output.accept(DRAGON_STAFF);
                     output.accept(DRAGON_HORN);
                     output.accept(DRAGON_FLUTE);
+                    output.accept(SUMMONING_CRYSTAL);
                     output.accept(FIRE_STEW);
                 });
         CreativeModeTabEvents.modifyOutputEvent(ResourceKey.create(Registries.CREATIVE_MODE_TAB,

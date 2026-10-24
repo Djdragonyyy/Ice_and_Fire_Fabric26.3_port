@@ -14,7 +14,31 @@ o lavorazioni duplicate. Non consumare quota artificialmente e non dichiarare
 completate fasi con funzioni mancanti. Al risveglio controllo quota93%; reset
 indicato dall'app24ottobre12:38:03UTC (14:38Roma). Verificare stato attuale.
 
-Verificati 70 JUnit, 92 GameTest della mod (93 con baseline vanilla escluso) e 5 prove client con quattordici screenshot. Nessuna prova con due veri client.
+Verificati 70 JUnit, 99 GameTest della mod (100 con baseline vanilla escluso) e 6 prove client con quindici screenshot. Nessuna prova con due veri client.
+
+## Checkpoint 0.1.28 — cristallo e caricamento dei draghi
+
+Cristallo fuoco: UUID/nome in CUSTOM_DATA, flag CrystalBound nativo salvato e
+sincronizzato, modelli/texture originali attivo/vuoto. Legame e richiamo tramite
+interazioni native, stesso drago/UUID e inventario; dati svuotati solo al successo.
+Overworld come originale, proprietà corrente/permessi e veicoli occupati protetti;
+corpo/ostacoli/fluidi/bordo/quote e chunk destinazione controllati. Legami non
+sovrascritti e fallimenti conservano dati. Creativo usa il vero stack in mano.
+
+SavedData nativo dragon_positions per livello, provato con disco/riapertura.
+Indice all'entrata/uscita tracking e ogni20tick per draghi legati; scarto/morte
+rimuovono. Callback con motivo nullo conserva posizione (tracking può terminare
+prima della rimozione). chunkLoadSummonCrystal defaulttrue originale: false
+ammette solo entità caricate. Ticket sorgente temporaneo non persistente2001tick,
+richiesta con timeout2000; cleanup su successo/annullamento/timeout/serverstop.
+Richieste separate per mondo/UUID/giocatore/mano/stack/destinazione; ticket di uno
+stesso chunk mantenuto finché resta una richiesta. Nessuno stato sul singleton Item.
+
+Sei nuove prove isolate passate, poi anche la settima con reale salvataggio,
+scaricamento/assenza UUID dal mondo, caricamento/ricomparsa e richiamo con stesso
+proprietario e ticket rilasciato. Fixture corregge callback Runnable (riusarlo
+cancellava il successore) e dà5ms ai worker reali del server GameTest senza attesa.
+Timeout mod/orologio mondo invariati. Tappa1 ancora aperta, niente sospensione.
 
 ## Checkpoint 0.1.27 — flauto e palpebre
 
@@ -984,3 +1008,5 @@ con NtCreateDirectoryObject 0xC0000022, prima dell'autenticazione GitHub. Provar
 terminale PowerShell/VS Code dell'utente o il client Git autenticato; non estrarre credenziali
 e non aggirare i controlli. Verificare che il commit di questo handoff sia effettivamente remoto
 prima di cambiare PC: senza push riuscito il nuovo clone non contiene queste modifiche.
+
+Nota operativa24ottobre: utente richiede usare quota residua e prossima ripresa alle22:12Roma. Reset app22:12:11; automazione alle22:12:20, poi ripristinare controllo5min. Nessuna sospensione.

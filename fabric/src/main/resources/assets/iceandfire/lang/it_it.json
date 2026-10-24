@@ -76,5 +76,11 @@
   "item.iceandfire.dragon_horn": "Corno del drago",
   "dragon.unnamed": "Senza nome",
   "item.iceandfire.dragon_flute": "Flauto del drago",
-  "iceandfire.sound.subtitle.dragonflute": "Il flauto del drago suona"
+  "iceandfire.sound.subtitle.dragonflute": "Il flauto del drago suona",
+  "item.iceandfire.summoning_crystal_fire": "Cristallo di richiamo del drago di fuoco",
+  "item.iceandfire.summoning_crystal.bound": "Legato a: %s",
+  "item.iceandfire.summoning_crystal.desc_0": "Lega il cristallo al tuo drago con clic destro.",
+  "item.iceandfire.summoning_crystal.desc_1": "Usalo su un blocco per richiamarlo.",
+  "message.iceandfire.dragonTeleport": "Drago richiamato.",
+  "message.iceandfire.noDragonTeleport": "Impossibile richiamare il drago."
 }

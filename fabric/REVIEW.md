@@ -1,6 +1,49 @@
 # Revisione del port Fabric
 
-Verificati 70 JUnit, 92 GameTest della mod (93 con baseline vanilla escluso) e 5 prove client con quattordici screenshot. Nessuna prova con due veri client.
+Verificati 70 JUnit, 99 GameTest della mod (100 con baseline vanilla escluso) e 6 prove client con quindici screenshot. Nessuna prova con due veri client.
+
+## Revisione 0.1.28 — 24 ottobre 2026
+
+Review-agent in sola lettura, senza delega, sul diff completo da4639f9d1f,
+inclusi tutti i nuovi item/manager/SavedData, tracker e flag, configurazione,
+risorse, prove e documenti. Confrontati ItemSummoningCrystal/DragonPosWorldData/
+EntityDragonBase originali e bytecode ufficiale26.3 delle firme native. No findings.
+
+Legame con UUID/nome nativi, flag salvato/sincronizzato e vero stack anche in
+creativo. Richiamo stessa entità, proprietà corrente, corpo/fluido/bordo/quote,
+passeggeri e destinazione caricata controllati; dati cancellati solo al successo.
+Overworld conservato. Verifica aggiuntiva del proprietario attuale e rifiuto
+veicoli occupati espliciti nel TEST. Helper di sicurezza del seguito riusato,
+solo visibilità package ampliata; il comportamento del seguito resta invariato.
+
+Posizioni immutabili, SavedData codec-backed senza datafixer improprio e prova
+reale su disco/riapertura. Nessuna promessa di importazione del file Forge1.20.
+Tracker aggiorna solo entità effettivamente nel livello e registra ultimo blocco
+anche quando il tracking termina prima del motivo di rimozione. Morte/scarto
+rimuovono; il corno conserva il flag nel proprio NBT e il successivo ingresso
+nel mondo reindicizza la posizione.
+
+Ticket registrato separato, non persistente, tempo2001 e richiesta2000; nessuna
+attesa bloccante di chunk nel codice di produzione. Stato per richiesta invece
+del singleton originale, cancellazione su mano/stack/UUID/giocatore/livello,
+config disabilitata, timeout e arresto server. Una richiesta conclusa non rimuove
+il ticket ancora necessario a un'altra nello stesso chunk. Clock ricevuto dal
+tick server per testare confini senza manipolare il tempo globale del mondo.
+
+Prime sei prove isolate passate; la settima fixture richiedeva correzione di
+scheduling: GameTestInfo usa Runnable come chiave e lo rimuove dopo esecuzione;
+riusarlo cancellava il controllo successivo. Ora ogni callback è nuovo, cede5ms
+ai worker e prepara il chunk nel test. Nessuna modifica al timeout o al loader
+della mod per adattarlo al test. Caso reale poi passato isolato E nella suite
+completa: salvataggio, UUID assente, richiesta/caricamento, stesso UUID/proprietario
+ritrovati, cristallo svuotato e ticket rilasciato.
+
+Risultato finale70JUnit,99GameTest mod (100totali),6prove client/15screenshot,
+tutti passati e build completa riuscita. Client verifica vere interactOn/useItemOn,
+flag/UUID/item/posizione sincronizzati senza copia del drago. Quattro asset
+originali del cristallo byte-identici nel JAR; icone ispezionate. Tappa1 ancora
+incompleta, due veri client simultanei e lacune cumulative ancora da completare.
+Nessuna sospensione del PC. Ripresa successiva richiesta per24ottobre22:12Roma.
 
 ## Revisione 0.1.27 — 24 ottobre 2026
 

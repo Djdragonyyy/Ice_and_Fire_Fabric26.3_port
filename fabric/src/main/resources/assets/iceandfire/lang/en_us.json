@@ -76,5 +76,11 @@
   "item.iceandfire.dragon_horn": "Dragon Horn",
   "dragon.unnamed": "Unnamed",
   "item.iceandfire.dragon_flute": "Dragon Bone Flute",
-  "iceandfire.sound.subtitle.dragonflute": "Dragon Bone Flute plays"
+  "iceandfire.sound.subtitle.dragonflute": "Dragon Bone Flute plays",
+  "item.iceandfire.summoning_crystal_fire": "Fire Dragon Summoning Crystal",
+  "item.iceandfire.summoning_crystal.bound": "Bound to %s",
+  "item.iceandfire.summoning_crystal.desc_0": "Right click on a dragon to bind it",
+  "item.iceandfire.summoning_crystal.desc_1": "Use when bound to teleport dragon",
+  "message.iceandfire.dragonTeleport": "This dragon has been teleported.",
+  "message.iceandfire.noDragonTeleport": "§cCould not find a dragon bound to this crystal."
 }

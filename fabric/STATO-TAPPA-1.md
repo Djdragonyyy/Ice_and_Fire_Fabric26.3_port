@@ -14,7 +14,31 @@ o lavorazioni duplicate. Non consumare quota artificialmente e non dichiarare
 completate fasi con funzioni mancanti. Al risveglio controllo quota93%; reset
 indicato dall'app24ottobre12:38:03UTC (14:38Roma). Verificare stato attuale.
 
-Verificati 70 JUnit, 92 GameTest della mod (93 con baseline vanilla escluso) e 5 prove client con quattordici screenshot. Nessuna prova con due veri client.
+Verificati 70 JUnit, 99 GameTest della mod (100 con baseline vanilla escluso) e 6 prove client con quindici screenshot. Nessuna prova con due veri client.
+
+## Checkpoint 0.1.28 — cristallo e caricamento dei draghi
+
+Cristallo fuoco: UUID/nome in CUSTOM_DATA, flag CrystalBound nativo salvato e
+sincronizzato, modelli/texture originali attivo/vuoto. Legame e richiamo tramite
+interazioni native, stesso drago/UUID e inventario; dati svuotati solo al successo.
+Overworld come originale, proprietà corrente/permessi e veicoli occupati protetti;
+corpo/ostacoli/fluidi/bordo/quote e chunk destinazione controllati. Legami non
+sovrascritti e fallimenti conservano dati. Creativo usa il vero stack in mano.
+
+SavedData nativo dragon_positions per livello, provato con disco/riapertura.
+Indice all'entrata/uscita tracking e ogni20tick per draghi legati; scarto/morte
+rimuovono. Callback con motivo nullo conserva posizione (tracking può terminare
+prima della rimozione). chunkLoadSummonCrystal defaulttrue originale: false
+ammette solo entità caricate. Ticket sorgente temporaneo non persistente2001tick,
+richiesta con timeout2000; cleanup su successo/annullamento/timeout/serverstop.
+Richieste separate per mondo/UUID/giocatore/mano/stack/destinazione; ticket di uno
+stesso chunk mantenuto finché resta una richiesta. Nessuno stato sul singleton Item.
+
+Sei nuove prove isolate passate, poi anche la settima con reale salvataggio,
+scaricamento/assenza UUID dal mondo, caricamento/ricomparsa e richiamo con stesso
+proprietario e ticket rilasciato. Fixture corregge callback Runnable (riusarlo
+cancellava il successore) e dà5ms ai worker reali del server GameTest senza attesa.
+Timeout mod/orologio mondo invariati. Tappa1 ancora aperta, niente sospensione.
 
 ## Checkpoint 0.1.27 — flauto e palpebre
 
@@ -77,7 +101,7 @@ mondo e dalla taglia. Nessuna barriera al pilota o modifica della velocità.
 Vecchi JSON compatibili. Nuovo GameTest salva/ricarica casa e verifica raggio,
 confine e due limiti di quota; estesa validazione JUnit. Tappa1 ancora aperta.
 
-Aggiornato per 0.1.27-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
+Aggiornato per 0.1.28-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
 Questo riepilogo distingue ciò che è nel codice da ciò che manca: build e test
 non sostituiscono il riscontro in gioco, soprattutto per grafica e multiplayer.
 L'utente ha confermato la 0.1.13 funzionante il 24 ottobre e chiesto di continuare.
@@ -295,6 +319,12 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
     o immunità in aria. Palpebre6tick su50 con skin originale chiusa e stop del
     glow, conservando posa del corpo e IA sveglia.
 
+24. Cristallo del drago di fuoco: legame UUID/nome persistente, icone originali,
+    richiamo stessa entità in Overworld con controlli di proprietà e destinazione.
+    Registro posizioni SavedData, caricamento temporaneo del chunk sorgente se
+    abilitato, richieste indipendenti e cleanup/ticket condivisi. Prova reale di
+    scaricamento/ricaricamento e sincronizzazione client completa passate.
+
 ## Da completare nella tappa 1
 
 - Combattimento autonomo: ulteriori dettagli di presa e
@@ -318,4 +348,6 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 Restano fuori da questa consegna draghi di ghiaccio/fulmine, altre creature,
 progressione completa, ricette, strutture e generazione naturale: appartengono
 alle tappe successive. Non iniziarle prima del completamento e del riscontro
-sulla tappa 1. La 0.1.13 è confermata; collaudare le novità successive, ora fino alla0.1.27.
+sulla tappa 1. La 0.1.13 è confermata; collaudare le novità successive, ora fino alla0.1.28.
+
+Nota operativa24ottobre: utente richiede usare quota residua e prossima ripresa alle22:12Roma. Reset app22:12:11; automazione alle22:12:20, poi ripristinare controllo5min. Nessuna sospensione.

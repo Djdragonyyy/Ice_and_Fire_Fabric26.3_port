@@ -11,6 +11,7 @@ class DragonCombatConfigTest {
         assertEquals(3000, config.dragonHungerTickRate); assertEquals(7200, config.dragonEggTime);
         assertEquals(256, config.maxDragonFlight); assertEquals(40, config.dragonWanderFromHomeDistance);
         assertEquals(4, config.dragonFluteDistance);
+        assertTrue(config.chunkLoadSummonCrystal);
         assertTrue(config.validValues());
     }
     @Test void malformedAndOutOfRangeValuesCannotReachTickArithmetic() {

@@ -47,6 +47,7 @@ public final class FireDragon extends TamableAnimal {
     private static final EntityDataAccessor<Boolean> SLEEPING = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<ItemStack> BANNER = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.ITEM_STACK);
     private static final EntityDataAccessor<Integer> GRIPPED_PREY = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> CRYSTAL_BOUND = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.BOOLEAN);
     private java.util.UUID loadedPrey;
     private int loadedGripTick;
     private boolean gripImpactDone;
@@ -150,6 +151,7 @@ public final class FireDragon extends TamableAnimal {
         builder.define(SLEEPING, false);
         builder.define(BANNER, ItemStack.EMPTY);
         builder.define(GRIPPED_PREY, -1);
+        builder.define(CRYSTAL_BOUND, false);
     }
 
     @Override protected void registerGoals() {
@@ -188,6 +190,8 @@ public final class FireDragon extends TamableAnimal {
     public void setVariant(int value) { entityData.set(VARIANT, Math.clamp(value, 0, 3)); }
     public boolean male() { return entityData.get(MALE); }
     public boolean isBlinking() { return tickCount % 50 > 43; }
+    public boolean crystalBound() { return entityData.get(CRYSTAL_BOUND); }
+    public void setCrystalBound(boolean bound) { entityData.set(CRYSTAL_BOUND, bound); }
     public void onHearFlute(Player player) {
         if (!level().isClientSide() && isAlive() && isTame() && isOwnedBy(player) && (flying() || hovering())) {
             setAutonomousFlight(false, false);
@@ -347,6 +351,8 @@ public final class FireDragon extends TamableAnimal {
         setNoGravity(flying() || carrier != null);
         super.tick();
         if (level() instanceof ServerLevel server) tickCombat(server);
+        if (level() instanceof ServerLevel server && crystalBound() && tickCount % 20 == 0 && server.getEntity(getUUID()) == this)
+            DragonPositions.get(server).put(getUUID(), blockPosition());
         prevBreathProgress = breathProgress;
         breathProgress = Math.clamp(breathProgress + (entityData.get(BREATHING) ? 0.5F : -0.5F), 0, 10);
         prevFlyProgress = flyProgress;
@@ -981,6 +987,7 @@ public final class FireDragon extends TamableAnimal {
         output.storeNullable("GrippedPrey", net.minecraft.core.UUIDUtil.CODEC, prey != null ? prey.getUUID() : loadedPrey);
         output.putInt("GripTick", prey != null ? combat.animationTick() : loadedGripTick);
         output.putBoolean("HasHomePosition", hasDragonHome());
+        output.putBoolean("CrystalBound", crystalBound());
         if (dragonHome != null) {
             output.putInt("HomeAreaX", dragonHome.getX());
             output.putInt("HomeAreaY", dragonHome.getY());
@@ -999,6 +1006,7 @@ public final class FireDragon extends TamableAnimal {
         setHunger(input.getIntOr("Hunger", 50));
         setMale(input.getBooleanOr("Gender", false));
         entityData.set(AGING_DISABLED, input.getBooleanOr("AgingDisabled", false));
+        setCrystalBound(input.getBooleanOr("CrystalBound", false));
         speakingTicks = 0;
         flightManager.reset();
         setAutonomousFlight(input.getBooleanOr("Flying", false) && stage() >= 2, input.getBooleanOr("Hovering", false));

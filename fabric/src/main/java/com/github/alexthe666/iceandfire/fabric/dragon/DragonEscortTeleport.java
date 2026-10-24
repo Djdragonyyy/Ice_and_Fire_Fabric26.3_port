@@ -44,7 +44,7 @@ final class DragonEscortTeleport {
         dragon.setOnGround(!flying);
         return true;
     }
-    private static boolean safe(FireDragon dragon, ServerLevel server, Vec3 destination, boolean ground) {
+    static boolean safe(FireDragon dragon, ServerLevel server, Vec3 destination, boolean ground) {
         AABB box = dragon.getBoundingBox().move(destination.subtract(dragon.position()));
         if (box.minY < server.getMinY() || box.maxY > server.getMaxY() || !server.getWorldBorder().isWithinBounds(box)) return false;
         for (int x = (int) Math.floor(box.minX) >> 4; x <= (int) Math.floor(box.maxX) >> 4; x++)
