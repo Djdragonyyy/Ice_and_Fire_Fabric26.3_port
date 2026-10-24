@@ -67,5 +67,7 @@
   "gui.iceandfire.stage": "Stage %s - %s days",
   "gui.iceandfire.male": "Male",
   "gui.iceandfire.female": "Female",
-  "gui.iceandfire.untamed": "Untamed"
+  "gui.iceandfire.untamed": "Untamed",
+  "item.iceandfire.fire_stew": "Fire Stew",
+  "block.iceandfire.nest": "Dragon Nest"
 }

@@ -11,6 +11,18 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DragonArmorLayerTest {
+    @Test void breedingItemsUseOriginalModelsAndTextures() throws Exception {
+        var legacy = java.nio.file.Path.of(System.getProperty("iceandfire.legacyResources"), "assets/iceandfire");
+        var packaged = java.nio.file.Path.of("build/resources/main/assets/iceandfire");
+        for (String item : new String[]{"fire_stew", "nest"}) {
+            var definition = com.google.gson.JsonParser.parseString(java.nio.file.Files.readString(packaged.resolve("items/" + item + ".json"))).getAsJsonObject();
+            assertEquals("iceandfire:item/" + item, definition.getAsJsonObject("model").get("model").getAsString());
+            assertArrayEquals(java.nio.file.Files.readAllBytes(legacy.resolve("models/item/" + item + ".json")),
+                    java.nio.file.Files.readAllBytes(packaged.resolve("models/item/" + item + ".json")));
+            String image = "textures/" + (item.equals("nest") ? "block/" : "item/") + item + ".png";
+            assertArrayEquals(java.nio.file.Files.readAllBytes(legacy.resolve(image)), java.nio.file.Files.readAllBytes(packaged.resolve(image)));
+        }
+    }
     @Test void everyArmorItemResolvesToItsOriginalPackagedIcon() throws Exception {
         var legacy = java.nio.file.Path.of(System.getProperty("iceandfire.legacyResources"));
         var packaged = java.nio.file.Path.of("build/resources/main/assets/iceandfire");

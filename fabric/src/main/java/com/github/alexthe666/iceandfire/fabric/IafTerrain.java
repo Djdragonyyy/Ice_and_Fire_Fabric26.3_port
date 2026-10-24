@@ -30,6 +30,10 @@ public final class IafTerrain {
     public static final Block GRAVEL = register("chared_gravel", new ReturningFalling(properties("chared_gravel", Blocks.GRAVEL, 0.6F, 0), Blocks.GRAVEL));
     public static final Block PATH = register("chared_dirt_path", new ReturningPath(properties("chared_dirt_path", Blocks.DIRT_PATH, 0.6F, 0.6F)));
     public static final Block ASH = register("ash", new ReturningFalling(properties("ash", Blocks.SAND, 0.5F, 0), null));
+    public static final Block NEST = register("nest", new Block(BlockBehaviour.Properties.of()
+            .mapColor(net.minecraft.world.level.material.MapColor.PLANT).sound(SoundType.GRAVEL)
+            .strength(0.5F, 0).friction(0.98F).pushReaction(net.minecraft.world.level.material.PushReaction.POPPED)
+            .setId(ResourceKey.create(Registries.BLOCK, id("nest")))));
     private IafTerrain() {}
     public static void initialize() {}
     private static Identifier id(String name) { return Identifier.fromNamespaceAndPath(IceAndFireFabric.MOD_ID, name); }

@@ -1,10 +1,20 @@
 # Stato della tappa 1 — drago di fuoco, Fabric 26.3
 
-Aggiornato per 0.1.18-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
+Verificati61 JUnit,66 GameTest della mod (67 con baseline vanilla escluso) e3 prove client con sei screenshot ispezionati. Nessuna prova con due veri client.
+
+Aggiornato per 0.1.19-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
 Questo riepilogo distingue ciò che è nel codice da ciò che manca: build e test
 non sostituiscono il riscontro in gioco, soprattutto per grafica e multiplayer.
 L'utente ha confermato la 0.1.13 funzionante il 24 ottobre e chiesto di continuare.
 La prova0.1.14 ha rilevato alberi e dismount: correzioni0.1.15 da collaudare. Nessun passaggio alla tappa 2.
+
+## Novità 0.1.19
+
+Riproduzione con stufato di fuoco fra adulti stage4+ di sesso opposto, ricerca,
+corteggiamento, uovo casuale e nido. Cooldown6000 salvato, terreno protetto e
+spawn fallito atomico. Il nuovo uovo resta senza proprietario finché raccolto e
+ripiazzato; test completo fino alla schiusa. Uova non spingibili come originale.
+Autonomia continua dopo sospensione S3/risveglio verificati e quota rinnovata.
 
 ## Novità 0.1.18
 
@@ -157,7 +167,7 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
   parità delle configurazioni/temporizzazioni originali, reazioni e
   coordinamento con movimento e volo.
 - Altre interazioni originali e dettagli del ciclo delle uova.
-- Riproduzione e ciclo collegato, ulteriori dettagli/parità del sonno originale.
+- Ulteriori dettagli/parità di riproduzione e sonno originali.
 - Comportamento completo in acqua/lava e navigazione aerea più robusta fra
   edifici, alberi e grotte. Il manager attuale verifica spazio e visibilità,
   ma non aggira qualsiasi ostacolo complesso.
@@ -174,4 +184,4 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 Restano fuori da questa consegna draghi di ghiaccio/fulmine, altre creature,
 progressione completa, ricette, strutture e generazione naturale: appartengono
 alle tappe successive. Non iniziarle prima del completamento e del riscontro
-sulla tappa 1. La 0.1.13 è confermata; collaudare le novità0.1.18 alla ripresa del port.
+sulla tappa 1. La 0.1.13 è confermata; collaudare le novità0.1.19 alla ripresa del port.

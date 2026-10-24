@@ -1,5 +1,27 @@
 # Prompt completo per continuare il porting su un altro PC
 
+Verificati61 JUnit,66 GameTest della mod (67 con baseline vanilla escluso) e3 prove client con sei screenshot ispezionati. Nessuna prova con due veri client.
+
+## Checkpoint 0.1.19 — riproduzione
+
+Ripresa dopo la sospensione S3 richiesta: il registro conferma sospensione e
+successivo risveglio riusciti; nuova finestra di quota disponibile. Autonomia
+utente confermata, continuare tappa1 e sospendere di nuovo a fine sessione.
+
+Fire stew originale in creativo, due adulti stage4+ (75giorni), sesso opposto,
+liberi a terra senza bersaglio/controllo, entrambi innamorati. Ricerca entro180,
+cammino1, corteggiamento60tick, distanza<35 e visibilità. Un solo uovo casuale
+senza proprietario; raccolta/ripiazzamento assegna il proprietario. Cooldown6000
+vanilla salvato, indipendente dai giorni del drago. Sonno/volo casuale sospesi
+in amore. Nido3x3 con centro sentiero, protetto da griefing/blacklist/contenitori/
+fluidi/durezza/chunk/bordo; mancato spawn non consuma amore o modifica terreno.
+Uovo non spingibile come originale: impedisce ai genitori di spostarlo dal nido.
+Asset originali byte-identici, nessuna ricetta/progressione aggiunta prima fase3.
+
+Prossimi: stendardo grafico, caccia/shake prey, acqua/lava e altre lacune nello
+stato cumulativo. Tappa1 ancora incompleta, nessun passaggio alla2.
+
+
 ## Checkpoint 0.1.18 — 24 ottobre 2026
 
 Base824e05454. Utente a dormire, autonomia completa e test di ogni blocco.

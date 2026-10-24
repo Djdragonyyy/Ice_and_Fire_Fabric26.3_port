@@ -67,5 +67,7 @@
   "gui.iceandfire.stage": "Stadio %s - %s giorni",
   "gui.iceandfire.male": "Maschio",
   "gui.iceandfire.female": "Femmina",
-  "gui.iceandfire.untamed": "Non addomesticato"
+  "gui.iceandfire.untamed": "Non addomesticato",
+  "item.iceandfire.fire_stew": "Stufato di fuoco",
+  "block.iceandfire.nest": "Nido di drago"
 }

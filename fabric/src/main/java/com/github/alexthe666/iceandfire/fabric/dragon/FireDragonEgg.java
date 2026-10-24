@@ -35,6 +35,9 @@ public final class FireDragonEgg extends Mob {
     public int variant() { return entityData.get(VARIANT); }
     public void setVariant(int value) { entityData.set(VARIANT, Math.clamp(value, 0, 3)); }
     public void setOwner(LivingEntity value) { owner = EntityReference.of(value); }
+    public java.util.UUID ownerId() { return owner == null ? null : owner.getUUID(); }
+    @Override public boolean isPushable() { return false; }
+    @Override protected void doPush(Entity other) { }
 
     @Override public boolean hurtServer(ServerLevel server, net.minecraft.world.damagesource.DamageSource source, float damage) {
         if (source.is(net.minecraft.tags.DamageTypeTags.IS_FIRE) || isRemoved()) return false;

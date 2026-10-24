@@ -126,6 +126,7 @@ public final class FireDragon extends TamableAnimal {
     @Override protected void registerGoals() {
         goalSelector.addGoal(0, new FloatGoal(this));
         goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
+        goalSelector.addGoal(2, new DragonMateGoal(this));
         goalSelector.addGoal(3, new DragonReturnToRoostGoal(this));
         goalSelector.addGoal(4, new DragonEscortGoal(this));
         goalSelector.addGoal(5, new DragonMeleeGoal(this));
@@ -358,7 +359,7 @@ public final class FireDragon extends TamableAnimal {
         if (isNoAi()) return;
         boolean supported = onGround() && !server.noCollision(this, getBoundingBox().move(0, -0.1, 0));
         if (!DragonCombatConfig.current.doDragonsSleep || !isAlive() || flying() || isInWater() || !supported
-                || isVehicle() || isPassenger() || shoulderCarrier() != null || command() != 0 || getTarget() != null) {
+                || isVehicle() || isPassenger() || shoulderCarrier() != null || command() != 0 || getTarget() != null || isInLove()) {
             setDragonSleeping(false);
             return;
         }
@@ -774,6 +775,16 @@ public final class FireDragon extends TamableAnimal {
             }
             return InteractionResult.SUCCESS;
         }
+        if (stack.is(IafContent.FIRE_STEW)) {
+            if (stage() < 4 || getAge() != 0 || !canFallInLove() || isInLove()) return InteractionResult.FAIL;
+            if (!level().isClientSide()) {
+                setDragonSleeping(false);
+                sleepNotBefore = level().getGameTime() + 20;
+                setInLove(player);
+                stack.consume(1, player);
+            }
+            return InteractionResult.SUCCESS;
+        }
         if (isOwnedBy(player)) {
             if (stack.is(IafContent.DRAGON_STAFF)) {
                 if (!level().isClientSide()) {
@@ -861,7 +872,22 @@ public final class FireDragon extends TamableAnimal {
         return super.mobInteract(player, hand);
     }
 
-    @Override public boolean isFood(ItemStack stack) { return false; }
+    @Override public boolean isFood(ItemStack stack) { return stack.is(IafContent.FIRE_STEW); }
+    boolean readyToMate() {
+        return stage() >= 4 && getAge() == 0 && isInLove() && canMoveOnGround() && onGround()
+                && command() == 0 && getTarget() == null && !isInWater();
+    }
+    @Override public boolean canMate(Animal other) {
+        return other instanceof FireDragon partner && partner != this && partner.level() == level()
+                && partner.getType() == getType() && male() != partner.male()
+                && readyToMate() && partner.readyToMate();
+    }
+    void finishBreeding() {
+        setAge(6000);
+        resetLove();
+        sleepNotBefore = level().getGameTime() + 20;
+        getNavigation().stop();
+    }
 
     private void feedingEffects(ItemStack stack, boolean sickly, boolean meal) {
         playSound(sickly ? net.minecraft.sounds.SoundEvents.ZOMBIE_VILLAGER_CURE : net.minecraft.sounds.SoundEvents.GENERIC_EAT.value(), 1, 1);

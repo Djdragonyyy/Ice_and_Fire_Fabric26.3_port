@@ -1,8 +1,15 @@
 # Ice and Fire: port Fabric 26.3 in sviluppo
 
+Verificati61 JUnit,66 GameTest della mod (67 con baseline vanilla escluso) e3 prove client con sei screenshot ispezionati. Nessuna prova con due veri client.
+
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
-Versione corrente: **0.1.18-stage1-dev**. Sonno notturno, risvegli difensivi,
+Versione corrente: **0.1.19-stage1-dev**. Riproduzione con stufato di fuoco,
+corteggiamento, uovo/nido e cooldown salvato. Protezioni del terreno e prova
+completa da uovo nato a schiusa con nuovo proprietario. [TEST-0.1.19.md](TEST-0.1.19.md).
+Tappa1 ancora incompleta, autonomia continua secondo autorizzazione utente.
+
+Versione precedente: **0.1.18-stage1-dev**. Sonno notturno, risvegli difensivi,
 posa/texture sleeping, occhi emissivi originali e recupero delle uova danneggiate.
 [TEST-0.1.18.md](TEST-0.1.18.md).60 JUnit,60 GameTest mod e3 prove client passati.
 Tappa1 ancora incompleta, stato cumulativo aggiornato e port completo non concluso.

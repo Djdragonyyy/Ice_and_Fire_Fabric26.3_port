@@ -16,6 +16,12 @@ public class DragonArmorClientTest implements FabricClientGameTest {
         try (var world = context.worldBuilder().create()) {
         context.waitFor(client -> client.player != null && client.level != null);
         context.runOnClient(client -> {
+            for (var item : java.util.List.of(com.github.alexthe666.iceandfire.fabric.IafContent.FIRE_STEW,
+                    com.github.alexthe666.iceandfire.fabric.IafTerrain.NEST.asItem())) {
+                var state = new ItemStackRenderState();
+                client.getItemModelResolver().updateForTopItem(state, new ItemStack(item), ItemDisplayContext.GUI, null, null, 0);
+                if (state.isEmpty()) throw new AssertionError("Empty breeding item model: " + item);
+            }
             for (var item : DragonArmorItem.ITEMS) {
                 var state = new ItemStackRenderState();
                 client.getItemModelResolver().updateForTopItem(state, new ItemStack(item), ItemDisplayContext.GUI, null, null, 0);
@@ -60,6 +66,8 @@ public class DragonArmorClientTest implements FabricClientGameTest {
         ArmorIcons() { super(Component.literal("Dragon armor regression")); }
         @Override public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
             graphics.fill(0, 0, width, height, 0xff303030);
+            graphics.item(new ItemStack(com.github.alexthe666.iceandfire.fabric.IafContent.FIRE_STEW), 340, 12);
+            graphics.item(new ItemStack(com.github.alexthe666.iceandfire.fabric.IafTerrain.NEST.asItem()), 365, 12);
             for (int slot = 0; slot < 4; slot++) graphics.text(font, DragonArmorItem.PARTS[slot], 150 + slot * 40, 12, 0xffffffff);
             for (int material = 0; material < 8; material++) {
                 int y = 34 + material * 23;

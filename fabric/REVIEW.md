@@ -1,5 +1,22 @@
 # Revisione del port Fabric
 
+Verificati61 JUnit,66 GameTest della mod (67 con baseline vanilla escluso) e3 prove client con sei screenshot ispezionati. Nessuna prova con due veri client.
+
+## Revisione 0.1.19 — 24 ottobre 2026
+
+Review-agent locale applicata in sola lettura, senza delega, al diff completo da
+a2684afe7: produzione, nuove risorse, test, build/versione e documenti. No findings.
+Confrontati DragonAIMate, isFood/createEgg e EntityDragonEgg originali, con API
+26.3 locali. Verificate priorità amore/sonno/volo, validazione simmetrica della
+coppia, sesso/stadio/dimensione/tipo, singolo spawn da due goal attivi, cooldown
+persistente separato dalla crescita e fallimento atomico prima del consumo.
+
+Il primo test aveva trovato un uovo spostato dal centro del nido dai genitori:
+migrati isPushable=false e doPush vuoto originali. Asserzione otto blocchi nido
+più centro sentiero mantenuta, poi superata. Controllati terreno protetto,
+mobGriefing, contenitori, durezza negativa, fluidi e chunk/bordo; nuovo ciclo
+server completo fino alla schiusa del nuovo proprietario. Asset originali integri.
+
 ## Revisione 0.1.18 — 24 ottobre 2026
 
 Skill locale review-agent applicata read-only senza delega al diff completo

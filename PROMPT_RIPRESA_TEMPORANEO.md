@@ -1,12 +1,12 @@
 # Prompt temporaneo per la prossima ripresa
 
-Aggiornato il 24 ottobre 2026, checkpoint 0.1.18, nuova autorizzazione utente a proseguire nelle fasi.
+Aggiornato il 24 ottobre 2026, checkpoint 0.1.19, nuova autorizzazione utente a proseguire nelle fasi.
 Conservare fabric/HANDOFF.md: contiene lo storico e i vincoli permanenti.
 
 ---
 
 Continua il porting di Ice and Fire. Comunica in italiano. Leggi integralmente
-fabric/HANDOFF.md, fabric/README.md, fabric/REVIEW.md, fabric/TEST-0.1.18.md e gli
+fabric/HANDOFF.md, fabric/README.md, fabric/REVIEW.md, fabric/TEST-0.1.19.md e gli
 AGENTS.md applicabili. Non ricominciare da zero o sovrascrivere modifiche locali.
 
 Repository personale:
@@ -15,22 +15,21 @@ Ramo esclusivo: port/fabric-26.3. Controlla stato, remote e git log prima di
 modificare; git switch e git pull --ff-only origin port/fabric-26.3, preservando
 il lavoro locale. Verifica l'esistenza del commit base 417f5a8d2. Niente reset.
 
-Prima leggere fabric/STATO-TAPPA-1.md. Checkpoint0.1.18: sonno e risvegli,
-Sleeping salvato/sincronizzato, posa/texture originali, occhi emissivi HeadFront
-prima delle armature; uova danneggiate con drop singolo/variante. Conservati cibo,
-coda/ali/palla autonoma e tre modalità aeree.60 JUnit,60 GameTest mod più baseline
-escluso,3 test client. Review-agent read-only senza delega, niente due veri client.
+Prima leggere fabric/STATO-TAPPA-1.md. Checkpoint0.1.19: riproduzione con fire_stew,
+ricerca/corteggiamento, uovo/nido, cooldown6000 salvato e protezioni del terreno.
+Uovo nato senza proprietario, raccolta/ripiazzamento lo assegnano; test fino alla
+schiusa. Uova non spingibili come originale. Conservato tutto fino alla0.1.18.
 
 ULTIMA AUTORIZZAZIONE: utente a dormire, autonomia completa, test di ogni blocco,
 proseguire il più possibile nelle fasi usando quota disponibile. Sospensione PC
 richiesta alla fine della sessione di test, dopo salvataggio/push/consegna.
-Sessione0.1.18 prossima al limite: riprendere quando PC/quota disponibili, non
+Sessione0.1.18 sospesa e ripresa correttamente, nuova quota disponibile; non
 avviare nuovi processi durante sospensione. Goal completo attivo e incompleto.
 Non consumare quota artificialmente o dichiarare chiuse fasi non migrate.
 Nuova richiesta supera attese di riscontro fra checkpoint, conserva ordine delle
 tappe e loro verifica. La1 è ancora incompleta.
 
-Prossimi: riproduzione/fire_stew/nest (DragonAIMate/isFood originali), shake prey/
+Prossimi: layer dello stendardo (slot già pronto), shake prey/
 caccia, stendardo, configurazioni/interazioni/animazioni e limiti navigazione/
 acqua/lava nello stato cumulativo. Uova raccolte senza incubazione/proprietà.
 Sonno solo libero, NoAI congela automazione; targeting separato da movimento per
