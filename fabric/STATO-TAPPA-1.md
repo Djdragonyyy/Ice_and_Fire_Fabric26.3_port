@@ -14,7 +14,26 @@ o lavorazioni duplicate. Non consumare quota artificialmente e non dichiarare
 completate fasi con funzioni mancanti. Al risveglio controllo quota93%; reset
 indicato dall'app24ottobre12:38:03UTC (14:38Roma). Verificare stato attuale.
 
-Verificati 70 JUnit, 83 GameTest della mod (84 con baseline vanilla escluso) e 4 prove client con undici screenshot. Nessuna prova con due veri client.
+Verificati 70 JUnit, 88 GameTest della mod (89 con baseline vanilla escluso) e 5 prove client con dodici screenshot. Nessuna prova con due veri client.
+
+## Checkpoint 0.1.26 — corno del drago
+
+Item dragon_horn, raccolta proprietario/main hand e rilascio su faccia UP.
+Entità salvata nativamente in CUSTOM_DATA, UUID/inventario e tutti i dati
+mantenuti; cancellazione contenuto solo dopo addFreshEntity riuscito.
+No cattura con passeggeri/veicolo/spalla, dati occupati mai sovrascritti.
+Rilascio valida tipo/UUID, permessi, corpo/bordo/quote e chunk già caricati;
+UUID già caricato cercato in tutte le dimensioni. Nessun registro globale
+anti-copia per entità non caricate. Originali texture/modelli vuoto/fuoco,
+flag modello nativo, tooltip nome/sesso/stadio/giorni. Ricette restano fase3.
+
+Revisione: Player.interactOn usa una copia in creativo; aggiornare il vero
+corno in mano come originale. Prova dedicata su quel ramo nativo. MockPlayer
+non è registrato nel mondo: roundtrip server verifica EntityReference UUID;
+client connesso verifica isOwnedBy dopo rilascio. Abilità Creative/Adventure
+inizializzate esplicitamente nei mock, helper semplice non lo fa. Cinque prove
+isolate passate, poi suite completa e nuova prova client passate.
+Tappa1 e goal completo ancora incompleti. Nessuna sospensione del PC.
 
 ## Checkpoint 0.1.25 — voci e mandibola
 
@@ -38,7 +57,7 @@ mondo e dalla taglia. Nessuna barriera al pilota o modifica della velocità.
 Vecchi JSON compatibili. Nuovo GameTest salva/ricarica casa e verifica raggio,
 confine e due limiti di quota; estesa validazione JUnit. Tappa1 ancora aperta.
 
-Aggiornato per 0.1.25-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
+Aggiornato per 0.1.26-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
 Questo riepilogo distingue ciò che è nel codice da ciò che manca: build e test
 non sostituiscono il riscontro in gioco, soprattutto per grafica e multiplayer.
 L'utente ha confermato la 0.1.13 funzionante il 24 ottobre e chiesto di continuare.
@@ -226,6 +245,31 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
     inseguimento a terra e morso temporizzato; interruzione per comandi e controllo,
     protezione alleati e atterraggio prima dello scontro terrestre.
 
+15. Attacchi terrestri temporizzati coda/ali e pasto da terra con percorso e
+    consumo/cura; soffio e carica autonomi, più tre modalità aeree (tuffo,
+    hover blast e scorch stream). Difesa e bersagli attivi restano prioritari.
+16. Sonno notturno e ritorno alla casa, risvegli difensivi/da comandi, posa e
+    texture sleeping; layer occhi originale disabilitato durante sonno/morte.
+17. Riproduzione con stufato di fuoco: genitori stadio4+, sesso opposto,
+    corteggiamento e cooldown salvato; uovo/nido con protezioni del terreno,
+    poi raccolta/piazzamento e schiusa verificati nel runtime.
+18. Caccia autonoma originale tramite tag/fame/taglia e raggio configurabile;
+    protezione di proprietari/pet e precedenza del cibo raggiungibile prima
+    di una nuova caccia. Non sostituisce un bersaglio difensivo già attivo.
+19. Presa/scuotimento di piccole prede mob: occupante nativo, danno/cura e
+    rilascio temporizzati, persistenza UUID/tick e aggancio visivo alla testa.
+    Niente cattura giocatori o secondo posto; visibilità ai bordi vista corretta.
+20. Configurazioni originali già esposte per combattimento, ciclo vitale,
+    salute/danno/fame/schiusa, quota autonoma e distanza dalla casa. Validazione,
+    compatibilità vecchi JSON e incubazione64bit; altre impostazioni restano.
+21. Voci originali ambientali/ferita/morte per fascia d'età e SPEAK20tick sulla
+    mandibola. File audio originali invariati; NoAI e animazioni prioritarie
+    interrompono la posa cosmetica. Ruggiti/effetti ancora da completare.
+22. Corno riutilizzabile del drago: salvataggio nativo nel componente oggetto,
+    raccolta/rilascio e UUID/inventario persistenti, tooltip e icone originali.
+    Proprietà, permessi, ostacoli, corpo completo e UUID caricati controllati;
+    cattura di veicoli occupati/spalle vietata. Disponibile creativo/comando.
+
 ## Da completare nella tappa 1
 
 - Combattimento autonomo: ulteriori dettagli di presa e
@@ -237,7 +281,7 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
   edifici, alberi e grotte. Il manager attuale verifica spazio e visibilità,
   ma non aggira qualsiasi ostacolo complesso.
 - Passeggeri nell'anteprima GUI; palpebre, differenze visive complete maschio/femmina,
-  animazioni secondarie/attacchi, suoni e particelle ancora mancanti.
+  animazioni secondarie/attacchi, ruggiti/altri suoni e particelle ancora mancanti.
 - Configurazioni originali non ancora esposte; integrazione DragonForge ed
   esplosioni opzionali del combattimento.
 - Difetto delle punte grigie ancora aperto: non è stato risolto né modificato
@@ -249,4 +293,4 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 Restano fuori da questa consegna draghi di ghiaccio/fulmine, altre creature,
 progressione completa, ricette, strutture e generazione naturale: appartengono
 alle tappe successive. Non iniziarle prima del completamento e del riscontro
-sulla tappa 1. La 0.1.13 è confermata; collaudare le novità0.1.23 alla ripresa del port.
+sulla tappa 1. La 0.1.13 è confermata; collaudare le novità successive, ora fino alla0.1.26.

@@ -1,6 +1,44 @@
 # Revisione del port Fabric
 
-Verificati 70 JUnit, 83 GameTest della mod (84 con baseline vanilla escluso) e 4 prove client con undici screenshot. Nessuna prova con due veri client.
+Verificati 70 JUnit, 88 GameTest della mod (89 con baseline vanilla escluso) e 5 prove client con dodici screenshot. Nessuna prova con due veri client.
+
+## Revisione 0.1.26 — 24 ottobre 2026
+
+Review-agent in sola lettura, senza delega, sull'intero diff da865dc6c9b:
+item nuovo e registrazione, componenti, modello nativo/risorse, tutte le nuove
+prove e documenti. Confrontati ItemDragonHorn originale e bytecode ufficiale
+26.3 di Player.interactOn, GameTestHelper, TamableAnimal e codec/entity storage.
+
+[P2] Aggiornare il corno realmente impugnato in creativo — DragonHornItem.interactLivingEntity.
+Il controllo iniziale sull'identità dello stack rifiutava la copia che il ramo
+creativo nativo passa al metodo item. Corretto fuori revisione recuperando il
+vero stack in mano come nell'originale; nuova prova nativa con instabuild attivo
+verifica che il dato sia conservato nel corno reale. No findings alla rilettura.
+
+Roundtrip server conserva UUID del drago e riferimento UUID proprietario:
+makeMockPlayer non è registrato, quindi isOwnedBy non può risolverlo dopo load.
+Non è perdita di dati: diagnostica conferma salute160/max308, fame73,75giorni,
+variante2, sesso/nome/comando2 corretti. Test verifica riferimento persistito;
+la nuova prova con client connesso verifica anche la risoluzione reale del
+proprietario dopo rilascio. Applicate le abilità Creative/Adventure nei mock
+che il semplice helper non inizializza; nessun cambio di produzione per i mock.
+
+Cinque GameTest nuovi: persistenza nativa dell'oggetto/entità e inventario,
+fallimenti di piazzamento senza consumo, UUID caricato duplicato, proprietà,
+mano/pilota/dati occupati, ramo creativo, permessi avventura e UUID mancante.
+Prima cinque isolate passate, poi suite INTEGRALE finale:70JUnit,88GameTest mod
+(89totali),5prove client/12screenshot, build riuscita. Non consegnato il report
+filtrato al posto della suite completa. Nuova prova client attraversa la vera
+interazione del giocatore, sincronizza rimozione/corno/rilascio e proprietario;
+le due icone sono visivamente distinte e prive di texture mancanti.
+
+Quattro modelli/texture originali byte-identici nel JAR. Nessun contenuto test
+nel JAR distribuibile. Controllati ordine salvataggio/rimozione/inserimento/
+svuotamento, corpo completo/bordo/quote/chunk già caricati e UUID nelle dimensioni.
+La guardia UUID copre entità caricate, senza promettere un registro globale
+per copie creative e rollback. Nuove protezioni di passeggeri/spalle e permessi
+esplicite nel TEST. Tappa1 incompleta, due veri client ancora da provare.
+Nessuna sospensione: continuare il port dopo checkpoint, push e consegna.
 
 ## Revisione 0.1.25 — 24 ottobre 2026
 

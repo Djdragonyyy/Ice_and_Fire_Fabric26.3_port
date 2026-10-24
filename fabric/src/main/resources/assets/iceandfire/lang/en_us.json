@@ -72,5 +72,7 @@
   "block.iceandfire.nest": "Dragon Nest",
   "iceandfire.sound.subtitle.firedragon_idle": "Fire Dragon growls",
   "iceandfire.sound.subtitle.firedragon_hurt": "Fire Dragon hurts",
-  "iceandfire.sound.subtitle.firedragon_death": "Fire Dragon dies"
+  "iceandfire.sound.subtitle.firedragon_death": "Fire Dragon dies",
+  "item.iceandfire.dragon_horn": "Dragon Horn",
+  "dragon.unnamed": "Unnamed"
 }

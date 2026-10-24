@@ -14,7 +14,26 @@ o lavorazioni duplicate. Non consumare quota artificialmente e non dichiarare
 completate fasi con funzioni mancanti. Al risveglio controllo quota93%; reset
 indicato dall'app24ottobre12:38:03UTC (14:38Roma). Verificare stato attuale.
 
-Verificati 70 JUnit, 83 GameTest della mod (84 con baseline vanilla escluso) e 4 prove client con undici screenshot. Nessuna prova con due veri client.
+Verificati 70 JUnit, 88 GameTest della mod (89 con baseline vanilla escluso) e 5 prove client con dodici screenshot. Nessuna prova con due veri client.
+
+## Checkpoint 0.1.26 — corno del drago
+
+Item dragon_horn, raccolta proprietario/main hand e rilascio su faccia UP.
+Entità salvata nativamente in CUSTOM_DATA, UUID/inventario e tutti i dati
+mantenuti; cancellazione contenuto solo dopo addFreshEntity riuscito.
+No cattura con passeggeri/veicolo/spalla, dati occupati mai sovrascritti.
+Rilascio valida tipo/UUID, permessi, corpo/bordo/quote e chunk già caricati;
+UUID già caricato cercato in tutte le dimensioni. Nessun registro globale
+anti-copia per entità non caricate. Originali texture/modelli vuoto/fuoco,
+flag modello nativo, tooltip nome/sesso/stadio/giorni. Ricette restano fase3.
+
+Revisione: Player.interactOn usa una copia in creativo; aggiornare il vero
+corno in mano come originale. Prova dedicata su quel ramo nativo. MockPlayer
+non è registrato nel mondo: roundtrip server verifica EntityReference UUID;
+client connesso verifica isOwnedBy dopo rilascio. Abilità Creative/Adventure
+inizializzate esplicitamente nei mock, helper semplice non lo fa. Cinque prove
+isolate passate, poi suite completa e nuova prova client passate.
+Tappa1 e goal completo ancora incompleti. Nessuna sospensione del PC.
 
 ## Checkpoint 0.1.25 — voci e mandibola
 
