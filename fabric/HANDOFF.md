@@ -14,7 +14,19 @@ o lavorazioni duplicate. Non consumare quota artificialmente e non dichiarare
 completate fasi con funzioni mancanti. Al risveglio controllo quota93%; reset
 indicato dall'app24ottobre12:38:03UTC (14:38Roma). Verificare stato attuale.
 
-Verificati 68 JUnit, 81 GameTest della mod (82 con baseline vanilla escluso) e 4 prove client con dieci screenshot. Nessuna prova con due veri client.
+Verificati 70 JUnit, 83 GameTest della mod (84 con baseline vanilla escluso) e 4 prove client con undici screenshot. Nessuna prova con due veri client.
+
+## Checkpoint 0.1.25 — voci e mandibola
+
+Nove eventi originali idle/hurt/death con fasce stage1/2 child,3teen,4/5adult,
+intervallo90 e campioni/sottotitoli/volumi originali. File OGG byte-identici.
+SPEAK20tick sincronizzato, sola mandibola18gradi eZ0.2, interpolazione5/10/5.
+Priorità di attacchi/soffio/pasto/sonno/morte/NoAI; cosmetica non persistente.
+Una regressione NoAI rilevata nella prima suite ha portato al gate esplicito
+su avvio e annullamento. Test aggiunti per risorse, posa, voci e durata/stati;
+client verifica sound manager e screenshot SPEAK. Ruggiti restano da migrare.
+Non dichiarata prova di ascolto manuale o multiplayer con due veri client.
+Nessuna sospensione del PC. Tappa1 ancora incompleta; continuare dopo consegna.
 
 ## Checkpoint 0.1.24 — casa e quota di volo
 

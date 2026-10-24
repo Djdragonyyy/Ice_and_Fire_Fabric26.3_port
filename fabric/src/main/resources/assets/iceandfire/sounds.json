@@ -1,6 +1,165 @@
 {
   "firedragon_breath": {
-    "sounds": [{"name": "iceandfire:mobs/dragon/fire/breath", "volume": 0.4}],
+    "sounds": [
+      {
+        "name": "iceandfire:mobs/dragon/fire/breath",
+        "volume": 0.4
+      }
+    ],
     "subtitle": "iceandfire.sound.subtitle.firedragon_breath"
+  },
+  "firedragon_child_idle": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "iceandfire:mobs/dragon/fire/child_idle_0",
+        "volume": 0.4
+      },
+      {
+        "name": "iceandfire:mobs/dragon/fire/child_idle_1",
+        "volume": 0.4
+      },
+      {
+        "name": "iceandfire:mobs/dragon/fire/child_idle_2",
+        "volume": 0.4
+      }
+    ],
+    "subtitle": "iceandfire.sound.subtitle.firedragon_idle"
+  },
+  "firedragon_child_hurt": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "iceandfire:mobs/dragon/fire/child_hurt_0",
+        "volume": 0.4
+      },
+      {
+        "name": "iceandfire:mobs/dragon/fire/child_hurt_1",
+        "volume": 0.4
+      }
+    ],
+    "subtitle": "iceandfire.sound.subtitle.firedragon_hurt"
+  },
+  "firedragon_child_death": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "iceandfire:mobs/dragon/fire/child_die_0",
+        "volume": 0.4
+      }
+    ],
+    "subtitle": "iceandfire.sound.subtitle.firedragon_death"
+  },
+  "firedragon_teen_idle": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "iceandfire:mobs/dragon/fire/teen_idle_0",
+        "volume": 0.4
+      },
+      {
+        "name": "iceandfire:mobs/dragon/fire/teen_idle_1",
+        "volume": 0.4
+      },
+      {
+        "name": "iceandfire:mobs/dragon/fire/teen_idle_2",
+        "volume": 0.4
+      },
+      {
+        "name": "iceandfire:mobs/dragon/fire/teen_idle_3",
+        "volume": 0.4
+      },
+      {
+        "name": "iceandfire:mobs/dragon/fire/teen_idle_4",
+        "volume": 0.4
+      },
+      {
+        "name": "iceandfire:mobs/dragon/fire/teen_idle_5",
+        "volume": 0.4
+      }
+    ],
+    "subtitle": "iceandfire.sound.subtitle.firedragon_idle"
+  },
+  "firedragon_teen_hurt": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "iceandfire:mobs/dragon/fire/teen_hurt_0",
+        "volume": 0.4
+      },
+      {
+        "name": "iceandfire:mobs/dragon/fire/teen_hurt_1",
+        "volume": 0.4
+      }
+    ],
+    "subtitle": "iceandfire.sound.subtitle.firedragon_hurt"
+  },
+  "firedragon_teen_death": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "iceandfire:mobs/dragon/fire/teen_die_0",
+        "volume": 0.4
+      }
+    ],
+    "subtitle": "iceandfire.sound.subtitle.firedragon_death"
+  },
+  "firedragon_adult_idle": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "iceandfire:mobs/dragon/fire/adult_idle_0",
+        "volume": 0.4
+      },
+      {
+        "name": "iceandfire:mobs/dragon/fire/adult_idle_1",
+        "volume": 0.4
+      },
+      {
+        "name": "iceandfire:mobs/dragon/fire/adult_idle_2",
+        "volume": 0.4
+      },
+      {
+        "name": "iceandfire:mobs/dragon/fire/adult_idle_3",
+        "volume": 0.4
+      }
+    ],
+    "subtitle": "iceandfire.sound.subtitle.firedragon_idle"
+  },
+  "firedragon_adult_hurt": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "iceandfire:mobs/dragon/fire/adult_hurt_0",
+        "volume": 0.4
+      },
+      {
+        "name": "iceandfire:mobs/dragon/fire/adult_hurt_1",
+        "volume": 0.4
+      },
+      {
+        "name": "iceandfire:mobs/dragon/fire/adult_hurt_2",
+        "volume": 0.4
+      }
+    ],
+    "subtitle": "iceandfire.sound.subtitle.firedragon_hurt"
+  },
+  "firedragon_adult_death": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "iceandfire:mobs/dragon/fire/adult_hurt_0",
+        "volume": 0.4
+      },
+      {
+        "name": "iceandfire:mobs/dragon/fire/adult_hurt_1",
+        "volume": 0.4
+      },
+      {
+        "name": "iceandfire:mobs/dragon/fire/adult_hurt_2",
+        "volume": 0.4
+      }
+    ],
+    "subtitle": "iceandfire.sound.subtitle.firedragon_death"
   }
 }

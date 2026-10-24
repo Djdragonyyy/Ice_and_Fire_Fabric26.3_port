@@ -37,6 +37,19 @@ public class DragonSleepClientTest implements FabricClientGameTest {
             context.waitFor(client -> client.level.getEntity(id) instanceof FireDragon d && !d.dragonSleeping());
             context.waitTicks(45);
             context.takeScreenshot("dragon-awake-eyes-0.1.18");
+            context.runOnClient(client -> {
+                for (var sounds : new net.minecraft.sounds.SoundEvent[][]{IafContent.FIRE_IDLE, IafContent.FIRE_HURT, IafContent.FIRE_DEATH})
+                    for (var sound : sounds) if (client.getSoundManager().getSoundEvent(sound.location()) == null)
+                        throw new AssertionError("Original voice must resolve in the real client sound manager: " + sound.location());
+            });
+            world.getServer().runOnServer(server -> {
+                var d = (FireDragon) player.level().getEntity(id);
+                d.setNoAi(false); d.playAmbientSound();
+            });
+            context.waitFor(client -> client.level.getEntity(id) instanceof FireDragon d
+                    && d.attackAnimation() == com.github.alexthe666.iceandfire.fabric.dragon.DragonCombatState.SPEAK
+                    && d.attackAnimationTick() >= 5 && d.attackAnimationTick() <= 12);
+            context.takeScreenshot("dragon-speaking-jaw-0.1.25");
             context.setScreen(() -> null);
         }
     }

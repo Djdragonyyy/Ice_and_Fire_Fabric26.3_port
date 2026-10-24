@@ -174,7 +174,14 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
     }
 
     private void applyCombat(FireDragonRenderer.State state) {
-        if (state.attack == DragonCombatState.TACKLE) {
+        if (state.attack == DragonCombatState.SPEAK) {
+            float tick = Math.clamp(state.attackTick, 0, 20);
+            float weight = tick < 5 ? (float) Math.sin(tick / 5 * Math.PI * 0.5)
+                    : tick < 15 ? 1 : 1 - (float) Math.sin((tick - 15) / 5 * Math.PI * 0.5);
+            var jaw = parts.get("Jaw");
+            jaw.xRot += (float) Math.toRadians(18) * weight;
+            jaw.z += 0.2F * weight;
+        } else if (state.attack == DragonCombatState.TACKLE) {
             float weight = Math.clamp(state.attackTick / 40F, 0, 1);
             for (var entry : parts.entrySet())
                 addPoseDelta(entry.getValue(), poses.get("attack_tackle").parts().get(entry.getKey()), weight, true);

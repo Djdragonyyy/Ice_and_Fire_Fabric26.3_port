@@ -34,6 +34,9 @@ public final class IafContent {
     public static final EntityType<DragonFireCharge> FIRE_DRAGON_CHARGE = registerCharge();
     public static final SoundEvent FIRE_BREATH = Registry.register(BuiltInRegistries.SOUND_EVENT,
             id("firedragon_breath"), SoundEvent.createVariableRangeEvent(id("firedragon_breath")));
+    public static final SoundEvent[] FIRE_IDLE = dragonSounds("idle");
+    public static final SoundEvent[] FIRE_HURT = dragonSounds("hurt");
+    public static final SoundEvent[] FIRE_DEATH = dragonSounds("death");
     public static final Item DRAGON_MEAL = registerItem("dragon_meal", properties("dragon_meal"));
     public static final Item SICKLY_DRAGON_MEAL = registerItem("sickly_dragon_meal", properties("sickly_dragon_meal"));
     public static final Item CREATIVE_DRAGON_MEAL = registerItem("creative_dragon_meal", properties("creative_dragon_meal"));
@@ -45,6 +48,13 @@ public final class IafContent {
     };
 
     private IafContent() {}
+
+    private static SoundEvent[] dragonSounds(String action) {
+        return java.util.Arrays.stream(new String[]{"child", "teen", "adult"}).map(age -> {
+            var key = id("firedragon_" + age + "_" + action);
+            return Registry.register(BuiltInRegistries.SOUND_EVENT, key, SoundEvent.createVariableRangeEvent(key));
+        }).toArray(SoundEvent[]::new);
+    }
     public static Identifier id(String path) { return Identifier.fromNamespaceAndPath(IceAndFireFabric.MOD_ID, path); }
 
     private static EntityType<FireDragon> registerDragon() {

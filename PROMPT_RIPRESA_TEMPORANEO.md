@@ -14,13 +14,13 @@ o lavorazioni duplicate. Non consumare quota artificialmente e non dichiarare
 completate fasi con funzioni mancanti. Al risveglio controllo quota93%; reset
 indicato dall'app24ottobre12:38:03UTC (14:38Roma). Verificare stato attuale.
 
-Aggiornato il 24 ottobre 2026, checkpoint 0.1.23, nuova autorizzazione utente a proseguire nelle fasi.
+Aggiornato il 24 ottobre 2026, checkpoint 0.1.25, nuova autorizzazione utente a proseguire nelle fasi.
 Conservare fabric/HANDOFF.md: contiene lo storico e i vincoli permanenti.
 
 ---
 
 Continua il porting di Ice and Fire. Comunica in italiano. Leggi integralmente
-fabric/HANDOFF.md, fabric/README.md, fabric/REVIEW.md, fabric/TEST-0.1.23.md e gli
+fabric/HANDOFF.md, fabric/README.md, fabric/REVIEW.md, fabric/TEST-0.1.25.md e gli
 AGENTS.md applicabili. Non ricominciare da zero o sovrascrivere modifiche locali.
 
 Repository personale:
@@ -28,6 +28,8 @@ https://github.com/Djdragonyyy/Ice_and_Fire_Fabric26.3_port.git
 Ramo esclusivo: port/fabric-26.3. Controlla stato, remote e git log prima di
 modificare; git switch e git pull --ff-only origin port/fabric-26.3, preservando
 il lavoro locale. Verifica l'esistenza del commit base 417f5a8d2. Niente reset.
+
+Checkpoint0.1.25: 70JUnit,83GameTest mod,4test client/11screenshot. Voci originali per età e SPEAK20tick, NoAI protetto. 0.1.24: quota autonoma e raggio casa configurabili. Prossime interazioni originali; niente sospensione, tappa1 aperta.
 
 Prima leggere fabric/STATO-TAPPA-1.md. Checkpoint0.1.23: config salute/danno/fame/
 schiusa, default/vecchi JSON conservati e incubazione long compatibile con vecchi

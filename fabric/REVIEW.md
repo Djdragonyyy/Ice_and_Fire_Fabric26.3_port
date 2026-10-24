@@ -1,6 +1,28 @@
 # Revisione del port Fabric
 
-Verificati 68 JUnit, 81 GameTest della mod (82 con baseline vanilla escluso) e 4 prove client con dieci screenshot. Nessuna prova con due veri client.
+Verificati 70 JUnit, 83 GameTest della mod (84 con baseline vanilla escluso) e 4 prove client con undici screenshot. Nessuna prova con due veri client.
+
+## Revisione 0.1.25 — 24 ottobre 2026
+
+Review-agent in sola lettura, senza delega, sul diff completo da79fff306d,
+inclusi nuovi test, risorse, build e documentazione. Riferimenti originali:
+EntityFireDragon per le fasce vocali; EntityDragonBase per intervallo/soppressione
+sonno e avvio SPEAK; DragonTabulaModelAnimator per i keyframe della mandibola.
+
+[P2] Impedire SPEAK con NoAI — FireDragon.startSpeaking/syncCombat.
+La prima suite ha rilevato animazione ancora attiva nel test di cancellazione
+NoAI. Corretto fuori revisione con gate di avvio/annullamento; aggiunta verifica
+esplicita e mantenute le asserzioni di danno/target/animazione del test precedente.
+Suite completa ripetuta dopo la correzione:70JUnit,83GameTest mod (84totali)
+e4prove client,11screenshot, tutti superati. No findings nella rilettura finale.
+
+Definizioni dei nove eventi identiche al JSON originale e ogni OGG referenziato
+confrontato byte per byte. Soglie vocali2/3/4 corrette, priorità combattimento
+conservata, timer cosmetico non persistente e azzerato al caricamento. NoAI
+conserva la possibilità nativa del suono ma sopprime l'animazione incidentale.
+Sound manager reale risolve tutti i nove eventi; screenshot della mandibola
+SPEAK ispezionato. Non dichiarato ascolto manuale o multiplayer con due client.
+Ruggiti/effetti e altre lacune della tappa1 ancora aperti. Nessuna sospensione.
 
 ## Revisione 0.1.24 — 24 ottobre 2026
 

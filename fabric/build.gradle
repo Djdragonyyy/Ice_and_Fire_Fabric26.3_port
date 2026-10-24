@@ -31,7 +31,7 @@ loom {
         gametest {
             server()
             source sourceSets.gametest
-            runDir 'run/0.1.24-gametest'
+            runDir 'run/0.1.25-gametest'
             vmArg '-Dfabric-api.gametest'
             vmArg "-Dfabric-api.gametest.report-file=${file('build/gametest-results.xml').absolutePath}"
         }
@@ -67,7 +67,7 @@ processResources {
     from('../src/main/resources') {
         include 'assets/iceandfire/models/tabula/firedragon/**'
         include 'assets/iceandfire/textures/models/firedragon/**'
-        include 'assets/iceandfire/sounds/mobs/dragon/fire/breath.ogg'
+        include 'assets/iceandfire/sounds/mobs/dragon/fire/*.ogg'
         include 'data/iceandfire/damage_type/dragon_fire.json'
         include 'assets/iceandfire/blockstates/chared_*.json', 'assets/iceandfire/blockstates/ash.json'
         include 'assets/iceandfire/models/block/chared_*.json', 'assets/iceandfire/models/block/ash.json'
@@ -108,7 +108,7 @@ loom {
         clientGametest {
             client()
             source sourceSets.clientGametest
-            runDir 'run/0.1.24-client-gametest'
+            runDir 'run/0.1.25-client-gametest'
             vmArg '-Dfabric.client.gametest'
         }
     }

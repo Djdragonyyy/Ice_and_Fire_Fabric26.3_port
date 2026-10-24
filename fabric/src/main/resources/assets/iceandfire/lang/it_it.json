@@ -69,5 +69,8 @@
   "gui.iceandfire.female": "Femmina",
   "gui.iceandfire.untamed": "Non addomesticato",
   "item.iceandfire.fire_stew": "Stufato di fuoco",
-  "block.iceandfire.nest": "Nido di drago"
+  "block.iceandfire.nest": "Nido di drago",
+  "iceandfire.sound.subtitle.firedragon_idle": "Il drago di fuoco brontola",
+  "iceandfire.sound.subtitle.firedragon_hurt": "Il drago di fuoco si ferisce",
+  "iceandfire.sound.subtitle.firedragon_death": "Il drago di fuoco muore"
 }

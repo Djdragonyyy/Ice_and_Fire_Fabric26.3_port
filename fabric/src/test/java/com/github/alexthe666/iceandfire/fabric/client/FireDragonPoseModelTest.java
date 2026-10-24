@@ -388,6 +388,21 @@ class FireDragonPoseModelTest {
         }
     }
 
+    @Test void speechMovesOnlyJawAndReturnsWithoutAccumulation() {
+        var model = model(); var state = new FireDragonRenderer.State();
+        state.male = true; model.setupAnim(state);
+        var jaw = model.root().getAllParts().stream().filter(p -> p == model.root().getChild("BodyUpper").getChild("Neck1").getChild("Neck2").getChild("Neck3").getChild("Head").getChild("Jaw")).findFirst().orElseThrow();
+        float pitch = jaw.xRot, z = jaw.z; var idle = rotations(model);
+        state.attack = com.github.alexthe666.iceandfire.fabric.dragon.DragonCombatState.SPEAK;
+        state.attackTick = 10; model.setupAnim(state);
+        assertEquals(pitch + Math.toRadians(18), jaw.xRot, 0.00001);
+        assertEquals(z + 0.2F, jaw.z, 0.00001);
+        model.setupAnim(state); assertEquals(z + 0.2F, jaw.z, 0.00001);
+        state.attackTick = 20; model.setupAnim(state);
+        assertArrayEquals(idle, rotations(model), 0.00001F);
+        assertEquals(z, jaw.z, 0.00001);
+    }
+
     private static float[] rotations(FireDragonPoseModel model) {
         var parts = model.root().getAllParts();
         float[] result = new float[parts.size() * 3];

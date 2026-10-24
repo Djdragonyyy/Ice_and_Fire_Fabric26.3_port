@@ -67,6 +67,7 @@ public final class FireDragon extends TamableAnimal {
     private int nextMeleeAttack = DragonCombatState.BITE;
     private int lastWingImpact = -1;
     private int eatingTicks;
+    private int speakingTicks;
     boolean seekingFood;
     private DragonFoodGoal foodGoal;
     private LivingEntity previousAutonomousTarget;
@@ -97,6 +98,26 @@ public final class FireDragon extends TamableAnimal {
     public FireDragon(EntityType<? extends FireDragon> type, Level level) {
         super(type, level);
         setPersistenceRequired();
+    }
+
+    private int voiceIndex() { return stage() < 3 ? 0 : stage() == 3 ? 1 : 2; }
+    @Override public int getAmbientSoundInterval() { return 90; }
+    @Override protected net.minecraft.sounds.SoundEvent getAmbientSound() { return IafContent.FIRE_IDLE[voiceIndex()]; }
+    @Override protected net.minecraft.sounds.SoundEvent getHurtSound(net.minecraft.world.damagesource.DamageSource source) { return IafContent.FIRE_HURT[voiceIndex()]; }
+    @Override protected net.minecraft.sounds.SoundEvent getDeathSound() { return IafContent.FIRE_DEATH[voiceIndex()]; }
+    @Override public void playAmbientSound() {
+        if (!level().isClientSide() && isAlive() && !dragonSleeping()) {
+            startSpeaking();
+            super.playAmbientSound();
+        }
+    }
+    @Override protected void playHurtSound(net.minecraft.world.damagesource.DamageSource source) {
+        if (!level().isClientSide() && isAlive()) startSpeaking();
+        super.playHurtSound(source);
+    }
+    private void startSpeaking() {
+        if (!isNoAi() && !dragonSleeping() && speakingTicks == 0 && combat.animation() == DragonCombatState.NONE
+                && !combat.breathing() && eatingTicks == 0) speakingTicks = DragonCombatState.duration(DragonCombatState.SPEAK);
     }
 
     public static AttributeSupplier.Builder attributes() {
@@ -640,9 +661,12 @@ public final class FireDragon extends TamableAnimal {
         boolean eating = eatingTicks > 0 && combat.animation() == DragonCombatState.NONE && !combat.breathing();
         boolean tackle = flying() && canMoveAutonomously() && getTarget() != null
                 && flightManager.attacking() && flightManager.airAttack() == DragonFlightManager.AirAttack.TACKLE;
-        entityData.set(ATTACK, tackle ? DragonCombatState.TACKLE : eating ? DragonCombatState.EAT : combat.animation());
-        entityData.set(ATTACK_TICK, tackle ? Math.min(40, flightManager.combatTicks()) : eating ? 20 - eatingTicks : combat.animationTick());
+        if (!isAlive() || isNoAi() || dragonSleeping() || combat.animation() != DragonCombatState.NONE || combat.breathing() || eating || tackle) speakingTicks = 0;
+        boolean speaking = speakingTicks > 0;
+        entityData.set(ATTACK, tackle ? DragonCombatState.TACKLE : eating ? DragonCombatState.EAT : speaking ? DragonCombatState.SPEAK : combat.animation());
+        entityData.set(ATTACK_TICK, tackle ? Math.min(40, flightManager.combatTicks()) : eating ? 20 - eatingTicks : speaking ? 20 - speakingTicks : combat.animationTick());
         if (eatingTicks > 0) eatingTicks--;
+        if (speakingTicks > 0) speakingTicks--;
     }
 
     void eatDroppedFood(net.minecraft.world.entity.item.ItemEntity item) {
@@ -968,6 +992,7 @@ public final class FireDragon extends TamableAnimal {
         setHunger(input.getIntOr("Hunger", 50));
         setMale(input.getBooleanOr("Gender", false));
         entityData.set(AGING_DISABLED, input.getBooleanOr("AgingDisabled", false));
+        speakingTicks = 0;
         flightManager.reset();
         setAutonomousFlight(input.getBooleanOr("Flying", false) && stage() >= 2, input.getBooleanOr("Hovering", false));
         setCommand(input.getIntOr("Command", isOrderedToSit() ? 1 : 0));

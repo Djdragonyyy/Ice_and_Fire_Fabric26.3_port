@@ -167,7 +167,8 @@ public class DragonDefenseGameTests {
         h.runAfterDelay(60, () -> {
             float damage = (int) d.getAttributeValue(Attributes.ATTACK_DAMAGE);
             require(d.getTarget() == null && d.attackAnimation() == DragonCombatState.NONE
-                    && Math.abs(second.getHealth() - (200 - damage)) < 0.01, "NoAI clears target and prevents further hits");
+                    && Math.abs(second.getHealth() - (200 - damage)) < 0.01, "NoAI clears target and prevents further hits: target="
+                    + d.getTarget() + " animation=" + d.attackAnimation() + " victimHealth=" + second.getHealth());
             h.succeed();
         });
     }

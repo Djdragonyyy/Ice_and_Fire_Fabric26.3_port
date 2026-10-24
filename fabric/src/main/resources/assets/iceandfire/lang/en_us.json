@@ -69,5 +69,8 @@
   "gui.iceandfire.female": "Female",
   "gui.iceandfire.untamed": "Untamed",
   "item.iceandfire.fire_stew": "Fire Stew",
-  "block.iceandfire.nest": "Dragon Nest"
+  "block.iceandfire.nest": "Dragon Nest",
+  "iceandfire.sound.subtitle.firedragon_idle": "Fire Dragon growls",
+  "iceandfire.sound.subtitle.firedragon_hurt": "Fire Dragon hurts",
+  "iceandfire.sound.subtitle.firedragon_death": "Fire Dragon dies"
 }
