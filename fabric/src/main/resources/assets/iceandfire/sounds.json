@@ -161,5 +161,15 @@
       }
     ],
     "subtitle": "iceandfire.sound.subtitle.firedragon_death"
+  },
+  "dragonflute": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "iceandfire:items/dragon_flute",
+        "volume": 0.2
+      }
+    ],
+    "subtitle": "iceandfire.sound.subtitle.dragonflute"
   }
 }

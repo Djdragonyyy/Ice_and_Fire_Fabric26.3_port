@@ -75,8 +75,9 @@ public class DragonDefenseGameTests {
         });
         h.runAfterDelay(60, () -> {
             float damage = (int) d.getAttributeValue(Attributes.ATTACK_DAMAGE);
-            require(Math.abs(v.getHealth() - (200 - damage)) < 0.01 && d.attackAnimation() == DragonCombatState.NONE,
-                    "Sit cancels animation and further damage");
+            require(Math.abs(v.getHealth() - (200 - damage)) < 0.01
+                    && (d.attackAnimation() == DragonCombatState.NONE || d.attackAnimation() == DragonCombatState.SPEAK),
+                    "Sit cancels offensive animation and further damage; idle speech remains allowed");
             h.succeed();
         });
     }
@@ -134,6 +135,7 @@ public class DragonDefenseGameTests {
     public void wallShieldsVictimAndDeadTargetIsReleased(GameTestHelper h) {
         floor(h);
         var d = dragon(h, null, 0);
+        d.setHunger(100); // Isolate cancellation from selecting an unrelated food animal in adjacent arenas.
         var v = victim(h, d.position().add(2, 0, 0));
         for (int y = 2; y < 7; y++) for (int z = 1; z < 46; z++)
             h.setBlock(new BlockPos(13, y, z), Blocks.STONE);
@@ -143,8 +145,10 @@ public class DragonDefenseGameTests {
             require(v.getHealth() == 200, "Wall blocks autonomous bite");
             v.discard();
         });
+        h.runAfterDelay(35, d::playAmbientSound);
         h.runAfterDelay(40, () -> {
-            require(d.getTarget() == null && d.attackAnimation() == DragonCombatState.NONE, "Removed victim cancels combat");
+            require(d.getTarget() == null && d.attackAnimation() == DragonCombatState.SPEAK,
+                    "Removed victim cancels combat while explicit ambient speech remains cosmetic: target=" + d.getTarget() + " animation=" + d.attackAnimation());
             h.succeed();
         });
     }

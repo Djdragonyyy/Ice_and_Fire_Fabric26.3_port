@@ -154,7 +154,8 @@ public class DragonPreyGameTests {
             var owner = h.makeMockPlayer(GameType.SURVIVAL); d.setOwner(owner); d.setTame(true, false);
             require(owner.startRiding(d), "Owner can board the freed pilot seat during recovery");
             advance(d);
-            require(d.getControllingPassenger() == owner && d.attackAnimation() == DragonCombatState.NONE,
+            require(d.getControllingPassenger() == owner
+                            && (d.attackAnimation() == DragonCombatState.NONE || d.attackAnimation() == DragonCombatState.SPEAK),
                     "Boarding owner immediately takes priority over remaining shake recovery frames");
         } finally { config.canDragonsHealFromBiting = old; }
         h.succeed();

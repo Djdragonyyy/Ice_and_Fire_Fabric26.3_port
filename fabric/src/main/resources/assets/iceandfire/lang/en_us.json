@@ -74,5 +74,7 @@
   "iceandfire.sound.subtitle.firedragon_hurt": "Fire Dragon hurts",
   "iceandfire.sound.subtitle.firedragon_death": "Fire Dragon dies",
   "item.iceandfire.dragon_horn": "Dragon Horn",
-  "dragon.unnamed": "Unnamed"
+  "dragon.unnamed": "Unnamed",
+  "item.iceandfire.dragon_flute": "Dragon Bone Flute",
+  "iceandfire.sound.subtitle.dragonflute": "Dragon Bone Flute plays"
 }

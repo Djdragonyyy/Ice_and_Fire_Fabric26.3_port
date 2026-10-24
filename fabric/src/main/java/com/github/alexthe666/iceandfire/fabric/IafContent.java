@@ -37,12 +37,16 @@ public final class IafContent {
     public static final SoundEvent[] FIRE_IDLE = dragonSounds("idle");
     public static final SoundEvent[] FIRE_HURT = dragonSounds("hurt");
     public static final SoundEvent[] FIRE_DEATH = dragonSounds("death");
+    public static final SoundEvent DRAGON_FLUTE_SOUND = Registry.register(BuiltInRegistries.SOUND_EVENT,
+            id("dragonflute"), SoundEvent.createVariableRangeEvent(id("dragonflute")));
     public static final Item DRAGON_MEAL = registerItem("dragon_meal", properties("dragon_meal"));
     public static final Item SICKLY_DRAGON_MEAL = registerItem("sickly_dragon_meal", properties("sickly_dragon_meal"));
     public static final Item CREATIVE_DRAGON_MEAL = registerItem("creative_dragon_meal", properties("creative_dragon_meal"));
     public static final Item DRAGON_STAFF = registerItem("dragon_stick", properties("dragon_stick").stacksTo(1));
     public static final Item DRAGON_HORN = Registry.register(BuiltInRegistries.ITEM, id("dragon_horn"),
             new com.github.alexthe666.iceandfire.fabric.dragon.DragonHornItem(properties("dragon_horn")));
+    public static final Item DRAGON_FLUTE = Registry.register(BuiltInRegistries.ITEM, id("dragon_flute"),
+            new com.github.alexthe666.iceandfire.fabric.dragon.DragonFluteItem(properties("dragon_flute")));
     public static final Item FIRE_STEW = registerItem("fire_stew", properties("fire_stew"));
     public static final Item[] FIRE_EGGS = {
             registerEggItem("dragonegg_red", 0), registerEggItem("dragonegg_green", 1),
@@ -124,6 +128,7 @@ public final class IafContent {
                     output.accept(CREATIVE_DRAGON_MEAL);
                     output.accept(DRAGON_STAFF);
                     output.accept(DRAGON_HORN);
+                    output.accept(DRAGON_FLUTE);
                     output.accept(FIRE_STEW);
                 });
         CreativeModeTabEvents.modifyOutputEvent(ResourceKey.create(Registries.CREATIVE_MODE_TAB,

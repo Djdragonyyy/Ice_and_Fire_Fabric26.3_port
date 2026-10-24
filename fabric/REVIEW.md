@@ -1,6 +1,44 @@
 # Revisione del port Fabric
 
-Verificati 70 JUnit, 88 GameTest della mod (89 con baseline vanilla escluso) e 5 prove client con dodici screenshot. Nessuna prova con due veri client.
+Verificati 70 JUnit, 92 GameTest della mod (93 con baseline vanilla escluso) e 5 prove client con quattordici screenshot. Nessuna prova con due veri client.
+
+## Revisione 0.1.27 — 24 ottobre 2026
+
+Review-agent in sola lettura, senza delega, sul diff completo da095fe9348,
+inclusi item nuovo, registrazioni/configurazione, renderer/occhi, risorse,
+tutte le prove nuove/modificate e documenti. No findings nel codice nuovo.
+Confrontati ItemDragonFlute, EntityDragonBase.onHearFlute/isBlinking,
+EnumDragonTextures e ServerConfig originali, più firme native26.3.
+
+Flauto: effetto soltanto server, proprietà e livello conservati, box originale,
+ordine per distanza, cooldown60 e raggio4chunk/limiti0..10000. Zero conserva
+il box1x1 e non causa aritmetica invalida. Interruzione di volo/hover senza
+smontare il pilota o azzerare caduta; NoAI e comandi non vengono riscritti.
+Query usa soltanto entità caricate. Tre asset (modello/texture/OGG) byte-identici
+nel JAR e definizione del suono originale conservata. Ricette nelle fasi successive.
+
+Blink6tick su50, skin chiusa originale e soppressione emissiva; nessuna mutazione
+dello stato Sleeping, della posa del corpo, del salvataggio o della rete.
+Preview di test salva/ripristina tickCount nella stessa estrazione grafica;
+angolo/zoom regolati soltanto nella fixture per mostrare gli occhi laterali.
+
+Prima suite: la vecchia prova di rimozione target richiedeva sempre NONE,
+ignorando nuova SPEAK e possibili nuove cacce nelle arene vicine. Corrette
+fixture/assertions, senza cambiare la logica del combattimento: sazio, verso
+esplicito al35 e al40 deve essere target nullo con SPEAK, dopo danno nullo
+dietro muro. Altri finali ammettono solo NONE/SPEAK, mantengono danni/controllo.
+NoAI e sonno mantengono le asserzioni strette. Nessun attacco offensivo ammesso
+come sostituto della cancellazione.
+
+Suite completa finale:70JUnit,92GameTest mod (93totali),5prove client, tutti
+passati. Poi solo fixture client modificata in zoom/angolo: tutte le cinque
+prove client ripetute e passate,14PNG finali rigenerati. I precedenti14PNG
+frontali archiviati fuori repo e non consegnati. Confronto angolato ispezionato:
+occhio luminoso aperto e palpebra chiusa visibili, stessa posa sveglia.
+Nel test del corno ora si vede anche il flauto, e native useItem conferma volo
+interrotto/cooldown ricevuti dal client. Report server completo93 conservato;
+log consegnato concatena esecuzioni pertinenti, nessun filtro nella suite finale.
+Tappa1 aperta; due veri client e altre lacune cumulative ancora da completare.
 
 ## Revisione 0.1.26 — 24 ottobre 2026
 

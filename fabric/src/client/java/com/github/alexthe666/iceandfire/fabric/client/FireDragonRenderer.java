@@ -36,6 +36,7 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
         float shoulderProgress;
         float sleepProgress;
         boolean sleeping;
+        boolean blinking;
         boolean firstPersonPilot;
         int armor;
         float bannerDragonScale;
@@ -71,6 +72,7 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
         state.breathProgress = dragon.prevBreathProgress + (dragon.breathProgress - dragon.prevBreathProgress) * partialTick;
         state.shoulderProgress = dragon.prevShoulderProgress + (dragon.shoulderProgress - dragon.prevShoulderProgress) * partialTick;
         state.sleeping = dragon.dragonSleeping();
+        state.blinking = dragon.isBlinking();
         state.sleepProgress = dragon.prevSleepProgress + (dragon.sleepProgress - dragon.prevSleepProgress) * partialTick;
         var player = dragon.shoulderCarrier();
         if (player != null) {
@@ -106,7 +108,7 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
     }
 
     @Override public Identifier getTextureLocation(State state) {
-        return texture(state, state.sleeping ? "_sleeping" : "");
+        return texture(state, state.sleeping || state.blinking ? "_sleeping" : "");
     }
     static Identifier texture(State state, String suffix) {
         return Identifier.fromNamespaceAndPath("iceandfire", "textures/models/firedragon/" + COLORS[state.variant] + "_" + state.stage + suffix + ".png");

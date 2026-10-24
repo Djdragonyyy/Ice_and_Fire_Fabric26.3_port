@@ -1,10 +1,12 @@
 # Ice and Fire: port Fabric 26.3 in sviluppo
 
-Verificati 70 JUnit, 88 GameTest della mod (89 con baseline vanilla escluso) e 5 prove client con dodici screenshot. Nessuna prova con due veri client.
+Verificati 70 JUnit, 92 GameTest della mod (93 con baseline vanilla escluso) e 5 prove client con quattordici screenshot. Nessuna prova con due veri client.
 
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
-Versione corrente: **0.1.26-stage1-dev**. Corno del drago, salvataggio nativo e rilascio, icone vuoto/fuoco originali e tooltip. [TEST-0.1.26.md](TEST-0.1.26.md). Tappa1 incompleta.
+Versione corrente: **0.1.27-stage1-dev**. Flauto originale con configurazione e palpebre con texture originali. [TEST-0.1.27.md](TEST-0.1.27.md). Tappa1 incompleta.
+
+Versione precedente: **0.1.26-stage1-dev**. Corno del drago, salvataggio nativo e rilascio, icone vuoto/fuoco originali e tooltip. [TEST-0.1.26.md](TEST-0.1.26.md). Tappa1 incompleta.
 
 Versione precedente: **0.1.25-stage1-dev**. Voci originali ambientali/ferita/morte per età e animazione della mandibola SPEAK. [TEST-0.1.25.md](TEST-0.1.25.md). Tappa1 incompleta.
 

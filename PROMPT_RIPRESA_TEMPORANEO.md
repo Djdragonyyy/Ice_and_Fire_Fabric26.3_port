@@ -14,13 +14,13 @@ o lavorazioni duplicate. Non consumare quota artificialmente e non dichiarare
 completate fasi con funzioni mancanti. Al risveglio controllo quota93%; reset
 indicato dall'app24ottobre12:38:03UTC (14:38Roma). Verificare stato attuale.
 
-Aggiornato il 24 ottobre 2026, checkpoint 0.1.26, nuova autorizzazione utente a proseguire nelle fasi.
+Aggiornato il 24 ottobre 2026, checkpoint 0.1.27, nuova autorizzazione utente a proseguire nelle fasi.
 Conservare fabric/HANDOFF.md: contiene lo storico e i vincoli permanenti.
 
 ---
 
 Continua il porting di Ice and Fire. Comunica in italiano. Leggi integralmente
-fabric/HANDOFF.md, fabric/README.md, fabric/REVIEW.md, fabric/TEST-0.1.26.md e gli
+fabric/HANDOFF.md, fabric/README.md, fabric/REVIEW.md, fabric/TEST-0.1.27.md e gli
 AGENTS.md applicabili. Non ricominciare da zero o sovrascrivere modifiche locali.
 
 Repository personale:
@@ -28,6 +28,8 @@ https://github.com/Djdragonyyy/Ice_and_Fire_Fabric26.3_port.git
 Ramo esclusivo: port/fabric-26.3. Controlla stato, remote e git log prima di
 modificare; git switch e git pull --ff-only origin port/fabric-26.3, preservando
 il lavoro locale. Verifica l'esistenza del commit base 417f5a8d2. Niente reset.
+
+Checkpoint0.1.27: flauto (due mani/cooldown60/config4chunk/range0..10000/suono originale), stop volo dei draghi propri senza smontare/azzerare caduta. Blink6/50 con skin chiusa/glow disabilitato e posa sveglia. 70JUnit,92GameTest mod,5client/14screenshot, suite completa e poi client ripetuti solo per angolo della preview, tutti passati. Prove di cancellazione distinguono SPEAK cosmetico da attacchi; target/danni/NoAI restano verificati. Prossimi: cristallo, ruggiti/altri suoni, acqua/lava e lacune cumulative. Nessuna sospensione.
 
 Checkpoint0.1.26: corno del drago, salvataggio nativo in oggetto e rilascio con inventario/UUID, icone/tooltip originali. Guardie proprietà/passeggeri/permessi/ostacoli/chunk/UUID caricato. Corretto ramo creativo usando vero stack, test native 5 nuovi. 70JUnit,88GameTest mod,5test client/12screenshot, suite completa. Mock owner non registrato: verifica UUID; client connesso verifica isOwnedBy. Prossimi: flauto/cristallo, palpebre/ruggiti, acqua/lava e lacune cumulative. Nessuna sospensione, tappa1 aperta.
 

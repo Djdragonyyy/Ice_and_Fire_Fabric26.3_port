@@ -50,7 +50,43 @@ public class DragonSleepClientTest implements FabricClientGameTest {
                     && d.attackAnimation() == com.github.alexthe666.iceandfire.fabric.dragon.DragonCombatState.SPEAK
                     && d.attackAnimationTick() >= 5 && d.attackAnimationTick() <= 12);
             context.takeScreenshot("dragon-speaking-jaw-0.1.25");
+            world.getServer().runOnServer(server -> ((FireDragon) player.level().getEntity(id)).setNoAi(true));
+            context.waitFor(client -> client.level.getEntity(id) instanceof FireDragon d && d.attackAnimation() == 0);
+            FireDragon[] preview = new FireDragon[1];
+            context.runOnClient(client -> {
+                var d = (FireDragon) client.level.getEntity(id); preview[0] = d;
+                var renderer = (FireDragonRenderer) client.getEntityRenderDispatcher().getRenderer(d);
+                int originalTick = d.tickCount;
+                try {
+                    for (int tick : new int[]{43, 44}) {
+                        d.tickCount = tick;
+                        var state = renderer.createRenderState(); renderer.extractRenderState(d, state, 1);
+                        if (state.blinking != (tick == 44) || state.sleeping || state.sleepProgress != 0)
+                            throw new AssertionError("Blink changes eye state without sleeping AI or body pose");
+                        if (renderer.getTextureLocation(state).getPath().endsWith("_sleeping.png") != (tick == 44))
+                            throw new AssertionError("Blink uses original closed-eye skin");
+                    }
+                } finally { d.tickCount = originalTick; }
+            });
+            for (int tick : new int[]{43, 44}) {
+                context.setScreen(() -> new BlinkPreview(preview[0], tick)); context.waitTicks(3);
+                context.takeScreenshot(tick == 43 ? "dragon-open-eyes-0.1.27" : "dragon-blink-0.1.27");
+            }
             context.setScreen(() -> null);
+        }
+    }
+    private static final class BlinkPreview extends net.minecraft.client.gui.screens.Screen {
+        private final FireDragon dragon; private final int tick;
+        BlinkPreview(FireDragon dragon, int tick) { super(net.minecraft.network.chat.Component.literal("Dragon blink regression")); this.dragon = dragon; this.tick = tick; }
+        @Override public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+            graphics.fill(0, 0, width, height, 0xff303030);
+            graphics.text(font, tick == 43 ? "Open eyes" : "Blink", 20, 10, 0xffffffff);
+            int originalTick = dragon.tickCount;
+            try {
+                dragon.tickCount = tick;
+                net.minecraft.client.gui.screens.inventory.InventoryScreen.extractEntityInInventoryFollowsMouse(graphics,
+                        50, 30, width - 50, height - 20, 70, 0.0625F, 0, height / 2F, dragon);
+            } finally { dragon.tickCount = originalTick; }
         }
     }
 }

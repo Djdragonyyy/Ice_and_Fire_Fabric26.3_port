@@ -74,5 +74,7 @@
   "iceandfire.sound.subtitle.firedragon_hurt": "Il drago di fuoco si ferisce",
   "iceandfire.sound.subtitle.firedragon_death": "Il drago di fuoco muore",
   "item.iceandfire.dragon_horn": "Corno del drago",
-  "dragon.unnamed": "Senza nome"
+  "dragon.unnamed": "Senza nome",
+  "item.iceandfire.dragon_flute": "Flauto del drago",
+  "iceandfire.sound.subtitle.dragonflute": "Il flauto del drago suona"
 }

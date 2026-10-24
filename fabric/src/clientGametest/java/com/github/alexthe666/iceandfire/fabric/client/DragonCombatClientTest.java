@@ -97,7 +97,8 @@ public class DragonCombatClientTest implements FabricClientGameTest {
             world.getServer().runOnServer(server -> ((FireDragon) player.level().getEntity(id)).setCommand(1));
             context.waitTicks(25);
             context.runOnClient(client -> {
-                if (!(client.level.getEntity(id) instanceof FireDragon d) || d.attackAnimation() != DragonCombatState.NONE)
+                if (!(client.level.getEntity(id) instanceof FireDragon d)
+                        || d.attackAnimation() != DragonCombatState.NONE && d.attackAnimation() != DragonCombatState.SPEAK)
                     throw new AssertionError("Attack state must clear when ordered to sit");
                 if (client.level.getEntity(capturedPrey[0]) instanceof net.minecraft.world.entity.Mob prey) {
                     var state = client.getEntityRenderDispatcher().getRenderer(prey).createRenderState(prey, 1);

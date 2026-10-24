@@ -14,7 +14,27 @@ o lavorazioni duplicate. Non consumare quota artificialmente e non dichiarare
 completate fasi con funzioni mancanti. Al risveglio controllo quota93%; reset
 indicato dall'app24ottobre12:38:03UTC (14:38Roma). Verificare stato attuale.
 
-Verificati 70 JUnit, 88 GameTest della mod (89 con baseline vanilla escluso) e 5 prove client con dodici screenshot. Nessuna prova con due veri client.
+Verificati 70 JUnit, 92 GameTest della mod (93 con baseline vanilla escluso) e 5 prove client con quattordici screenshot. Nessuna prova con due veri client.
+
+## Checkpoint 0.1.27 — flauto e palpebre
+
+Flauto originale dragon_flute, due mani, cooldown60tick, suono e texture/modello
+originali. Effetti server su draghi propri caricati nel livello; box originale
+con16*dragonFluteDistance suX/Z e256 suY. Configdefault4,0..10000, vecchi JSON
+compatibili. Interrompe Flying/Hovering mantenendo comando/target/pilota e regole
+di caduta; riattivazione successiva segue controlli/IA originali del port.
+
+Blink originale tickCount%50>43: closed skin sleeping e occhi emissivi spenti,
+posa/IA del sonno invariate. Nessun dato salvato o payload aggiunto. Nuove prove
+server per zona/proprietà/cooldown/pilota/caduta/ciclo; client esteso con native
+useItem/cooldown/volo, icona/audio e preview deterministiche aperto/chiuso.
+
+Una precedente prova di fine combattimento richiedeva sempre NONE dopo rimozione
+del target: ora la nuova voce SPEAK è legittima. Fixture sazia contro nuove
+cacce adiacenti e voce esplicita al35: al40 target nullo/SPEAK, danno dietro il
+muro ancora nullo. Altri controlli di fine attacco/pasto ammettono solo NONE o
+SPEAK; NoAI mantiene NONE rigoroso. Logica di combattimento non modificata.
+Tappa1 incompleta e nessuna sospensione. Suite completa finale passata:70JUnit,92GameTest mod,5prove client/14screenshot.
 
 ## Checkpoint 0.1.26 — corno del drago
 
@@ -57,7 +77,7 @@ mondo e dalla taglia. Nessuna barriera al pilota o modifica della velocità.
 Vecchi JSON compatibili. Nuovo GameTest salva/ricarica casa e verifica raggio,
 confine e due limiti di quota; estesa validazione JUnit. Tappa1 ancora aperta.
 
-Aggiornato per 0.1.26-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
+Aggiornato per 0.1.27-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
 Questo riepilogo distingue ciò che è nel codice da ciò che manca: build e test
 non sostituiscono il riscontro in gioco, soprattutto per grafica e multiplayer.
 L'utente ha confermato la 0.1.13 funzionante il 24 ottobre e chiesto di continuare.
@@ -270,6 +290,11 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
     Proprietà, permessi, ostacoli, corpo completo e UUID caricati controllati;
     cattura di veicoli occupati/spalle vietata. Disponibile creativo/comando.
 
+23. Flauto originale: due mani, cooldown60, zona/configurazione originale,
+    interruzione volo dei draghi propri e suono originale; nessun cambio di pilota
+    o immunità in aria. Palpebre6tick su50 con skin originale chiusa e stop del
+    glow, conservando posa del corpo e IA sveglia.
+
 ## Da completare nella tappa 1
 
 - Combattimento autonomo: ulteriori dettagli di presa e
@@ -280,7 +305,7 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 - Comportamento completo in acqua/lava e navigazione aerea più robusta fra
   edifici, alberi e grotte. Il manager attuale verifica spazio e visibilità,
   ma non aggira qualsiasi ostacolo complesso.
-- Passeggeri nell'anteprima GUI; palpebre, differenze visive complete maschio/femmina,
+- Passeggeri nell'anteprima GUI; differenze visive complete maschio/femmina,
   animazioni secondarie/attacchi, ruggiti/altri suoni e particelle ancora mancanti.
 - Configurazioni originali non ancora esposte; integrazione DragonForge ed
   esplosioni opzionali del combattimento.
@@ -293,4 +318,4 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 Restano fuori da questa consegna draghi di ghiaccio/fulmine, altre creature,
 progressione completa, ricette, strutture e generazione naturale: appartengono
 alle tappe successive. Non iniziarle prima del completamento e del riscontro
-sulla tappa 1. La 0.1.13 è confermata; collaudare le novità successive, ora fino alla0.1.26.
+sulla tappa 1. La 0.1.13 è confermata; collaudare le novità successive, ora fino alla0.1.27.

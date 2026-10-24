@@ -187,6 +187,13 @@ public final class FireDragon extends TamableAnimal {
     public int variant() { return entityData.get(VARIANT); }
     public void setVariant(int value) { entityData.set(VARIANT, Math.clamp(value, 0, 3)); }
     public boolean male() { return entityData.get(MALE); }
+    public boolean isBlinking() { return tickCount % 50 > 43; }
+    public void onHearFlute(Player player) {
+        if (!level().isClientSide() && isAlive() && isTame() && isOwnedBy(player) && (flying() || hovering())) {
+            setAutonomousFlight(false, false);
+            flightManager.reset();
+        }
+    }
     public void setMale(boolean value) { entityData.set(MALE, value); }
     public int hunger() { return entityData.get(HUNGER); }
     public boolean agingDisabled() { return entityData.get(AGING_DISABLED); }

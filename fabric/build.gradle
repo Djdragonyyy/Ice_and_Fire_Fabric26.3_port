@@ -31,7 +31,7 @@ loom {
         gametest {
             server()
             source sourceSets.gametest
-            runDir 'run/0.1.26-gametest'
+            runDir 'run/0.1.27-gametest'
             vmArg '-Dfabric-api.gametest'
             vmArg "-Dfabric-api.gametest.report-file=${file('build/gametest-results.xml').absolutePath}"
         }
@@ -80,6 +80,8 @@ processResources {
         include 'assets/iceandfire/textures/item/dragon_stick.png'
         include 'assets/iceandfire/textures/item/dragon_horn.png', 'assets/iceandfire/textures/item/dragon_horn_fire.png'
         include 'assets/iceandfire/models/item/dragon_horn.json', 'assets/iceandfire/models/item/dragon_horn_fire.json'
+        include 'assets/iceandfire/models/item/dragon_flute.json', 'assets/iceandfire/textures/item/dragon_flute.png'
+        include 'assets/iceandfire/sounds/items/dragon_flute.ogg'
         include 'assets/iceandfire/models/item/sickly_dragon_meal.json', 'assets/iceandfire/models/item/creative_dragon_meal.json'
         include 'assets/iceandfire/models/item/dragon_stick.json'
         include 'assets/iceandfire/models/item/fire_stew.json', 'assets/iceandfire/textures/item/fire_stew.png'
@@ -110,7 +112,7 @@ loom {
         clientGametest {
             client()
             source sourceSets.clientGametest
-            runDir 'run/0.1.26-client-gametest'
+            runDir 'run/0.1.27-client-gametest'
             vmArg '-Dfabric.client.gametest'
         }
     }

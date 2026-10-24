@@ -36,9 +36,12 @@ public class DragonHornClientTest implements FabricClientGameTest {
                     throw new AssertionError("Native player interaction must reach the horn after dragon mob interaction");
             });
             context.waitFor(client -> DragonHornItem.filled(client.player.getMainHandItem()) && client.level.getEntity(id) == null);
-            ItemStack[] icons = new ItemStack[2];
+            ItemStack[] icons = new ItemStack[3];
             context.runOnClient(client -> {
                 icons[0] = new ItemStack(IafContent.DRAGON_HORN); icons[1] = client.player.getMainHandItem().copy();
+                icons[2] = new ItemStack(IafContent.DRAGON_FLUTE);
+                if (client.getSoundManager().getSoundEvent(IafContent.DRAGON_FLUTE_SOUND.location()) == null)
+                    throw new AssertionError("Original flute sound resolves in the real client");
                 for (var stack : icons) {
                     var state = new ItemStackRenderState();
                     client.getItemModelResolver().updateForTopItem(state, stack, ItemDisplayContext.GUI, client.level, client.player, 0);
@@ -56,6 +59,23 @@ public class DragonHornClientTest implements FabricClientGameTest {
                         player.getBoundingBox().inflate(10)).stream().filter(d -> d.isOwnedBy(player)).findFirst().orElseThrow().getId();
             });
             context.waitFor(client -> !DragonHornItem.filled(client.player.getMainHandItem()) && client.level.getEntity(released) != null);
+            world.getServer().runOnServer(server -> {
+                var d = (com.github.alexthe666.iceandfire.fabric.dragon.FireDragon) player.level().getEntity(released);
+                for (int i = 0; i < 25; i++) d.growOneDay();
+                var output = net.minecraft.world.level.storage.TagValueOutput.createWithContext(net.minecraft.util.ProblemReporter.DISCARDING, player.level().registryAccess());
+                d.saveWithoutId(output); output.putBoolean("Flying", true);
+                d.load(net.minecraft.world.level.storage.TagValueInput.create(net.minecraft.util.ProblemReporter.DISCARDING, player.level().registryAccess(), output.buildResult()));
+                d.setPos(player.position().add(5, 15, 3));
+                player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(IafContent.DRAGON_FLUTE));
+            });
+            context.waitFor(client -> client.level.getEntity(released) instanceof com.github.alexthe666.iceandfire.fabric.dragon.FireDragon d
+                    && d.flying() && client.player.getMainHandItem().is(IafContent.DRAGON_FLUTE));
+            world.getServer().runOnServer(server -> {
+                if (!player.gameMode.useItem(player, player.level(), player.getMainHandItem(), InteractionHand.MAIN_HAND).consumesAction())
+                    throw new AssertionError("Native useItem activates the flute");
+            });
+            context.waitFor(client -> client.level.getEntity(released) instanceof com.github.alexthe666.iceandfire.fabric.dragon.FireDragon d
+                    && !d.flying() && client.player.getCooldowns().isOnCooldown(client.player.getMainHandItem()));
         }
     }
     private static final class HornIcons extends Screen {
@@ -65,6 +85,7 @@ public class DragonHornClientTest implements FabricClientGameTest {
             graphics.fill(0, 0, width, height, 0xff303030);
             graphics.text(font, "Empty", 100, 60, 0xffffffff); graphics.text(font, "Fire dragon", 190, 60, 0xffffffff);
             graphics.item(icons[0], 100, 90); graphics.item(icons[1], 190, 90);
+            graphics.text(font, "Flute", 280, 60, 0xffffffff); graphics.item(icons[2], 280, 90);
         }
     }
 }
