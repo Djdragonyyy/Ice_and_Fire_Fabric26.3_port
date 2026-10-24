@@ -1,5 +1,32 @@
 # Revisione del port Fabric
 
+## Revisione 0.1.18 — 24 ottobre 2026
+
+Skill locale review-agent applicata read-only senza delega al diff completo
+da824e05454, inclusi nuovi file client/server/test, configurazione, documenti e
+versione. No findings. Confrontati IafDragonLogic/EntityDragonBase per sonno,
+LayerDragonEyes per HeadFront ed EntityDragonEgg.hurt per recupero uova.
+Controllati consenso targeting separato dal movimento, risveglio prima dei goal,
+protezione proprietario, persistenza, supporto, ordine occhi/armature e doppio drop.
+
+60 JUnit,60 GameTest della mod (61 col baseline vanilla escluso) passati.3 test
+client con mondi temporanei e screenshot ispezionati: armature, coda/ali/statistiche,
+Sleeping salvato NoAI e risveglio. Le ultime modifiche server alle uova sono state
+verificate successivamente con build/runGametest, senza ulteriori modifiche client.
+Due nuovi JUnit,7 GameTest sonno e2 GameTest uova rispetto alla0.1.17.
+
+Il test difesa proprietario era inizialmente scaduto al default20tick prima della
+sua asserzione al45; timeout corretto a80, asserzioni mantenute e prova passata.
+NoAI congela automazione del sonno, che parte solo in libero; non dichiarare
+parità di ogni dettaglio originale. Prova client NoAI è grafica, il ciclo notturno
+è verificato nei GameTest server. Nessun collaudo con due veri client, shader
+esterni o misure prestazionali del doppio modello degli occhi.
+
+Port completo e tappa1 ancora incompleti. Restano riproduzione, shake prey/caccia,
+stendardo e altre lacune nello stato cumulativo. Consegnare il checkpoint e
+sospendere il PC, come richiesto; riprendere quando PC/quota saranno disponibili.
+
+
 ## Revisione 0.1.17 — 24 ottobre 2026
 
 Review-agent locale in sola lettura senza delega al diff completo daed4537539,

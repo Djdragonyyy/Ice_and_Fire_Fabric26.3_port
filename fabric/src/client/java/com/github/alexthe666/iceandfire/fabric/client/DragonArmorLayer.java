@@ -22,7 +22,7 @@ final class DragonArmorLayer extends RenderLayer<FireDragonRenderer.State, Entit
             int armor = (state.armor >> (slot * 4)) & 15;
             if (armor < 1 || armor > 8) continue;
             // Separate ordered passes must follow the skin; texture batching at order zero can cover armor again.
-            collector.order(slot + 1).submitModel(model, state, stack,
+            collector.order(slot + 2).submitModel(model, state, stack,
                     net.minecraft.resources.Identifier.fromNamespaceAndPath("iceandfire", "textures/models/firedragon/armor_" + PARTS[slot] + "_" + armor + ".png"),
                     light, OverlayTexture.NO_OVERLAY, state.outlineColor);
         }

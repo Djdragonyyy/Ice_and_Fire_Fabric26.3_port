@@ -2,7 +2,12 @@
 
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
-Versione corrente: **0.1.17-stage1-dev**. Combattimento aereo autonomo con tuffo,
+Versione corrente: **0.1.18-stage1-dev**. Sonno notturno, risvegli difensivi,
+posa/texture sleeping, occhi emissivi originali e recupero delle uova danneggiate.
+[TEST-0.1.18.md](TEST-0.1.18.md).60 JUnit,60 GameTest mod e3 prove client passati.
+Tappa1 ancora incompleta, stato cumulativo aggiornato e port completo non concluso.
+
+Versione precedente: **0.1.17-stage1-dev**. Combattimento aereo autonomo con tuffo,
 hover blast e scorch stream; decollo verso bersagli elevati e reset aria/terra.
 Nuova prova client delle pose coda/ali e anteprima ritagliata. Istruzioni:
 [TEST-0.1.17.md](TEST-0.1.17.md). Tappa1 incompleta.

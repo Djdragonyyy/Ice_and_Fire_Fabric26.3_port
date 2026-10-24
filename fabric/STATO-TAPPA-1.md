@@ -1,10 +1,22 @@
 # Stato della tappa 1 — drago di fuoco, Fabric 26.3
 
-Aggiornato per 0.1.17-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
+Aggiornato per 0.1.18-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
 Questo riepilogo distingue ciò che è nel codice da ciò che manca: build e test
 non sostituiscono il riscontro in gioco, soprattutto per grafica e multiplayer.
 L'utente ha confermato la 0.1.13 funzionante il 24 ottobre e chiesto di continuare.
 La prova0.1.14 ha rilevato alberi e dismount: correzioni0.1.15 da collaudare. Nessun passaggio alla tappa 2.
+
+## Novità 0.1.18
+
+Sonno notturno sincronizzato/salvato, nido prima del riposo, risveglio per difesa
+propria/del proprietario e comandi, alba/supporto/acqua. Posa/texture originali,
+occhi emissivi HeadFront prima delle armature, asset invariati. Uova recuperate
+al colpo con variante/drop singolo, fuoco ignorato e bypass senza drop.
+60 JUnit,60 GameTest mod più baseline escluso e3 prove client (sonno/risveglio).
+
+Sessione prossima al limite di quota: salvare e sospendere dopo consegna. Port
+completo ancora aperto; riprendere quando PC/quota disponibili. Nessuna fase
+successiva dichiarata completa.
 
 ## Novità 0.1.17
 
@@ -144,13 +156,12 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 - Combattimento autonomo: caccia/selezione non difensiva, shake prey e
   parità delle configurazioni/temporizzazioni originali, reazioni e
   coordinamento con movimento e volo.
-- Altre interazioni originali
-  e gestione completa dell'uovo danneggiato.
-- Sonno completo e animazioni, riproduzione e ciclo collegato.
+- Altre interazioni originali e dettagli del ciclo delle uova.
+- Riproduzione e ciclo collegato, ulteriori dettagli/parità del sonno originale.
 - Comportamento completo in acqua/lava e navigazione aerea più robusta fra
   edifici, alberi e grotte. Il manager attuale verifica spazio e visibilità,
   ma non aggira qualsiasi ostacolo complesso.
-- Layer dello stendardo; occhi, differenze visive complete maschio/femmina,
+- Layer dello stendardo; palpebre, differenze visive complete maschio/femmina,
   animazioni secondarie/attacchi, suoni e particelle ancora mancanti.
 - Configurazioni originali non ancora esposte; integrazione DragonForge ed
   esplosioni opzionali del combattimento.
@@ -163,4 +174,4 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 Restano fuori da questa consegna draghi di ghiaccio/fulmine, altre creature,
 progressione completa, ricette, strutture e generazione naturale: appartengono
 alle tappe successive. Non iniziarle prima del completamento e del riscontro
-sulla tappa 1. La 0.1.13 è confermata; collaudare le novità0.1.17 mentre prosegue il port.
+sulla tappa 1. La 0.1.13 è confermata; collaudare le novità0.1.18 alla ripresa del port.

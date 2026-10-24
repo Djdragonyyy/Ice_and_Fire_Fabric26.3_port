@@ -20,6 +20,36 @@ import net.minecraft.world.level.storage.TagValueOutput;
 public class DragonInventoryTerrainGameTests {
     private static void require(boolean condition, String message) { if (!condition) throw new AssertionError(message); }
 
+    @GameTest(structure = "iceandfire:flight_arena", padding = 12)
+    public void damagedEggReturnsExactlyOneItemOfItsVariant(GameTestHelper helper) {
+        for (int variant = 0; variant < 4; variant++) {
+            var egg = IafContent.DRAGON_EGG.create(helper.getLevel(), EntitySpawnReason.TRIGGERED);
+            egg.setVariant(variant);
+            egg.setPos(helper.absoluteVec(new net.minecraft.world.phys.Vec3(5.5 + variant * 8, 2, 24.5)));
+            helper.getLevel().addFreshEntity(egg);
+            var area = egg.getBoundingBox().inflate(2);
+            require(egg.hurtServer(helper.getLevel(), egg.damageSources().generic(), 1) && egg.isRemoved(), "One ordinary hit collects egg");
+            require(!egg.hurtServer(helper.getLevel(), egg.damageSources().generic(), 1), "Removed egg cannot drop twice");
+            var drops = helper.getLevel().getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, area);
+            require(drops.size() == 1 && drops.getFirst().getItem().is(IafContent.FIRE_EGGS[variant])
+                    && drops.getFirst().getItem().getCount() == 1, "Exactly one correctly colored egg item");
+        }
+        helper.succeed();
+    }
+
+    @GameTest
+    public void eggIgnoresFireAndBypassRemovalDoesNotDrop(GameTestHelper helper) {
+        var egg = IafContent.DRAGON_EGG.create(helper.getLevel(), EntitySpawnReason.TRIGGERED);
+        egg.setPos(helper.absoluteVec(new net.minecraft.world.phys.Vec3(3.5, 2, 3.5)));
+        helper.getLevel().addFreshEntity(egg);
+        require(!egg.hurtServer(helper.getLevel(), egg.damageSources().inFire(), 5)
+                && !egg.hurtServer(helper.getLevel(), egg.damageSources().lava(), 5) && egg.isAlive(), "Incubating fire eggs survive fire and lava");
+        var area = egg.getBoundingBox().inflate(2);
+        require(egg.hurtServer(helper.getLevel(), egg.damageSources().genericKill(), 100) && egg.isRemoved(), "Bypass damage removes egg");
+        require(helper.getLevel().getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, area).isEmpty(), "Bypass removal does not create egg item");
+        helper.succeed();
+    }
+
     @GameTest
     public void threeOwnedBabiesCanBeCarriedAndReleased(GameTestHelper helper) {
         var player = helper.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);

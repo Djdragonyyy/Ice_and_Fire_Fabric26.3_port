@@ -9,6 +9,41 @@ import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FireDragonPoseModelTest {
+    @Test void sleepPoseMatchesOriginalAndEyeModelKeepsOnlyHeadFront() throws IOException {
+        var model = model();
+        var state = new FireDragonRenderer.State();
+        state.sleepProgress = 20;
+        state.sleeping = true;
+        model.setupAnim(state);
+        Path file = Path.of(System.getProperty("iceandfire.legacyResources"), "assets/iceandfire/models/tabula/firedragon/firedragon_sleeping.tbl");
+        try (var input = Files.newInputStream(file)) {
+            var original = TabulaLoader.parse(input);
+            for (String name : new String[]{"BodyUpper", "Neck1", "Head"}) {
+                var actual = find(model.root(), name);
+                var expected = original.parts().get(name);
+                assertEquals(Math.sin(expected.xRot), Math.sin(actual.xRot), 0.00001);
+                assertEquals(Math.cos(expected.xRot), Math.cos(actual.xRot), 0.00001);
+                assertEquals(expected.y, actual.y, 0.00001);
+            }
+        }
+        var asleep = rotations(model);
+        model.setupAnim(state);
+        assertArrayEquals(asleep, rotations(model), 0.00001F);
+        model.keepOnlyEyeCubes();
+        assertFalse(find(model.root(), "HeadFront").skipDraw);
+        for (String name : new String[]{"BodyUpper", "Head", "Jaw", "Neck1"}) assertTrue(find(model.root(), name).skipDraw);
+    }
+
+    @Test void everyVariantAndStageHasOriginalSleepAndEyeTextures() throws IOException {
+        for (int variant = 0; variant < 4; variant++) for (int stage = 1; stage <= 5; stage++) {
+            var state = new FireDragonRenderer.State(); state.variant = variant; state.stage = stage;
+            for (String suffix : new String[]{"_sleeping", "_eyes"}) {
+                var texture = FireDragonRenderer.texture(state, suffix);
+                Path file = Path.of(System.getProperty("iceandfire.legacyResources"), "assets/iceandfire", texture.getPath());
+                assertTrue(Files.size(file) > 100, "Original texture must exist: " + texture);
+            }
+        }
+    }
     @Test void tailWingAndEatingPosesResetWithoutAccumulation() {
         var model = model();
         for (int attack : new int[]{3, 4, 5, 6}) {

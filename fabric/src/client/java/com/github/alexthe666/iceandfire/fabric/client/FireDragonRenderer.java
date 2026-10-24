@@ -34,12 +34,15 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
         float attackTick;
         float breathProgress;
         float shoulderProgress;
+        float sleepProgress;
+        boolean sleeping;
         boolean firstPersonPilot;
         int armor;
     }
 
     public FireDragonRenderer(EntityRendererProvider.Context context) {
         super(context, new FireDragonPoseModel(context.getResourceManager()), 1F);
+        addLayer(new DragonEyesLayer(this, new FireDragonPoseModel(context.getResourceManager(), true)));
         addLayer(new DragonArmorLayer(this));
     }
 
@@ -62,6 +65,8 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
         state.attackTick = dragon.attackAnimationTick() + partialTick;
         state.breathProgress = dragon.prevBreathProgress + (dragon.breathProgress - dragon.prevBreathProgress) * partialTick;
         state.shoulderProgress = dragon.prevShoulderProgress + (dragon.shoulderProgress - dragon.prevShoulderProgress) * partialTick;
+        state.sleeping = dragon.dragonSleeping();
+        state.sleepProgress = dragon.prevSleepProgress + (dragon.sleepProgress - dragon.prevSleepProgress) * partialTick;
         var player = dragon.shoulderCarrier();
         if (player != null) {
             float yaw = net.minecraft.util.Mth.rotLerp(partialTick, player.yBodyRotO, player.yBodyRot);
@@ -94,7 +99,10 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
     }
 
     @Override public Identifier getTextureLocation(State state) {
-        return IafContent.id("textures/models/firedragon/" + COLORS[state.variant] + "_" + state.stage + ".png");
+        return texture(state, state.sleeping ? "_sleeping" : "");
+    }
+    static Identifier texture(State state, String suffix) {
+        return Identifier.fromNamespaceAndPath("iceandfire", "textures/models/firedragon/" + COLORS[state.variant] + "_" + state.stage + suffix + ".png");
     }
 
     @Override protected void scale(State state, PoseStack stack) {

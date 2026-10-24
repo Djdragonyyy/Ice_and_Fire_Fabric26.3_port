@@ -44,7 +44,7 @@ class DragonArmorLayerTest {
             var state = new FireDragonRenderer.State();
             state.armor = material | material << 4 | material << 8 | material << 12;
             DragonArmorLayer.submitLayers(null, state, new PoseStack(), collector, 0);
-            assertEquals(List.of(1, 2, 3, 4), orders);
+            assertEquals(List.of(2, 3, 4, 5), orders);
             assertEquals(List.of("head", "neck", "body", "tail").stream()
                     .map(part -> "textures/models/firedragon/armor_" + part + "_" + materialOrdinal(state) + ".png").toList(), textures);
         }

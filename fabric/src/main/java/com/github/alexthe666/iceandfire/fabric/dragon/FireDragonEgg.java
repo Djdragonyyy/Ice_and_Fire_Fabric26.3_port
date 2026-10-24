@@ -36,6 +36,14 @@ public final class FireDragonEgg extends Mob {
     public void setVariant(int value) { entityData.set(VARIANT, Math.clamp(value, 0, 3)); }
     public void setOwner(LivingEntity value) { owner = EntityReference.of(value); }
 
+    @Override public boolean hurtServer(ServerLevel server, net.minecraft.world.damagesource.DamageSource source, float damage) {
+        if (source.is(net.minecraft.tags.DamageTypeTags.IS_FIRE) || isRemoved()) return false;
+        if (!source.is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY))
+            spawnAtLocation(server, new net.minecraft.world.item.ItemStack(IafContent.FIRE_EGGS[variant()]));
+        remove(RemovalReason.KILLED);
+        return true;
+    }
+
     @Override public void tick() {
         super.tick();
         if (!(level() instanceof ServerLevel server)) return;

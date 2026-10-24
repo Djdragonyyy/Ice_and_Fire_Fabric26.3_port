@@ -20,6 +20,11 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
     FireDragonPoseModel(ResourceManager resources) {
         this(name -> pose(resources, name));
     }
+    FireDragonPoseModel(ResourceManager resources, boolean eyesOnly) {
+        this(resources);
+        if (eyesOnly) keepOnlyEyeCubes();
+    }
+    void keepOnlyEyeCubes() { parts.forEach((name, part) -> part.skipDraw = !name.equals("HeadFront")); }
 
     FireDragonPoseModel(Function<String, TabulaLoader.Model> loader) {
         this(loader, loader.apply("ground"));
@@ -37,7 +42,7 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
         for (String name : List.of("base_male", "base_female", "flying", "hovering", "sitting", "sitting_shoulder", "walk1", "walk2", "walk3", "walk4",
                 "flight1", "flight2", "flight3", "flight4", "flight5", "flight6",
                 "bite1", "bite2", "bite3", "attack_blast_charge1", "attack_blast_charge2", "attack_blast_charge3", "attack_stream_breath",
-                "tail1", "tail2", "tail3", "wing_blast1", "wing_blast2", "wing_blast3", "wing_blast4", "wing_blast5", "wing_blast6", "wing_blast7", "attack_tackle")) {
+                "tail1", "tail2", "tail3", "wing_blast1", "wing_blast2", "wing_blast3", "wing_blast4", "wing_blast5", "wing_blast6", "wing_blast7", "attack_tackle", "sleeping")) {
             poses.put(name, loader.apply(name));
         }
     }
@@ -104,6 +109,13 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
         }
         applySecondaryMotion(state, walking);
         applyCombat(state);
+        if (state.sleepProgress > 0) {
+            float weight = state.sleepProgress / 20F;
+            for (var entry : parts.entrySet()) {
+                ModelPart asleep = poses.get("sleeping").parts().get(entry.getKey());
+                if (asleep != null && !entry.getKey().contains("Horn")) transition(entry.getValue(), asleep, weight);
+            }
+        }
         if (state.shoulderProgress > 0) {
             float weight = state.shoulderProgress / 20F;
             for (var entry : parts.entrySet()) {
@@ -116,8 +128,9 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
         for (String name : List.of("Neck1", "Neck2", "Neck3", "Head")) {
             ModelPart neck = parts.get(name);
             if (neck != null) {
-                neck.yRot += (float) Math.toRadians(state.yRot) / 8F;
-                neck.xRot += (float) Math.toRadians(state.xRot) / 8F;
+                float awake = 1 - state.sleepProgress / 20F;
+                neck.yRot += (float) Math.toRadians(state.yRot) / 8F * awake;
+                neck.xRot += (float) Math.toRadians(state.xRot) / 8F * awake;
             }
         }
     }

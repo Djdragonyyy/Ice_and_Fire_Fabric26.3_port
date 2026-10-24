@@ -1,12 +1,12 @@
 # Prompt temporaneo per la prossima ripresa
 
-Aggiornato il 24 ottobre 2026, checkpoint 0.1.17, nuova autorizzazione utente a proseguire nelle fasi.
+Aggiornato il 24 ottobre 2026, checkpoint 0.1.18, nuova autorizzazione utente a proseguire nelle fasi.
 Conservare fabric/HANDOFF.md: contiene lo storico e i vincoli permanenti.
 
 ---
 
 Continua il porting di Ice and Fire. Comunica in italiano. Leggi integralmente
-fabric/HANDOFF.md, fabric/README.md, fabric/REVIEW.md, fabric/TEST-0.1.17.md e gli
+fabric/HANDOFF.md, fabric/README.md, fabric/REVIEW.md, fabric/TEST-0.1.18.md e gli
 AGENTS.md applicabili. Non ricominciare da zero o sovrascrivere modifiche locali.
 
 Repository personale:
@@ -15,26 +15,27 @@ Ramo esclusivo: port/fabric-26.3. Controlla stato, remote e git log prima di
 modificare; git switch e git pull --ff-only origin port/fabric-26.3, preservando
 il lavoro locale. Verifica l'esistenza del commit base 417f5a8d2. Niente reset.
 
-Prima leggere anche fabric/STATO-TAPPA-1.md. Checkpoint0.1.17: modalità aeree tackle/hover blast/scorch stream, cibo a terra,
-animazione EAT, attacchi coda/ali con pose originali, palla di fuoco autonoma.
-Verifiche:58 JUnit,51 GameTest mod più baseline vanilla escluso,due test client.
-Review-agent read-only completa senza delega: No findings. Non attribuire alla
-prova delle armature un test multiplayer: la seconda prova mostra coda/ali, con pixel GUI.
+Prima leggere fabric/STATO-TAPPA-1.md. Checkpoint0.1.18: sonno e risvegli,
+Sleeping salvato/sincronizzato, posa/texture originali, occhi emissivi HeadFront
+prima delle armature; uova danneggiate con drop singolo/variante. Conservati cibo,
+coda/ali/palla autonoma e tre modalità aeree.60 JUnit,60 GameTest mod più baseline
+escluso,3 test client. Review-agent read-only senza delega, niente due veri client.
 
-ULTIMA AUTORIZZAZIONE UTENTE: proseguire il più possibile attraverso tutte le
-fasi usando la quota disponibile; sospendere il PC alla fine dei test, dopo
-salvataggio/push/consegna. Non consumare quota artificialmente. La nuova richiesta
-supera l'attesa del riscontro fra checkpoint, ma non l'ordine delle fasi o la
-necessità di completarle/verificarle. Goal del thread attivo per il port completo.
-Non inventare un completamento delle fasi2..4: la1 è ancora incompleta.
+ULTIMA AUTORIZZAZIONE: utente a dormire, autonomia completa, test di ogni blocco,
+proseguire il più possibile nelle fasi usando quota disponibile. Sospensione PC
+richiesta alla fine della sessione di test, dopo salvataggio/push/consegna.
+Sessione0.1.18 prossima al limite: riprendere quando PC/quota disponibili, non
+avviare nuovi processi durante sospensione. Goal completo attivo e incompleto.
+Non consumare quota artificialmente o dichiarare chiuse fasi non migrate.
+Nuova richiesta supera attese di riscontro fra checkpoint, conserva ordine delle
+tappe e loro verifica. La1 è ancora incompleta.
 
-Restano shake prey/caccia, sonno/riproduzione, stendardo, altre
-animazioni/configurazioni/interazioni e limiti elencati nello stato cumulativo.
-La palla di fuoco sceglie1/5 fra cicli di stream, non ogni tick: comportamento
-stabile esplicitato, emissione20 e cura solo del morso. Cibo a terra solo libero,
-comandi prioritari; cura foodPoints differente dalla carne data a mano.
-Conservare correzioni0.1.15, teletrasporto richiesto, unica seduta e niente dorso
-solido. Punte grigie aperte, nessun collaudo con due veri client.
+Prossimi: riproduzione/fire_stew/nest (DragonAIMate/isFood originali), shake prey/
+caccia, stendardo, configurazioni/interazioni/animazioni e limiti navigazione/
+acqua/lava nello stato cumulativo. Uova raccolte senza incubazione/proprietà.
+Sonno solo libero, NoAI congela automazione; targeting separato da movimento per
+difesa dal sonno. Occhi order1, armature2..5. Conservare correzioni0.1.15,
+teletrasporto richiesto, unica seduta, niente dorso solido. Punte grigie aperte.
 
 Toolchain fissata: Minecraft Java 26.3, JDK25, Loader0.19.5, Fabric API
 0.163.0+26.3, Loom1.18.4, Gradle9.7.1. Usare fabric/ come progetto Gradle

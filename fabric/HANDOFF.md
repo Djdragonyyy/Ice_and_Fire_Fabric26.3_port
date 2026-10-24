@@ -1,5 +1,35 @@
 # Prompt completo per continuare il porting su un altro PC
 
+## Checkpoint 0.1.18 — 24 ottobre 2026
+
+Base824e05454. Utente a dormire, autonomia completa e test di ogni blocco.
+Quota5ore prossima al limite: checkpoint verificato, push/consegna e sospensione
+PC richiesta. Goal completo resta incompleto; riprendere quando PC/quota saranno
+disponibili, senza avviare nuovi processi locali durante la sospensione.
+
+Sleeping sincronizzato/persistito separato dal letto vanilla. Solo libero,
+notte, a terra/supportato, senza target/pilota/spalle; casa prima del riposo.
+Risveglio per danno/target/comandi/interazione/acqua/volo/supporto perso; giorno
+per addomesticati, selvatici già addormentati al coperto possono restare a dormire.
+Difesa proprietario dal sonno: consenso selezione target separato dal movimento,
+setTarget sveglia prima dei goal. Attesa20tick post combattimento/interazione,
+memoria vanilla aggressore può prolungarla. NoAI congela automazione. Nuova
+config doDragonsSleep=true; sonno non avviato in seduto/seguimi prioritari.
+
+Posa sleeping originale/transizione40tick, texture di4varianti*5stadi e occhi
+emissivi HeadFront, nascosti dormendo/invisibili/morti. Sottomodello con skipDraw
+preserva trasformazioni evitando emissione di UV estranee. Ordine pelle0/occhi1/
+armature2..5, test e client confermano head/tail. PNG/UV originali invariati.
+Terzo test client: Sleeping salvato/NoAI, screenshot sonno/risveglio ispezionati;
+il ciclo notturno e la difesa sono provati sul server, non dalla schermata NoAI.
+
+Uova: colpo non di fuoco restituisce1oggetto del colore corretto e rimuove
+entità, senza doppio drop. Fuoco/lava ignorati, bypass rimuove senza drop come
+originale. Il nuovo oggetto non conserva incubazione/proprietà (getItem originale).
+
+Verificati60 JUnit,60 GameTest della mod (61 con baseline vanilla escluso) e3 test client con mondi/screenshot. Uova verificate sul server dopo le prove client, senza altre modifiche grafiche. Nessun test con due veri client.
+
+
 ## Checkpoint 0.1.17 — 24 ottobre 2026
 
 Baseed4537539. Migrati i percorsi di combattimento aereo di IafDragonFlightManager:

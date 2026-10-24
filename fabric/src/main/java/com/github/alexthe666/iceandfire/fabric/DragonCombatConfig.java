@@ -14,6 +14,7 @@ public final class DragonCombatConfig {
     public boolean canDragonsHealFromBiting = true;
     public int dragonBreakBlockCooldown = 5;
     public double dragonBlockBreakingDropChance = 0.1;
+    public boolean doDragonsSleep = true;
 
     public static void load() {
         var path = FabricLoader.getInstance().getConfigDir().resolve("iceandfire-combat.json");
