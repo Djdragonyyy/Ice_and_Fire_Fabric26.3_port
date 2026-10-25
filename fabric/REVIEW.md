@@ -1,5 +1,20 @@
 # Revisione del port Fabric
 
+## Revisione 0.1.33 — 25 ottobre 2026
+
+Intero diff da d0fbef697 e nuova prova client letti in sola lettura, senza delega.
+Confrontati EntityDragonBase2160..2194, IafDragonFlightManager282 e bytecode
+travelRidden26.3. No findings sul codice finale. Config finita0..2, server
+scrive prima del movimento; client legge solo dati sincronizzati. Campo non
+persistito: server attuale prevale sul mondo. Default1 preserva la navigazione;
+per altri valori adattamento limitato per passo, non moltiplicazione cumulativa.
+
+Nuove prove config/sterzata e tre native; nove client passati, poi suite finale
+79JUnit/117modGameTests/9client/17immagini passata in8m40s. Un precedente
+fallimento del contrattacco notturno resta senza causa provata; quattro prove
+isolate e successiva completa passate, diagnostica conservata e asserzioni
+invariate. Rischi residui: questo caso intermittente e due client reali.
+
 ## Revisione 0.1.32 — 25 ottobre 2026
 
 Revisione in sola lettura dell'intero diff da119ee0105, senza delega. Confrontati

@@ -48,6 +48,7 @@ public final class FireDragon extends TamableAnimal {
     private static final EntityDataAccessor<ItemStack> BANNER = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.ITEM_STACK);
     private static final EntityDataAccessor<Integer> GRIPPED_PREY = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> CRYSTAL_BOUND = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Float> SPEED_MODIFIER = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.FLOAT);
     private java.util.UUID loadedPrey;
     private int loadedGripTick;
     private boolean gripImpactDone;
@@ -100,6 +101,7 @@ public final class FireDragon extends TamableAnimal {
     public FireDragon(EntityType<? extends FireDragon> type, Level level) {
         super(type, level);
         setPersistenceRequired();
+        if (!level.isClientSide()) entityData.set(SPEED_MODIFIER, (float) DragonCombatConfig.current.dragonFlightSpeedMod);
         setPathfindingMalus(net.minecraft.world.level.pathfinder.PathType.FIRE, 0);
         setPathfindingMalus(net.minecraft.world.level.pathfinder.PathType.LAVA, 8);
     }
@@ -196,6 +198,7 @@ public final class FireDragon extends TamableAnimal {
         builder.define(BANNER, ItemStack.EMPTY);
         builder.define(GRIPPED_PREY, -1);
         builder.define(CRYSTAL_BOUND, false);
+        builder.define(SPEED_MODIFIER, 1F);
     }
 
     @Override protected void registerGoals() {
@@ -369,6 +372,7 @@ public final class FireDragon extends TamableAnimal {
     }
 
     @Override public void tick() {
+        if (!level().isClientSide()) entityData.set(SPEED_MODIFIER, (float) DragonCombatConfig.current.dragonFlightSpeedMod);
         if (!level().isClientSide() && loadedPrey != null) restoreGrip();
         Player carrier = shoulderCarrier();
         if (!level().isClientSide() && carrier != null && (!carrier.isAlive() || carrier.isRemoved()
@@ -791,7 +795,7 @@ public final class FireDragon extends TamableAnimal {
             if (ridingOverLava()) {
                 if (isLocalInstanceAuthoritative()) {
                     // Original EntityFireDragon surface branch: walking physics, then lava drag.
-                    setSpeed((float) getAttributeValue(Attributes.MOVEMENT_SPEED) * 1.8F);
+                    setSpeed(riddenGroundSpeed());
                     super.travel(input);
                     Vec3 motion = getDeltaMovement();
                     if (horizontalCollision) motion = new Vec3(motion.x, 0.2, motion.z);
@@ -899,13 +903,20 @@ public final class FireDragon extends TamableAnimal {
         yHeadRot = getYRot();
     }
 
+    /** Server-selected value is sent through native entity data to the movement-authoritative client. */
+    public double getFlightSpeedModifier() { return entityData.get(SPEED_MODIFIER); }
+
+    private float riddenGroundSpeed() {
+        return (float) getAttributeValue(Attributes.MOVEMENT_SPEED) * (float) (1.8F * getFlightSpeedModifier());
+    }
+
     private boolean ridingOverLava() {
         return !flying() && !isInLava() && getControllingPassenger() != null
                 && level().getBlockState(getBlockPosBelowThatAffectsMyMovement()).getFluidState().is(net.minecraft.tags.FluidTags.LAVA);
     }
 
     @Override protected float getRiddenSpeed(Player player) {
-        if (ridingOverLava()) return (float) getAttributeValue(Attributes.MOVEMENT_SPEED) * 1.8F;
+        if (!flying() && !isInWater() && !isInLava()) return riddenGroundSpeed();
         if (!flying() && isInLava()) return DragonFluidMotion.lavaSpeed(getAttributeValue(Attributes.MOVEMENT_SPEED), player.isSprinting());
         return (float) getAttributeValue(Attributes.MOVEMENT_SPEED);
     }
@@ -915,6 +926,8 @@ public final class FireDragon extends TamableAnimal {
                 player.zza * (player.isSprinting() ? 1.2F : 1) * (player.zza > 0 ? 1 : 0.2F));
         if (!flying() && (isInWater() || isInLava()))
             return new Vec3(player.xxa, DragonFluidMotion.vertical(isInLava(), control(DragonControlPayload.UP), control(DragonControlPayload.DOWN)), player.zza);
+        if (!flying()) return new Vec3(player.xxa * 0.5F, input.y,
+                player.zza * riddenGroundSpeed() * (player.isSprinting() ? 1.2F : 1) * (player.zza > 0 ? 1 : 0.2F));
         return new Vec3(player.xxa * 0.5F, 0, player.zza < 0 ? player.zza * 0.25F : player.zza);
     }
 

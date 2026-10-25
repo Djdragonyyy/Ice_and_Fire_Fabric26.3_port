@@ -9,13 +9,21 @@ final class DragonFlightSteering {
     record Step(Vec3 acceleration, float yaw, double speed) {}
 
     static Step towardsWaypoint(Vec3 offset, float yaw, double speed, boolean intermediate) {
+        return towardsWaypoint(offset, yaw, speed, intermediate, 1);
+    }
+
+    static Step towardsWaypoint(Vec3 offset, float yaw, double speed, boolean intermediate, double modifier) {
         // A local point on a distant journey must not apply the final-arrival slowdown.
         if (intermediate && offset.lengthSqr() > 1.0E-6)
             offset = offset.normalize().scale(Math.max(50, offset.length()));
-        return towards(offset, yaw, speed);
+        return towards(offset, yaw, speed, modifier);
     }
 
     static Step towards(Vec3 offset, float yaw, double speed) {
+        return towards(offset, yaw, speed, 1);
+    }
+
+    static Step towards(Vec3 offset, float yaw, double speed, double modifier) {
         double plane = offset.horizontalDistance();
         double horizontalScale = plane < 1.0e-6 ? 0 : Math.clamp(1 - Math.abs(offset.y * 0.7) / plane, 0.2, 1);
         Vec3 direction = new Vec3(offset.x * horizontalScale, offset.y, offset.z * horizontalScale);
@@ -26,7 +34,7 @@ final class DragonFlightSteering {
         float nextYaw = yaw + Mth.clamp(Mth.wrapDegrees(targetYaw - yaw), -4, 4);
         double nextSpeed = Math.abs(Mth.wrapDegrees(nextYaw - yaw)) < 3
                 ? Math.min(1.8, speed + 0.005 * 1.8 / Math.max(0.2, speed)) : Math.max(0.2, speed - 0.025);
-        double effectiveSpeed = nextSpeed * Math.min(1, distance / 50 + 0.3);
+        double effectiveSpeed = nextSpeed * modifier * Math.min(1, distance / 50 + 0.3);
         double pitch = Math.atan2(direction.y, direction.horizontalDistance());
         double heading = Math.toRadians(nextYaw + 90);
         Vec3 acceleration = new Vec3(Math.cos(heading) * Math.abs(direction.x / distance),

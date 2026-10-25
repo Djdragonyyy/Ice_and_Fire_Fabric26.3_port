@@ -31,7 +31,7 @@ loom {
         gametest {
             server()
             source sourceSets.gametest
-            runDir 'run/0.1.32-gametest'
+            runDir 'run/0.1.33-gametest'
             vmArg '-Dfabric-api.gametest'
             vmArg "-Dfabric-api.gametest.report-file=${file('build/gametest-results.xml').absolutePath}"
         }
@@ -115,7 +115,7 @@ loom {
         clientGametest {
             client()
             source sourceSets.clientGametest
-            runDir 'run/0.1.32-client-gametest'
+            runDir 'run/0.1.33-client-gametest'
             vmArg '-Dfabric.client.gametest'
         }
     }

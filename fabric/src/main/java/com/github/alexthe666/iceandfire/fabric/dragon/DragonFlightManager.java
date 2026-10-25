@@ -207,14 +207,14 @@ final class DragonFlightManager {
         if (waypoint == null) { landing = true; land(); return; }
         boolean corner = path.detouring() && dragon.position().distanceToSqr(waypoint) < 16;
         speed = corner ? Math.min(speed, 0.4) : Math.max(speed, minimumSpeed);
-        var step = DragonFlightSteering.towardsWaypoint(waypoint.subtract(dragon.position()), dragon.getYRot(), speed, path.intermediate());
+        var step = DragonFlightSteering.towardsWaypoint(waypoint.subtract(dragon.position()), dragon.getYRot(), speed, path.intermediate(), dragon.getFlightSpeedModifier());
         speed = step.speed();
         dragon.setYRot(step.yaw());
         dragon.yBodyRot = dragon.yHeadRot = step.yaw();
         Vec3 motion = dragon.getDeltaMovement();
         if (corner || dragon.position().distanceToSqr(waypoint) <= 1) motion = motion.scale(corner ? 0.6 : 0.5);
         motion = motion.add(step.acceleration());
-        if (waypoint.y > dragon.getY() + 1) motion = motion.add(0, 0.1, 0);
+        if (waypoint.y > dragon.getY() + 1) motion = motion.add(0, 0.1 * dragon.getFlightSpeedModifier(), 0);
         // Native swept movement clips blocked axes while preserving free vertical motion.
         // Stopping all axes here would freeze a descending dragon at the edge of an obstacle.
         dragon.setDeltaMovement(motion);

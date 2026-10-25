@@ -9,6 +9,7 @@ class DragonCombatConfigTest {
         var config = new Gson().fromJson("{\"dragonGriefing\":1}", DragonCombatConfig.class);
         assertEquals(500, config.dragonHealth); assertEquals(17, config.dragonAttackDamage);
         assertEquals(3000, config.dragonHungerTickRate); assertEquals(7200, config.dragonEggTime);
+        assertEquals(1, config.dragonFlightSpeedMod);
         assertEquals(256, config.maxDragonFlight); assertEquals(40, config.dragonWanderFromHomeDistance);
         assertEquals(4, config.dragonFluteDistance);
         assertEquals(4, config.dragonFlapNoiseDistance);
@@ -26,5 +27,14 @@ class DragonCombatConfigTest {
         var config = new DragonCombatConfig(); config.dragonHealth = Double.NaN; assertFalse(config.validValues());
         config.dragonHealth = 500; config.dragonEggTime = Integer.MAX_VALUE; assertTrue(config.validValues());
         config.dragonFluteDistance = 0; assertTrue(config.validValues());
+    }
+    @Test void flightModifierHasOriginalFiniteInclusiveLimits() {
+        var config = new DragonCombatConfig();
+        for (double good : new double[]{0, 0.5, 1, 2}) {
+            config.dragonFlightSpeedMod = good; assertTrue(config.validValues());
+        }
+        for (double bad : new double[]{-0.01, 2.01, Double.NaN, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY}) {
+            config.dragonFlightSpeedMod = bad; assertFalse(config.validValues());
+        }
     }
 }

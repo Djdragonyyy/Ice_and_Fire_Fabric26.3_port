@@ -53,14 +53,22 @@ public class DragonSleepGameTests {
         attacker.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH).setBaseValue(200);
         attacker.setHealth(200);
         h.getLevel().addFreshEntity(attacker);
-        h.getLevel().addFreshEntity(d);
+        h.getLevel().addFreshEntity(d);        var trace = new StringBuilder();
+        h.onEachTick(() -> {
+            if (!attacker.isRemoved() && d.tickCount <= 50) trace.append("\n").append(d.tickCount)
+                    .append(" atk=").append(d.attackAnimation()).append('/').append(d.attackAnimationTick())
+                    .append(" dst=").append(d.distanceTo(attacker)).append(" reach=").append(d.withinBiteReach(attacker))
+                    .append(" los=").append(d.hasLineOfSight(attacker)).append(" can=").append(d.canAttack(attacker))
+                    .append(" flying=").append(d.flying()).append(" water=").append(d.isInWater())
+                    .append(" hp=").append(attacker.getHealth());
+        });
         h.runAfterDelay(5, () -> {
             require(d.dragonSleeping(), "Dragon asleep before attack");
             require(d.hurtServer(h.getLevel(), d.damageSources().mobAttack(attacker), 1), "Actual attack on sleeping dragon");
             require(!d.dragonSleeping(), "Damage wakes immediately");
         });
         h.runAfterDelay(50, () -> {
-            require(!d.dragonSleeping() && d.getTarget() == attacker && attacker.getHealth() < 200, "Awakened dragon actually retaliates: sleeping=" + d.dragonSleeping() + ", target=" + (d.getTarget() == attacker) + ", health=" + attacker.getHealth() + ", distance=" + d.distanceTo(attacker) + ", removed=" + attacker.isRemoved());
+            require(!d.dragonSleeping() && d.getTarget() == attacker && attacker.getHealth() < 200, "Awakened dragon actually retaliates: sleeping=" + d.dragonSleeping() + ", target=" + (d.getTarget() == attacker) + ", health=" + attacker.getHealth() + ", distance=" + d.distanceTo(attacker) + ", removed=" + attacker.isRemoved() + trace);
             h.succeed();
         });
     }

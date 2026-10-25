@@ -1,10 +1,12 @@
 # Ice and Fire: port Fabric 26.3 in sviluppo
 
-Verificati 77 JUnit, 114 GameTest della mod (115 includendo la baseline vanilla) e 8 prove client con diciassette screenshot. Nessuna prova con due veri client.
+Verificati 79 JUnit, 117 GameTest della mod (118 includendo la baseline vanilla) e 9 prove client con diciassette screenshot. Nessuna prova con due veri client.
 
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
-Versione corrente: **0.1.32-stage1-dev**. Movimento originale sopra la lava. [TEST-0.1.32.md](TEST-0.1.32.md). Tappa1 incompleta.
+Versione corrente: **0.1.33-stage1-dev**. Camminata originale e velocita sincronizzata dal server. [TEST-0.1.33.md](TEST-0.1.33.md). Tappa1 incompleta.
+
+Versione precedente: **0.1.32-stage1-dev**. Movimento originale sopra la lava. [TEST-0.1.32.md](TEST-0.1.32.md). Tappa1 incompleta.
 
 Versione precedente: **0.1.31-stage1-dev**. Acqua/lava e controlli verificati con vero client. [TEST-0.1.31.md](TEST-0.1.31.md). Tappa1 incompleta.
 
@@ -247,3 +249,6 @@ Codice e risorse originali: Ice and Fire, Raptorfarian, Alexthe666 e collaborato
 La licenza LGPL-3.0 originale è conservata nella radice e inclusa nel JAR.
 Le regole di crescita, le coordinate dell'uovo e l'interpolazione delle pose derivano dal codice
 originale conservato in `src/`. Il port è non ufficiale.
+
+
+Opzione server: dragonFlightSpeedMod in config/iceandfire-combat.json, predefinito1, intervallo finito0..2. Configurazioni precedenti senza chiave usano1; aggiungerla al JSON per modificarla e riavviare Minecraft/server. Vedere TEST-0.1.33.md per comportamento e limiti.

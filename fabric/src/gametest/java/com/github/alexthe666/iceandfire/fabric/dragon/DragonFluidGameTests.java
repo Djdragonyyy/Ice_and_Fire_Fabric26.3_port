@@ -113,7 +113,7 @@ public class DragonFluidGameTests {
     }
 
     @GameTest(structure = "iceandfire:flight_arena", padding = 12)
-    public void surfaceRulesDoNotLeakIntoOrdinaryGroundOrFlyingPilot(GameTestHelper h) {
+    public void surfaceRulesRemainDistinctFromOrdinaryGroundAndFlyingPilot(GameTestHelper h) {
         tank(h, true, 1); var d = dragon(h, 50, 3.001);
         var owner = h.makeMockPlayer(GameType.SURVIVAL); d.setOwner(owner); d.setTame(true, false);
         owner.setPos(d.position()); require(owner.startRiding(d), "Owner mounts");
@@ -123,9 +123,10 @@ public class DragonFluidGameTests {
                 "Surface scaling does not replace aerial input");
         d.setAutonomousFlight(false, false);
         h.setBlock(d.getBlockPosBelowThatAffectsMyMovement().subtract(h.absolutePos(BlockPos.ZERO)), Blocks.STONE);
-        require(d.getRiddenInput(owner, Vec3.ZERO).x == 0.5 && d.getRiddenInput(owner, Vec3.ZERO).z == -0.25,
-                "Ordinary ground factors are unchanged");
-        require(Math.abs(d.getRiddenSpeed(owner) - d.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED)) < 1.0E-7,
-                "Surface speed does not leak into solid ground");
+        require(d.getRiddenInput(owner, Vec3.ZERO).x == 0.5 && Math.abs(d.getRiddenInput(owner, Vec3.ZERO).z + d.getRiddenSpeed(owner) * 0.2) < 1.0E-6,
+                "Ground uses its original forward-speed factor, distinct from surface lava");
+        require(Math.abs(d.getRiddenSpeed(owner) - d.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED) * 1.8) < 1.0E-6,
+                "Ground has the same original base factor, with different input scaling");
         h.succeed();
-    }}
+    }
+}

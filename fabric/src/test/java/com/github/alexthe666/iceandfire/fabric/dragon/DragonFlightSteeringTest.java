@@ -69,4 +69,21 @@ class DragonFlightSteeringTest {
         assertTrue(position.distanceTo(target) < 35, "Flight must make real progress towards its target");
         assertEquals(0, position.x, 0.00001);
     }
+    @Test void configuredAccelerationRemainsFiniteCappedAndHasNoCumulativeMultiplier() {
+        var target = new Vec3(0, 0, 100);
+        var normal = DragonFlightSteering.towards(target, 0, 0.2);
+        var half = DragonFlightSteering.towards(target, 0, 0.2, 0.5);
+        assertEquals(normal.acceleration().scale(0.5), half.acceleration());
+        assertEquals(normal.speed(), half.speed());
+        for (double modifier : new double[]{0, 0.5, 1, 2}) {
+            double speed = 0;
+            for (int tick = 0; tick < 200; tick++) {
+                var step = DragonFlightSteering.towards(target, 0, speed, modifier);
+                speed = step.speed();
+                assertTrue(Double.isFinite(speed) && speed <= 1.8);
+                assertTrue(step.acceleration().length() <= 0.20000001);
+                if (modifier == 0) assertEquals(Vec3.ZERO, step.acceleration());
+            }
+        }
+    }
 }

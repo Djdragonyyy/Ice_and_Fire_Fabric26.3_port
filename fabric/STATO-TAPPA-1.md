@@ -1,5 +1,20 @@
 # Stato della tappa 1 — drago di fuoco, Fabric 26.3
 
+## Checkpoint 0.1.33 — camminata e velocita sincronizzata
+
+Camminata originale (velocita/input/sprint/retromarcia e inputY), opzione
+server dragonFlightSpeedMod1 finita0..2 e FLOAT nativo inviato al pilota.
+Superficie lava e volo autonomo usano il fattore; volo pilotato conserva
+la curva originale indipendente. Accelerazione autonoma limitata per passo,
+non moltiplicatore cumulativo. Dettagli/adattamenti in TEST-0.1.33.md.
+Suite finale79JUnit/117GameTest mod (118 con baseline)/9client/17immagini,
+passata in8m40s. Sei prove config e quattro ripetizioni isolate sonno passate.
+Un precedente tentativo completo ha riprodotto il contrattacco intermittente:
+causa non provata, traccia per tick conservata; non dichiarare il caso risolto.
+Prossimo: overlay maschile originale, preparazione locale phase34-preparation.
+Tappa1 e port completo ancora aperti. Non sospendere o spegnere il PC.
+
+
 ## Checkpoint 0.1.32 — sopra la superficie della lava
 
 Migrato ramo originale del pilota non immerso/non in volo sopra il blocco lava:
@@ -163,7 +178,7 @@ mondo e dalla taglia. Nessuna barriera al pilota o modifica della velocità.
 Vecchi JSON compatibili. Nuovo GameTest salva/ricarica casa e verifica raggio,
 confine e due limiti di quota; estesa validazione JUnit. Tappa1 ancora aperta.
 
-Aggiornato per 0.1.30-stage1-dev, 24 ottobre 2026. La tappa 1 è ancora incompleta.
+Aggiornato per 0.1.33-stage1-dev, 25 ottobre 2026. La tappa 1 è ancora incompleta.
 Questo riepilogo distingue ciò che è nel codice da ciò che manca: build e test
 non sostituiscono il riscontro in gioco, soprattutto per grafica e multiplayer.
 L'utente ha confermato la 0.1.13 funzionante il 24 ottobre e chiesto di continuare.
@@ -419,6 +434,6 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 Restano fuori da questa consegna draghi di ghiaccio/fulmine, altre creature,
 progressione completa, ricette, strutture e generazione naturale: appartengono
 alle tappe successive. Non iniziarle prima del completamento e del riscontro
-sulla tappa 1. La 0.1.13 è confermata; collaudare le novità successive, ora fino alla0.1.30.
+sulla tappa 1. La 0.1.13 è confermata; collaudare le novità successive, ora fino alla0.1.33.
 
 Nota operativa24ottobre: ripresa effettiva alle22:12Roma dopo reset; automazione stessa chat riportata a controllo5min. Sessione in corso, nessuna sospensione.

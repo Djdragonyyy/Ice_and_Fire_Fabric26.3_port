@@ -1,5 +1,20 @@
 # Prompt completo per continuare il porting su un altro PC
 
+## Checkpoint 0.1.33 — camminata e velocita sincronizzata
+
+Camminata originale (velocita/input/sprint/retromarcia e inputY), opzione
+server dragonFlightSpeedMod1 finita0..2 e FLOAT nativo inviato al pilota.
+Superficie lava e volo autonomo usano il fattore; volo pilotato conserva
+la curva originale indipendente. Accelerazione autonoma limitata per passo,
+non moltiplicatore cumulativo. Dettagli/adattamenti in TEST-0.1.33.md.
+Suite finale79JUnit/117GameTest mod (118 con baseline)/9client/17immagini,
+passata in8m40s. Sei prove config e quattro ripetizioni isolate sonno passate.
+Un precedente tentativo completo ha riprodotto il contrattacco intermittente:
+causa non provata, traccia per tick conservata; non dichiarare il caso risolto.
+Prossimo: overlay maschile originale, preparazione locale phase34-preparation.
+Tappa1 e port completo ancora aperti. Non sospendere o spegnere il PC.
+
+
 ## Checkpoint 0.1.32 — sopra la superficie della lava
 
 Migrato ramo originale del pilota non immerso/non in volo sopra il blocco lava:
