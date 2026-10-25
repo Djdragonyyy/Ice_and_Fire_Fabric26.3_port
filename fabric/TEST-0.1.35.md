@@ -69,3 +69,11 @@ modello, con attenzione a CORPO E ALI e aderenza alle texture originali. Analisi
 avviata, nessuna correzione di feeding/modello consegnata in questa versione.
 Verificare prima immagini e geometria/UV; non ricostruire o riempire texture
 alla cieca. Punte grigie, altre parita originali e tappa1/port completo aperti.
+
+
+Nota di tracciabilita dalla0.1.37: la vecchia consegna0.1.35 includeva anche
+0000_dragon-network-owner-0.1.35.png, residua di un tentativo precedente alle tre
+immagini finali. Il numero effettivo di PNG nel vecchio archivio era quindi24,
+non23. Archivio/checksum storico conservati; conteggi dei test invariati.
+La consegna0.1.37 usa una whitelist di tre PNG correnti con verifica della
+versione nei log e dell'orario di acquisizione, senza quella immagine storica.

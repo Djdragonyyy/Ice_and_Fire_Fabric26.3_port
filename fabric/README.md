@@ -1,10 +1,12 @@
 # Ice and Fire: port Fabric 26.3 in sviluppo
 
-Verificati 80 JUnit, 119 GameTest della mod (120 con baseline vanilla), 11 prove client e 30 immagini nella 0.1.36. Prova TCP con due client separati svolta nella 0.1.35 su GameTestServer; DedicatedServer ordinario ancora da collaudare.
+Verificati 84 JUnit, 119 GameTest della mod (120 con baseline vanilla), 11 prove client e 33 immagini nella 0.1.37. Rete corrente: 1 test server, due client separati, tre exit 0 e tre immagini aggiuntive. DedicatedServer ordinario ancora da collaudare.
 
 **Checkpoint di sviluppo: la tappa 1 e il port completo restano aperti.**
 
-Versione corrente: **0.1.36-stage1-dev**. Feeding manuale e animazione nei cinque stadi, audit geometria/UV di corpo e ali e dieci tavole GPU. [TEST-0.1.36.md](TEST-0.1.36.md). Tappa1 incompleta.
+Versione corrente: **0.1.37-stage1-dev**. Movimenti originali del corpo, collo/coda e ali protette durante hover/tackle/attacchi; rete a due client rieseguita. [TEST-0.1.37.md](TEST-0.1.37.md). Tappa1 incompleta.
+
+Versione precedente: **0.1.36-stage1-dev**. Feeding manuale e animazione nei cinque stadi, audit geometria/UV di corpo e ali e dieci tavole GPU. [TEST-0.1.36.md](TEST-0.1.36.md). Tappa1 incompleta.
 
 Versione precedente: **0.1.35-stage1-dev**. Due client in processi separati su GameTestServer locale, proprieta/comandi e sincronizzazione verificati. [TEST-0.1.35.md](TEST-0.1.35.md). Tappa1 incompleta.
 

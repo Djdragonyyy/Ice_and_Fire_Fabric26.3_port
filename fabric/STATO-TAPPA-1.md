@@ -1,5 +1,33 @@
 # Stato della tappa 1 — drago di fuoco, Fabric 26.3
 
+## Checkpoint 0.1.37 - movimenti originali del corpo e protezione delle ali
+
+Ripristinati fase normalizzata delle catene, offset verticale bob, onde di collo e
+coda, oscillazioni del corpo, zampe e dita in volo e respiro lento nel sonno.
+Conservata la dissolvenza nativa al decollo/atterraggio. Nessuna modifica a mesh,
+UV, PNG, dimensioni fisiche, velocita o pacchetti della mod.
+Braccia alari e figli diretti (incluse membraneL6/R6) seguono il criterio
+originale: gait escluso per WING/EPIC_ROAR, ciclo alare mantenuto in hover/tackle.
+Feed, agganci del cavaliere, pose e reset senza accumulo ancora verificati.
+
+Suite ordinaria:84JUnit,119GameTest mod (120 con baseline),11prove client,
+33immagini. Build completa passata in9m05s; ripetizione client per inquadrature
+1m51s. Due nuove tavole alte di volo e una attacco/camminata, tutte controllate.
+Rete rieseguita davvero sulla0.1.37:1GameTest server,2client separati, tre exit0,
+proprieta/comandi/volo/sesso/velocita/head-tail verificati. Tre immagini correnti,
+36totali. Report/XML/log/versione runtime inclusi; nessun harness nel JAR.
+Vedere TEST-0.1.37.md. Non e ancora DedicatedServer ordinario/account autenticati.
+
+PROSSIMO: ciclo completo della carcassa, raccolta originale e XP per stadio.
+Manca ancora nel port: oggi la morte usa la rimozione vanilla e il solo drop
+inventario. Riferimenti principali EntityDragonBase.tickDeath539, interactAt1087,
+getExperienceReward575, getRandomDrop1299, NBT ModelDead/DeathStage; dead pose e
+texture scheletro originali. Preservare inventario/proprieta e regola dismount
+senza immunita in volo. Dettagli locali work/phase38-preparation/RESEARCH.txt.
+Restano anche multipart, altre parita, prove DedicatedServer/persistenza MP,
+punte grigie e cause dei casi intermittenti sonno/escort. Tappa1/port aperti.
+Proseguire autonomamente nella stessa chat/ramo; non sospendere o spegnere MAI.
+
 ## Checkpoint 0.1.36 - feeding e verifica di corpo/ali
 
 Feeding manuale ora sincronizzato nei cinque stadi, collo/mandibola con easing
@@ -485,7 +513,14 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 30. Feeding manuale nei cinque stadi, easing e recupero20tick; verifica completa
     delle UV/geometrie originali e dieci tavole corpo/ali/feeding. TEST-0.1.36.
 
+31. Movimenti secondari originali di corpo/collo/coda/arti, sonno lento e
+    protezione delle ali durante hover/tackle e WING/EPIC_ROAR. TEST-0.1.37.
+
 ## Da completare nella tappa 1
+
+- Carcassa persistente/raccolta e XP originali per stadio; oggi morte vanilla
+  e solo drop inventario. Componenti/item collegati da migrare con semantica originale.
+- Multipart del drago, con interazione/danno e sincronizzazione corretti.
 
 - Combattimento autonomo: ulteriori dettagli di presa e
   parità delle configurazioni/temporizzazioni originali, reazioni e
@@ -508,6 +543,6 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 Restano fuori da questa consegna draghi di ghiaccio/fulmine, altre creature,
 progressione completa, ricette, strutture e generazione naturale: appartengono
 alle tappe successive. Non iniziarle prima del completamento e del riscontro
-sulla tappa 1. La 0.1.13 è confermata; collaudare le novità successive, ora fino alla0.1.36. L'utente ha autorizzato il proseguimento autonomo; il riscontro non impone una nuova pausa.
+sulla tappa 1. La 0.1.13 è confermata; collaudare le novità successive, ora fino alla0.1.37. L'utente ha autorizzato il proseguimento autonomo; il riscontro non impone una nuova pausa.
 
 Nota operativa24ottobre: ripresa effettiva alle22:12Roma dopo reset; automazione stessa chat riportata a controllo5min. Sessione in corso, nessuna sospensione.

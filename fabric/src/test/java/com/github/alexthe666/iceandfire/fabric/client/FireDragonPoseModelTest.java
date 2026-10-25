@@ -9,6 +9,74 @@ import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FireDragonPoseModelTest {
+    @Test void idleChainsKeepOriginalLengthNormalizedPhaseAndBodyCounterBob() {
+        var model = model(); var s = new FireDragonRenderer.State(); s.male = true;
+        model.setupAnim(s);
+        // Independent original Citadel reference at t=0, rootOffset=-2, chain length=4.
+        float[] yaw = {0.125F, 0.08838835F, 0, -0.08838835F};
+        float[] pitch = {0.075F, 0.05303301F, 0, -0.05303301F};
+        for (int i = 0; i < 4; i++) {
+            var p = find(model.root(), "Tail" + (i + 1)); var initial = p.getInitialPose();
+            assertEquals(initial.yRot() + yaw[i], p.yRot, 0.00001F);
+            assertEquals(initial.xRot() + pitch[i], p.xRot, 0.00001F);
+        }
+        for (String name : new String[]{"BodyUpper", "ThighL", "ThighR", "armL1", "armR1"}) {
+            var p = find(model.root(), name);
+            assertEquals(p.getInitialPose().y() + (name.equals("BodyUpper") ? -0.65F : 0.65F), p.y, 0.00001F,
+                    "Original bob baseline and opposite leg/arm motion: " + name);
+        }
+        var neck = find(model.root(), "Neck1");
+        assertEquals(neck.getInitialPose().xRot() - 0.05F, neck.xRot, 0.00001F);
+    }
+
+    @Test void flyingBodyNeckToesAndTailUseOriginalSecondaryMotion() {
+        var model = model(); var s = new FireDragonRenderer.State();
+        s.male = true; s.flying = true; s.flyProgress = 20; model.setupAnim(s);
+        var frame = original("flight6");
+        String[] names = {"BodyUpper", "BodyLower", "Tail1", "Tail4", "Neck1", "Neck2", "ToeL2", "ToeR2", "ThighR", "ThighL"};
+        float[] delta = {0.05F, -0.05F, -0.05F, -0.05F, 0.1F, 0, 0.05F, 0.05F, 0.05F, -0.05F};
+        for (int i = 0; i < names.length; i++)
+            assertEquals(frame.parts().get(names[i]).xRot + delta[i], find(model.root(), names[i]).xRot, 0.00001F, names[i]);
+        assertEquals(original("flying").parts().get("BodyUpper").y - 0.65F - 2.5F,
+                find(model.root(), "BodyUpper").y, 0.00001F, "Original flight bob includes its vertical baseline");
+        var pose = rotations(model); model.setupAnim(s); assertArrayEquals(pose, rotations(model), 0.00001F);
+    }
+
+    @Test void hoverAndTackleKeepTheOriginalWingJointsOnTheirFlightCycle() {
+        var model = model(); var s = new FireDragonRenderer.State(); s.male = true; s.flying = true;
+        String[] joints = {"armL1", "armR1", "armL2", "armR2", "membraneL6", "membraneR6"};
+        for (boolean hovering : new boolean[]{true, false}) {
+            s.hoverProgress = hovering ? 20 : 0; s.flyProgress = hovering ? 0 : 20;
+            s.attack = hovering ? 0 : com.github.alexthe666.iceandfire.fabric.dragon.DragonCombatState.TACKLE;
+            s.attackTick = 40; model.setupAnim(s);
+            var frame = original("flight6");
+            for (String name : joints) {
+                var actual = find(model.root(), name); var expected = frame.parts().get(name);
+                assertEquals(expected.xRot, actual.xRot, 0.00001F, name + " pitch hovering=" + hovering);
+                assertEquals(expected.yRot, actual.yRot, 0.00001F, name + " yaw hovering=" + hovering);
+                assertEquals(expected.zRot, actual.zRot, 0.00001F, name + " roll hovering=" + hovering);
+            }
+        }
+    }
+
+    @Test void walkingDoesNotDistortWingBlastOrEpicRoarButStillAnimatesTheLegs() {
+        var model = model(); var s = new FireDragonRenderer.State(); s.male = true; s.walkCycle = 20; s.walkAnimationPos = 8;
+        for (int attack : new int[]{4, 10}) {
+            s.attack = attack; s.attackTick = attack == 4 ? 15 : 25; s.walkAnimationSpeed = 0; model.setupAnim(s);
+            var before = new java.util.HashMap<String, net.minecraft.client.model.geom.PartPose>();
+            for (String name : new String[]{"armL1", "armR1", "armL2", "armR2", "membraneL6", "membraneR6", "ThighL"})
+                before.put(name, find(model.root(), name).storePose());
+            s.walkAnimationSpeed = 1; model.setupAnim(s);
+            for (String name : new String[]{"armL1", "armR1", "armL2", "armR2", "membraneL6", "membraneR6"}) {
+                var p = find(model.root(), name); var expected = before.get(name);
+                assertEquals(expected.xRot(), p.xRot, 0.00001F, name);
+                assertEquals(expected.yRot(), p.yRot, 0.00001F, name);
+                assertEquals(expected.zRot(), p.zRot, 0.00001F, name);
+            }
+            assertNotEquals(before.get("ThighL").xRot(), find(model.root(), "ThighL").xRot,
+                    "Wing protection must not disable the walking gait");
+        }
+    }
     @Test void feedingKeepsBodyAndWingsAndRecoversContinuouslyAtEveryStage() {
         var model = model();
         for (int stage = 1; stage <= 5; stage++) for (boolean sitting : new boolean[]{false, true}) {
@@ -107,9 +175,11 @@ class FireDragonPoseModelTest {
             for (String name : new String[]{"BodyUpper", "Neck1", "Head"}) {
                 var actual = find(model.root(), name);
                 var expected = original.parts().get(name);
-                assertEquals(Math.sin(expected.xRot), Math.sin(actual.xRot), 0.00001);
-                assertEquals(Math.cos(expected.xRot), Math.cos(actual.xRot), 0.00001);
-                assertEquals(expected.y, actual.y, 0.00001);
+                // Original sleeping secondary motion at age zero: neck chain + Neck1.walk.
+                float pitch = name.equals("Neck1") ? -0.025F : name.equals("Head") ? 0.03464548F : 0;
+                assertEquals(Math.sin(expected.xRot + pitch), Math.sin(actual.xRot), 0.00001);
+                assertEquals(Math.cos(expected.xRot + pitch), Math.cos(actual.xRot), 0.00001);
+                assertEquals(expected.y - (name.equals("BodyUpper") ? 0.325F : 0), actual.y, 0.00001);
             }
         }
         var asleep = rotations(model);
@@ -166,7 +236,8 @@ class FireDragonPoseModelTest {
             for (String name : new String[]{"BodyUpper", "ThighR", "ThighL"}) {
                 var actual = find(model.root(), name);
                 var expected = original.parts().get(name);
-                assertEquals(Math.sin(expected.xRot), Math.sin(actual.xRot), 0.00001);
+                float pitch = name.equals("ThighL") ? -0.05F : 0.05F;
+                assertEquals(Math.sin(expected.xRot + pitch), Math.sin(actual.xRot), 0.00001);
                 assertEquals(Math.cos(expected.zRot), Math.cos(actual.zRot), 0.00001);
             }
         }
@@ -341,12 +412,14 @@ class FireDragonPoseModelTest {
     }
 
     private static FireDragonPoseModel model() {
-        return new FireDragonPoseModel(name -> {
-            Path file = Path.of(System.getProperty("iceandfire.legacyResources"),
-                    "assets/iceandfire/models/tabula/firedragon/firedragon_" + name + ".tbl");
-            try (var input = Files.newInputStream(file)) { return TabulaLoader.parse(input); }
-            catch (IOException error) { throw new UncheckedIOException(error); }
-        });
+        return new FireDragonPoseModel(FireDragonPoseModelTest::original);
+    }
+
+    private static TabulaLoader.Model original(String name) {
+        Path file = Path.of(System.getProperty("iceandfire.legacyResources"),
+                "assets/iceandfire/models/tabula/firedragon/firedragon_" + name + ".tbl");
+        try (var input = Files.newInputStream(file)) { return TabulaLoader.parse(input); }
+        catch (IOException error) { throw new UncheckedIOException(error); }
     }
 
     @Test void cyclesInterpolateAtZeroAndMatchTwoUnitFlightRate() {

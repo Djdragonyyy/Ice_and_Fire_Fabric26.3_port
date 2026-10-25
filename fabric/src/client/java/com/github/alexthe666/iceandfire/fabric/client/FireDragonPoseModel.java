@@ -13,6 +13,11 @@ import org.joml.Vector3f;
 
 /** Movement pose interpolation adapted from DragonTabulaModelAnimator (LGPL-3.0). */
 final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
+    private static final String[] NECK = {"Neck1", "Neck2", "Neck3", "Head"};
+    private static final String[] TAIL = {"Tail1", "Tail2", "Tail3", "Tail4"};
+    private static final String[] TAIL_BODY = {"BodyLower", "Tail1", "Tail2", "Tail3", "Tail4"};
+    private static final String[] TOES_L = {"ToeL1", "ToeL2", "ToeL3"};
+    private static final String[] TOES_R = {"ToeR1", "ToeR2", "ToeR3"};
     private final Map<String, ModelPart> parts;
     private final Map<String, TabulaLoader.Model> poses = new HashMap<>();
     private final Vector3f seatSurface = new Vector3f(Float.NaN);
@@ -89,7 +94,8 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
             ModelPart currentPose = to.get(name);
             if (previousPose == null || currentPose == null) continue;
             if (walking) {
-                if (!name.contains("Horn")) {
+                boolean wingAttack = state.attack == DragonCombatState.WING || state.attack == DragonCombatState.EPIC_ROAR;
+                if (!name.contains("Horn") && !(wingAttack && isWingJoint(name))) {
                     float amount = Math.min(state.walkAnimationSpeed * 2, 1);
                     var initial = cube.getInitialPose();
                     cube.xRot += amount * distance(initial.xRot(), previousPose.xRot + frame * distance(previousPose.xRot, currentPose.xRot));
@@ -113,12 +119,11 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
         if (state.hoverProgress > 0) {
             for (var entry : parts.entrySet()) {
                 String name = entry.getKey();
-                if (name.contains("Wing") || name.contains("Finger") || name.startsWith("arm") || name.contains("Tail")) continue;
+                if (isWingJoint(name) || name.contains("Tail")) continue;
                 ModelPart hover = poses.get("hovering").parts().get(name);
                 if (hover != null) transition(entry.getValue(), hover, state.hoverProgress / 20F);
             }
         }
-        applySecondaryMotion(state, walking);
         applyCombat(state);
         if (state.sleepProgress > 0) {
             float weight = state.sleepProgress / 20F;
@@ -136,7 +141,8 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
             }
             parts.get("BodyUpper").z -= 12F * weight;
         }
-        for (String name : List.of("Neck1", "Neck2", "Neck3", "Head")) {
+        applySecondaryMotion(state, walking);
+        for (String name : NECK) {
             ModelPart neck = parts.get(name);
             if (neck != null) {
                 float awake = 1 - state.sleepProgress / 20F;
@@ -191,7 +197,8 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
         } else if (state.attack == DragonCombatState.TACKLE) {
             float weight = Math.clamp(state.attackTick / 40F, 0, 1);
             for (var entry : parts.entrySet())
-                addPoseDelta(entry.getValue(), poses.get("attack_tackle").parts().get(entry.getKey()), weight, true);
+                if (!isWingJoint(entry.getKey()))
+                    addPoseDelta(entry.getValue(), poses.get("attack_tackle").parts().get(entry.getKey()), weight, true);
         } else if (state.attack == DragonCombatState.EAT) {
             float tick = Math.clamp(state.attackTick, 0, 20);
             // Original 18-degree keyframes and Citadel sine easing. Recover the jaw
@@ -232,6 +239,12 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
 
     private static float sineFrame(float tick) { return (float) Math.sin(tick / 5 * Math.PI * 0.5); }
 
+    /** Original isWing: upper arms and their direct children, including membraneL6/R6. */
+    private boolean isWingJoint(String name) {
+        return name.equals("armL1") || name.equals("armR1")
+                || parts.get("armL1").hasChild(name) || parts.get("armR1").hasChild(name);
+    }
+
     private static float wingLift(String pose) {
         if (pose == null) return 0;
         return switch (pose) { case "wing_blast2", "wing_blast7" -> -2; case "wing_blast3", "wing_blast4", "wing_blast5", "wing_blast6" -> -4; default -> 0; };
@@ -257,32 +270,58 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
 
     private void applySecondaryMotion(FireDragonRenderer.State state, boolean walking) {
         float age = state.ageInTicks;
-        float idle = (float) Math.sin(age * 0.05F) * 0.65F;
-        bob("BodyUpper", idle);
-        for (String name : List.of("ThighR", "ThighL", "armR1", "armL1")) bob(name, -idle);
+        float idleSpeed = state.sleeping ? 0.025F : 0.05F;
+        float idleDegree = state.sleeping ? 0.25F : 0.5F;
+        bob("BodyUpper", idleSpeed, idleDegree * 1.3F, age, 1);
+        for (String name : List.of("ThighR", "ThighL", "armR1", "armL1"))
+            bob(name, idleSpeed, -idleDegree * 1.3F, age, 1);
+        // Keep the native landing/takeoff fade, with the original motion at each endpoint.
+        float air = Math.clamp((state.flyProgress + state.hoverProgress) / 20F, 0, 1);
+        float ground = 1 - air;
         if (walking) {
             float phase = state.walkAnimationPos;
             float amount = state.walkAnimationSpeed;
-            bob("BodyUpper", (float) Math.sin(phase * 0.4F) * amount * 0.85F);
-            bob("ThighR", (float) Math.sin(phase * 0.2F) * amount * 0.85F);
-            bob("ThighL", (float) Math.sin(phase * 0.2F) * amount * 0.85F);
-        } else {
-            // Fade with the pose so the last landing frame cannot move the body/seat abruptly.
-            bob("BodyUpper", (float) Math.sin(-age * 0.2F) * 2.5F * (state.flyProgress / 20F));
+            bob("BodyUpper", 0.4F, 0.85F, phase, amount);
+            bob("ThighR", 0.2F, 0.85F, phase, amount);
+            bob("ThighL", 0.2F, 0.85F, phase, amount);
+            chain(TAIL, 0.2F, 0.125F, -2, phase, amount, 1);
+            chain(TAIL, 0.2F, 0.075F, 2, phase, amount, 0);
+            chain(NECK, 0.2F, 0.075F, 2, phase, amount, 1);
+            chain(NECK, 0.2F, 0.025F, -2, phase, amount, 0);
         }
-        // Original chainWave/chainSwing idle motion, evaluated at render time rather than at 20 Hz.
-        String[] tail = {"Tail1", "Tail2", "Tail3", "Tail4"};
-        for (int i = 0; i < tail.length; i++) {
-            ModelPart part = parts.get(tail[i]);
-            if (part == null) continue;
-            part.yRot += (float) Math.cos(age * 0.05F - 2 * i) * 0.125F;
-            part.xRot += (float) Math.cos(age * 0.05F - 2 * i) * 0.075F;
+        chain(TAIL, idleSpeed, idleDegree * 0.25F, -2, age, ground, 1);
+        chain(TAIL, idleSpeed, idleDegree * 0.15F, -2, age, ground, 0);
+        chain(NECK, idleSpeed, -idleDegree * 0.15F, -3, age, ground, 0);
+        walk("Neck1", idleSpeed, idleDegree * 0.05F, false, age, ground);
+        bob("BodyUpper", -0.2F, 2.5F, age, air);
+        walk("BodyUpper", -0.2F, 0.05F, false, age, air);
+        chain(TAIL_BODY, 0.2F, -0.05F, 0, age, air, 0);
+        chain(NECK, 0.2F, 0.1F, -4, age, air, 0);
+        chain(TOES_L, 0.2F, 0.1F, -2, age, air, 0);
+        chain(TOES_R, 0.2F, 0.1F, -2, age, air, 0);
+        walk("ThighR", -0.2F, 0.05F, false, age, air);
+        walk("ThighL", -0.2F, 0.05F, true, age, air);
+    }
+
+    /** Citadel AdvancedEntityModel.chain* uses a phase normalized by chain length. */
+    private void chain(String[] names, float speed, float degree, float rootOffset, float time, float amount, int axis) {
+        if (amount == 0) return;
+        float phase = (float) (rootOffset * Math.PI / (2 * names.length));
+        for (int i = 0; i < names.length; i++) {
+            ModelPart part = parts.get(names[i]);
+            float rotation = (float) Math.cos(time * speed + phase * i) * degree * amount;
+            if (axis == 0) part.xRot += rotation;
+            else if (axis == 1) part.yRot += rotation;
+            else part.zRot += rotation;
         }
     }
 
-    private void bob(String name, float offset) {
-        ModelPart part = parts.get(name);
-        if (part != null) part.y += offset;
+    private void walk(String name, float speed, float degree, boolean invert, float time, float amount) {
+        parts.get(name).xRot += (float) Math.cos(time * speed) * degree * amount * (invert ? -1 : 1);
+    }
+
+    private void bob(String name, float speed, float degree, float time, float amount) {
+        parts.get(name).y += ((float) Math.sin(time * speed) - 1) * degree * amount;
     }
 
     private static float distance(float from, float to) {

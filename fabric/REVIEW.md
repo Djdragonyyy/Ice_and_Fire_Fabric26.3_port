@@ -1,5 +1,26 @@
 # Revisione del port Fabric
 
+## Revisione 0.1.37 - 25 ottobre 2026
+
+Diff completo da b7f3618c1 letto in sola lettura, senza delega: cinque file di
+versione/runDir, pose produttive, riferimenti JUnit e tavole client. Nessun rilievo
+residuo. Formule/ampiezze e sei giunti confrontati con sorgenti originali e Citadel.
+Le nuove aspettative sleep/hover includono movimenti prima assenti, con stesse
+tolleranze. Nessuna modifica ai dati di rete o al codice server della mod.
+
+Suite completa84JUnit/119modGameTests+baseline/11client passata in9m05s. Inquadrature
+corrette fuori revisione: la tavola in quattro pannelli tagliava il battito verso
+il basso; separata in due tavole alte e ripetuta l'intera suite client (1m51s),
+33PNG ordinari. Dodici tavole iniziali e tre tavole finali controllate visivamente.
+Rete corrente:1GameTest, due client separati, tre exit0 e tre immagini controllate.
+Aggancio cavaliere, armature, osservatore e autorita/ownership verificati anche
+con i movimenti aggiornati. Non e DedicatedServer ordinario autenticato.
+
+Raccolta prove con whitelist13file e verifica della versione nei tre log. Una
+vecchia PNG residua e stata preservata fuori repo ed esclusa dalla nuova consegna;
+mai copiare wildcard di schermate senza verificarne l'esecuzione di origine.
+Punte grigie e cause intermittenti sonno/escort ancora aperte. Carcassa/harvest/XP,
+altre animazioni e multipart non ancora migrati. Test/harness esclusi dal JAR.
 ## Revisione 0.1.36 - 25 ottobre 2026
 
 Diff completo da ae649c9e0 letto in sola lettura, senza delega: feeding server,
