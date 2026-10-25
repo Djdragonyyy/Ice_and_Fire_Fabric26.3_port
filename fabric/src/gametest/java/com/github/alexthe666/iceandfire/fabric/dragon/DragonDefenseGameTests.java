@@ -135,6 +135,9 @@ public class DragonDefenseGameTests {
     public void wallShieldsVictimAndDeadTargetIsReleased(GameTestHelper h) {
         floor(h);
         var d = dragon(h, null, 0);
+        // This case schedules its own ambient call at tick 35. A random earlier
+        // call can still be speaking then, so the explicit call will not restart it.
+        d.ambientSoundTime = -10000;
         d.setHunger(100); // Isolate cancellation from selecting an unrelated food animal in adjacent arenas.
         var v = victim(h, d.position().add(2, 0, 0));
         for (int y = 2; y < 7; y++) for (int z = 1; z < 46; z++)

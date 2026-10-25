@@ -9,6 +9,37 @@ import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FireDragonPoseModelTest {
+    @Test void feedingKeepsBodyAndWingsAndRecoversContinuouslyAtEveryStage() {
+        var model = model();
+        for (int stage = 1; stage <= 5; stage++) for (boolean sitting : new boolean[]{false, true}) {
+            var s = new FireDragonRenderer.State(); s.stage = stage; s.male = true;
+            s.sitProgress = sitting ? 20 : 0; s.scale = stage;
+            model.setupAnim(s); var idle = rotations(model);
+            float neck = find(model.root(), "Neck1").xRot;
+            float jaw = find(model.root(), "Jaw").xRot;
+            s.attack = com.github.alexthe666.iceandfire.fabric.dragon.DragonCombatState.EAT;
+            s.attackTick = 5; model.setupAnim(s);
+            assertEquals(neck + Math.toRadians(18), find(model.root(), "Neck1").xRot, 0.00001);
+            s.attackTick = 10; model.setupAnim(s);
+            assertEquals(jaw + Math.toRadians(18), find(model.root(), "Jaw").xRot, 0.00001);
+            for (float tick : new float[]{0, 2.5F, 5, 7.5F, 10, 15, 17.5F, 20}) {
+                s.attackTick = tick; model.setupAnim(s);
+                for (String name : new String[]{"BodyUpper", "BodyLower", "armL1", "armR1"}) {
+                    var actual = find(model.root(), name); var pose = actual.storePose();
+                    s.attack = 0; model.setupAnim(s);
+                    assertEquals(pose, find(model.root(), name).storePose(), "Feeding cannot deform the original body or folded wing " + name);
+                    s.attack = com.github.alexthe666.iceandfire.fabric.dragon.DragonCombatState.EAT; model.setupAnim(s);
+                }
+            }
+            for (int boundary : new int[]{0, 5, 10, 15, 20}) {
+                s.attackTick = boundary - 0.0001F; model.setupAnim(s); var before = rotations(model);
+                s.attackTick = boundary + 0.0001F; model.setupAnim(s);
+                assertArrayEquals(before, rotations(model), 0.0001F, "No feeding snap at " + boundary);
+            }
+            s.attackTick = 20; model.setupAnim(s);
+            assertArrayEquals(idle, rotations(model), 0.00001F, "Twenty-tick recovery returns exactly to the original rest pose");
+        }
+    }
     @Test void preyVisualAttachmentKeepsItsSizeAndFollowsAnimatedHead() {
         var model = model();
         var state = new FireDragonRenderer.State(); state.attack = 7;

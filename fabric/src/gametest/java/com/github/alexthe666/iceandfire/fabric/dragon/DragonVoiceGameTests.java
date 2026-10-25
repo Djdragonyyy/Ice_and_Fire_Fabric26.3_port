@@ -31,6 +31,7 @@ public class DragonVoiceGameTests {
         d.setNoAi(false); d.setCommand(1);
         d.playAmbientSound();
         for (int tick = 0; tick < 20; tick++) {
+            if (tick == 15) d.playAmbientSound(); // An overlapping call must not restart speech.
             d.tickCount++; d.tick();
             require(d.attackAnimation() == DragonCombatState.SPEAK && d.attackAnimationTick() == tick, "Twenty synchronized speaking frames");
         }

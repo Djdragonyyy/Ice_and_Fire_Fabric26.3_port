@@ -1,5 +1,32 @@
 # Prompt temporaneo per la prossima ripresa
 
+## Checkpoint 0.1.36 - feeding e verifica di corpo/ali
+
+Feeding manuale ora sincronizzato nei cinque stadi, collo/mandibola con easing
+sinusoidale e recupero completo entro20tick. Clic ripetuti senza riavvio del ciclo;
+precedenza a combattimento, volo, cavaliere, spalla, sonno e NoAI. Stats invariati.
+Audit di vertici/facce/normali/mirroring/UV esteso a TUTTO il modello originale.
+Dieci nuove tavole GPU dei cinque stadi: feeding e corpo/ali laterali/posteriori,
+seduti e in volo, a dimensioni normalizzate. PNG e geometria originali invariati.
+
+Suite definitiva:80JUnit,119GameTest mod (120 con baseline),11prove client,
+30immagini. Build completa passata in8m39s: phase36-final-3.log, TEST-0.1.36.md.
+Corretto il fixture del parlato per isolare il richiamo esplicito dai casuali;
+verificata anche chiamata sovrapposta, senza indebolire le asserzioni.
+Un precedente tentativo ha fallito il caso escort0->1; isolato e completo poi
+passano, causa NON provata e diagnostica mantenuta. Contrattacco intermittente,
+punte grigie e DedicatedServer ordinario/persistenza MP restano aperti.
+La rete a due client della0.1.35 non e stata rieseguita o ri-etichettata come0.1.36.
+
+PROSSIMO: movimenti secondari originali di corpo/collo/coda e assetto in volo,
+fase corretta delle catene e precedenza delle pose alari durante gli attacchi.
+Citadel: fase catene=rootOffset*PI/(2*numeroParti), bob non bounce=
+(sin(tempo*velocita)-1)*ampiezza*quantita. Nel port fase e offset sono diversi.
+Escludere armL1/armR1 e loro figli diretti dal gait per WING/EPIC_ROAR.
+Riferimenti in TEST-0.1.36.md; dettagli locali work/phase37-preparation/RESEARCH.txt.
+Proseguire autonomamente nella stessa chat/ramo, completando tappa1 prima delle
+successive. Non sospendere o spegnere MAI il computer. Tappa1/port ancora aperti.
+
 ## Checkpoint 0.1.35 — due client Minecraft separati via TCP
 
 Verifica reale a3JVM: GameTestServer standalone locale, proprietario e osservatore.

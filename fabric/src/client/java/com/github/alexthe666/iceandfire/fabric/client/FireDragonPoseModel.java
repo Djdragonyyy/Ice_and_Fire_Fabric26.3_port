@@ -193,9 +193,11 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
             for (var entry : parts.entrySet())
                 addPoseDelta(entry.getValue(), poses.get("attack_tackle").parts().get(entry.getKey()), weight, true);
         } else if (state.attack == DragonCombatState.EAT) {
-            float tick = state.attackTick;
-            float neck = tick < 5 ? tick / 5 : tick < 10 ? (10 - tick) / 5 : 0;
-            float jaw = tick < 5 ? 0 : tick < 10 ? (tick - 5) / 5 : tick < 15 ? 1 : Math.max(0, (20 - tick) / 5);
+            float tick = Math.clamp(state.attackTick, 0, 20);
+            // Original 18-degree keyframes and Citadel sine easing. Recover the jaw
+            // within the actual twenty-tick animation, instead of snapping it shut.
+            float neck = tick < 5 ? sineFrame(tick) : tick < 10 ? 1 - sineFrame(tick - 5) : 0;
+            float jaw = tick < 5 ? 0 : tick < 10 ? sineFrame(tick - 5) : tick < 15 ? 1 : 1 - sineFrame(tick - 15);
             for (String name : List.of("Neck1", "Neck2")) parts.get(name).xRot += (float) Math.toRadians(18) * neck;
             parts.get("Jaw").xRot += (float) Math.toRadians(18) * jaw;
             parts.get("Jaw").z += 0.2F * jaw;
@@ -227,6 +229,8 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
             }
         }
     }
+
+    private static float sineFrame(float tick) { return (float) Math.sin(tick / 5 * Math.PI * 0.5); }
 
     private static float wingLift(String pose) {
         if (pose == null) return 0;

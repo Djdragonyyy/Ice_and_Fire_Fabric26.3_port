@@ -14,7 +14,7 @@ class TabulaLoaderTest {
     /** Reference face layout: Citadel TabulaModelRenderUtils.ModelBox/TexturedQuad (LGPL-3.0).
      * https://github.com/AlexModGuy/Citadel/blob/master/src/main/java/com/github/alexthe666/citadel/client/model/TabulaModelRenderUtils.java
      */
-    @Test void everySpikeVertexKeepsOriginalTabulaFaceOrientationAndUv() throws Exception {
+    @Test void everyBodyWingAndSpikeVertexKeepsOriginalTabulaFaceOrientationAndUv() throws Exception {
         Path file = modelDirectory().resolve("firedragon_ground.tbl");
         JsonObject original;
         try (var zip = new ZipFile(file.toFile());
@@ -22,7 +22,7 @@ class TabulaLoaderTest {
             original = JsonParser.parseReader(reader).getAsJsonObject();
         }
         java.util.Map<String, JsonObject> cubes = new java.util.HashMap<>();
-        collectSpikes(original.getAsJsonArray("cubes"), cubes);
+        collectCubes(original.getAsJsonArray("cubes"), cubes);
         try (var input = Files.newInputStream(file)) {
             var parsed = TabulaLoader.parse(input);
             for (var entry : cubes.entrySet()) {
@@ -67,18 +67,19 @@ class TabulaLoaderTest {
                 assertEquals(1, checked.get());
             }
         }
-        assertEquals(22, cubes.size());
+        assertEquals(cubeCount(original.getAsJsonArray("cubes")), cubes.size());
+        assertTrue(cubes.containsKey("BodyUpper") && cubes.containsKey("BodyLower") && cubes.containsKey("armL1") && cubes.containsKey("armR1"));
     }
 
     private static float number(JsonObject cube, String key, int i) {
         return cube.getAsJsonArray(key).get(i).getAsFloat();
     }
 
-    private static void collectSpikes(JsonArray children, java.util.Map<String, JsonObject> result) {
+    private static void collectCubes(JsonArray children, java.util.Map<String, JsonObject> result) {
         for (var child : children) {
             var cube = child.getAsJsonObject();
-            if (cube.get("name").getAsString().startsWith("spike")) result.put(cube.get("name").getAsString(), cube);
-            collectSpikes(cube.getAsJsonArray("children"), result);
+            result.put(cube.get("name").getAsString(), cube);
+            collectCubes(cube.getAsJsonArray("children"), result);
         }
     }
 

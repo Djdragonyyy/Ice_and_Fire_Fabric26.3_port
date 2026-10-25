@@ -731,7 +731,8 @@ public final class FireDragon extends TamableAnimal {
 
     private void syncCombat() {
         entityData.set(BREATHING, combat.breathing());
-        boolean eating = eatingTicks > 0 && combat.animation() == DragonCombatState.NONE && !combat.breathing();
+        if (!canAnimateFeeding()) eatingTicks = 0;
+        boolean eating = eatingTicks > 0;
         boolean tackle = flying() && canMoveAutonomously() && getTarget() != null
                 && flightManager.attacking() && flightManager.airAttack() == DragonFlightManager.AirAttack.TACKLE;
         if (!canRoar()) roarTicks = 0;
@@ -756,7 +757,6 @@ public final class FireDragon extends TamableAnimal {
         setHunger(hunger() + points);
         setHealth(Math.min(getMaxHealth(), (int) (getHealth() + points)));
         feedingEffects(item.getItem(), false, false);
-        eatingTicks = 20;
         item.getItem().shrink(1);
         if (item.getItem().isEmpty()) item.discard();
     }
@@ -1075,6 +1075,9 @@ public final class FireDragon extends TamableAnimal {
     private void feedingEffects(ItemStack stack, boolean sickly, boolean meal) {
         playSound(sickly ? net.minecraft.sounds.SoundEvents.ZOMBIE_VILLAGER_CURE : net.minecraft.sounds.SoundEvents.GENERIC_EAT.value(), 1, 1);
         if (!(level() instanceof ServerLevel server)) return;
+        // Feedback for both hand feeding and dropped food. Repeated clicks do not
+        // hold the neck in the first frame; movement/defence retain their priority.
+        if (eatingTicks == 0 && canAnimateFeeding()) eatingTicks = 20;
         Vec3 head = headPosition();
         for (var item : meal ? new net.minecraft.world.item.Item[]{stack.getItem(), net.minecraft.world.item.Items.BONE, net.minecraft.world.item.Items.BONE_MEAL}
                 : new net.minecraft.world.item.Item[]{stack.getItem()}) {
@@ -1083,6 +1086,11 @@ public final class FireDragon extends TamableAnimal {
         }
         if (sickly) server.sendParticles(new net.minecraft.core.particles.ItemParticleOption(net.minecraft.core.particles.ParticleTypes.ITEM,
                 net.minecraft.world.item.Items.POISONOUS_POTATO), head.x, head.y, head.z, 12, 0.15, 0.15, 0.15, 0.05);
+    }
+    private boolean canAnimateFeeding() {
+        return isAlive() && !isNoAi() && !dragonSleeping() && !flying() && !hovering()
+                && !isVehicle() && !isPassenger() && shoulderCarrier() == null && getTarget() == null
+                && combat.animation() == DragonCombatState.NONE && !combat.breathing() && roarTicks == 0;
     }
     @Override public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob other) { return null; }
 

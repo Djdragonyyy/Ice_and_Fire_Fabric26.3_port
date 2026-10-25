@@ -1,5 +1,32 @@
 # Stato della tappa 1 — drago di fuoco, Fabric 26.3
 
+## Checkpoint 0.1.36 - feeding e verifica di corpo/ali
+
+Feeding manuale ora sincronizzato nei cinque stadi, collo/mandibola con easing
+sinusoidale e recupero completo entro20tick. Clic ripetuti senza riavvio del ciclo;
+precedenza a combattimento, volo, cavaliere, spalla, sonno e NoAI. Stats invariati.
+Audit di vertici/facce/normali/mirroring/UV esteso a TUTTO il modello originale.
+Dieci nuove tavole GPU dei cinque stadi: feeding e corpo/ali laterali/posteriori,
+seduti e in volo, a dimensioni normalizzate. PNG e geometria originali invariati.
+
+Suite definitiva:80JUnit,119GameTest mod (120 con baseline),11prove client,
+30immagini. Build completa passata in8m39s: phase36-final-3.log, TEST-0.1.36.md.
+Corretto il fixture del parlato per isolare il richiamo esplicito dai casuali;
+verificata anche chiamata sovrapposta, senza indebolire le asserzioni.
+Un precedente tentativo ha fallito il caso escort0->1; isolato e completo poi
+passano, causa NON provata e diagnostica mantenuta. Contrattacco intermittente,
+punte grigie e DedicatedServer ordinario/persistenza MP restano aperti.
+La rete a due client della0.1.35 non e stata rieseguita o ri-etichettata come0.1.36.
+
+PROSSIMO: movimenti secondari originali di corpo/collo/coda e assetto in volo,
+fase corretta delle catene e precedenza delle pose alari durante gli attacchi.
+Citadel: fase catene=rootOffset*PI/(2*numeroParti), bob non bounce=
+(sin(tempo*velocita)-1)*ampiezza*quantita. Nel port fase e offset sono diversi.
+Escludere armL1/armR1 e loro figli diretti dal gait per WING/EPIC_ROAR.
+Riferimenti in TEST-0.1.36.md; dettagli locali work/phase37-preparation/RESEARCH.txt.
+Proseguire autonomamente nella stessa chat/ramo, completando tappa1 prima delle
+successive. Non sospendere o spegnere MAI il computer. Tappa1/port ancora aperti.
+
 ## Checkpoint 0.1.35 — due client Minecraft separati via TCP
 
 Verifica reale a3JVM: GameTestServer standalone locale, proprietario e osservatore.
@@ -446,6 +473,18 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
     Lo stadio5 supera una parete e atterra vivo senza attraversare blocchi.
     Collisioni native e regole separate per caduta del giocatore conservate.
 
+27. Acqua/lava, soglie per stadio, superficie lava e comandi verticali pilotati;
+    camminata originale e moltiplicatore server sincronizzato. TEST-0.1.31/32/33.
+
+28. Overlay maschile originale semitrasparente, cache limitata e ricaricamento
+    nativo delle risorse, con prova di tutte40combinazioni. TEST-0.1.34.
+
+29. Due client separati su GameTestServer locale: proprieta, comandi, volo,
+    sesso, armature e velocita server osservati da entrambi. TEST-0.1.35.
+
+30. Feeding manuale nei cinque stadi, easing e recupero20tick; verifica completa
+    delle UV/geometrie originali e dieci tavole corpo/ali/feeding. TEST-0.1.36.
+
 ## Da completare nella tappa 1
 
 - Combattimento autonomo: ulteriori dettagli di presa e
@@ -456,7 +495,7 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 - Comportamento completo in acqua/lava e ulteriori casi complessi di navigazione.
   La0.1.30 include corpo completo e deviazioni locali; labirinti/grotte e
   assetti stretti restano da collaudare, senza dichiarare un pathfinder universale.
-- Passeggeri nell'anteprima GUI; differenze visive complete maschio/femmina,
+- Passeggeri nell'anteprima GUI; ulteriori dettagli visivi maschio/femmina,
   animazioni secondarie/attacchi, ulteriori suoni e particelle ancora mancanti.
 - Configurazioni originali non ancora esposte; integrazione DragonForge ed
   esplosioni opzionali del combattimento.
@@ -469,6 +508,6 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 Restano fuori da questa consegna draghi di ghiaccio/fulmine, altre creature,
 progressione completa, ricette, strutture e generazione naturale: appartengono
 alle tappe successive. Non iniziarle prima del completamento e del riscontro
-sulla tappa 1. La 0.1.13 è confermata; collaudare le novità successive, ora fino alla0.1.35.
+sulla tappa 1. La 0.1.13 è confermata; collaudare le novità successive, ora fino alla0.1.36. L'utente ha autorizzato il proseguimento autonomo; il riscontro non impone una nuova pausa.
 
 Nota operativa24ottobre: ripresa effettiva alle22:12Roma dopo reset; automazione stessa chat riportata a controllo5min. Sessione in corso, nessuna sospensione.

@@ -141,9 +141,15 @@ public class DragonConfigGameTests {
             d.tick();
             require(d.flying() && d.flightManager.target() != null, "Escort route remains valid at zero modifier");
             require(d.getDeltaMovement().lengthSqr() < 1.0E-8, "Zero modifier contributes no cruise or climb acceleration");
+            Vec3 firstTarget = d.flightManager.target();
             cfg.dragonFlightSpeedMod = 1; d.tick();
             require(d.getFlightSpeedModifier() == 1 && d.getDeltaMovement().horizontalDistance() > 1.0E-5,
-                    "Same escort route resumes actual horizontal acceleration when server restores speed");
+                    "Same escort route resumes actual horizontal acceleration when server restores speed: pos=" + d.position()
+                            + " velocity=" + d.getDeltaMovement() + " modifier=" + d.getFlightSpeedModifier()
+                            + " targetBefore=" + firstTarget + " targetAfter=" + d.flightManager.target()
+                            + " flying=" + d.flying() + " hovering=" + d.hovering() + " collision=" + d.horizontalCollision
+                            + " owner=" + owner.position() + " ownerVelocity=" + owner.getDeltaMovement()
+                            + " directClear=" + (firstTarget != null && DragonFlightClearance.clear(d, d.position(), firstTarget)));
         } finally { DragonCombatConfig.current = old; }
         h.succeed();
     }

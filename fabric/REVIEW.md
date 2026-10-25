@@ -1,5 +1,27 @@
 # Revisione del port Fabric
 
+## Revisione 0.1.36 - 25 ottobre 2026
+
+Diff completo da ae649c9e0 letto in sola lettura, senza delega: feeding server,
+pose EAT, versioni/runDir, registrazione test, nuovo fixture server/client e
+comparatore geometrico di tutti i cubi. Nessun rilievo residuo nel diff finale.
+Stats e movimento non modificati; guardie e annullamento impediscono che EAT
+scavalchi i comportamenti attivi. Tavole GPU modificano soltanto render-state
+separati e dichiarano le dimensioni normalizzate; nessun hook di produzione.
+
+Correzioni fuori revisione: il nuovo difensore di prova era inizialmente seduto,
+che elimina correttamente il bersaglio; reso libero nel fixture. Nel vecchio
+caso wallShields il richiamo casuale poteva sovrapporsi a quello esplicito:
+isolato il secondo tramite ambientSoundTime nativo, asserzioni invariate.
+La prova voci verifica ora la chiamata al tick15 senza riavvio del ciclo20tick.
+Native Mob.baseTick/startSpeaking letti per confermare questo comportamento.
+
+Suite finale80JUnit/119modGameTests+baseline/11client,30PNG,8m39s, passata.
+Dieci tavole finali dei cinque stadi controllate dopo la rimozione dei toast.
+Un primo completo ha fallito il caso escort0->1: isolato e finale passano,
+causa non dimostrata, nuova diagnostica senza modificare lo steering o i limiti.
+Contrattacco intermittente, punte grigie, altre animazioni e collaudo su normale
+DedicatedServer restano aperti. Test e preview esclusi dal JAR distribuito.
 ## Revisione 0.1.35 — 25 ottobre 2026
 
 Diff completo da f6c287d78 letto in sola lettura, senza delega: sourceSet e
