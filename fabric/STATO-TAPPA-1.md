@@ -522,10 +522,11 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 33. Oggetti di raccolta, carne originale e teschio piazzabile/salvabile nei cinque
     stadi, con C2S e tavola GPU. TEST-0.1.39. Carcassa ancora da collegare.
 
+34. Carcassa persistente e raccolta completa, posa/skin DEAD originali,9prove
+    native e raccolta C2S completa. TEST-0.1.40. XP/inventario senza duplicazioni.
+
 ## Da completare nella tappa 1
 
-- Carcassa persistente/raccolta; XP originali completati nella0.1.38. Oggi rimozione vanilla
-  e solo drop inventario. Item/teschio pronti nella0.1.39; collegare ancora il ciclo di raccolta originale.
 - Multipart del drago, con interazione/danno e sincronizzazione corretti.
 
 - Combattimento autonomo: ulteriori dettagli di presa e
@@ -549,6 +550,6 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 Restano fuori da questa consegna draghi di ghiaccio/fulmine, altre creature,
 progressione completa, ricette, strutture e generazione naturale: appartengono
 alle tappe successive. Non iniziarle prima del completamento e del riscontro
-sulla tappa 1. La 0.1.13 è confermata; collaudare le novità successive, ora fino alla0.1.39. L'utente ha autorizzato il proseguimento autonomo; il riscontro non impone una nuova pausa.
+sulla tappa 1. La 0.1.13 è confermata; collaudare le novità successive, ora fino alla0.1.40. L'utente ha autorizzato il proseguimento autonomo; il riscontro non impone una nuova pausa.
 
-Nota operativa24ottobre: ripresa effettiva alle22:12Roma dopo reset; automazione stessa chat riportata a controllo5min. Sessione in corso, nessuna sospensione.
+Nota operativa25ottobre: ultima richiesta continua fino a esaurimento quota, poi spegni il PC dopo checkpoint sicuro. Controllo automatico50min, non5. Superati i vecchi divieti storici; proseguimento del port autorizzato.

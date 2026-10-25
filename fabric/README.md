@@ -1,10 +1,12 @@
 # Ice and Fire: port Fabric 26.3 in sviluppo
 
-Verificati 88 JUnit, 124 GameTest della mod (125 con baseline vanilla), 12 prove client e 34 immagini nella 0.1.39. Prova rete precedente sulla0.1.37, non rieseguita qui. DedicatedServer ordinario ancora da collaudare.
+Verificati 94 JUnit, 133 GameTest della mod (134 con baseline vanilla), 13 prove client e 39 immagini nella 0.1.40. Prova rete precedente sulla0.1.37, non rieseguita qui. DedicatedServer ordinario ancora da collaudare.
 
 **Checkpoint di sviluppo: la tappa 1 e il port completo restano aperti.**
 
-Versione corrente: **0.1.39-stage1-dev**. Oggetti della raccolta e teschio originale piazzabile nei cinque stadi. [TEST-0.1.39.md](TEST-0.1.39.md). Carcassa ancora da collegare; tappa1 incompleta.
+Versione corrente: **0.1.40-stage1-dev**. Carcassa persistente e raccolta originale fino al teschio, con posa e scheletro originali. [TEST-0.1.40.md](TEST-0.1.40.md). Multipart e altre parita ancora aperti; tappa1 incompleta.
+
+Versione precedente: **0.1.39-stage1-dev**. Oggetti della raccolta e teschio originale piazzabile nei cinque stadi. [TEST-0.1.39.md](TEST-0.1.39.md). Carcassa ancora da collegare; tappa1 incompleta.
 
 Versione precedente: **0.1.38-stage1-dev**. XP originali per i cinque stadi tramite hook nativo, senza duplicazioni. [TEST-0.1.38.md](TEST-0.1.38.md). Carcassa/raccolta e tappa1 ancora aperte.
 

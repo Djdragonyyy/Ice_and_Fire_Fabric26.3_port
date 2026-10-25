@@ -13,7 +13,7 @@ final class DragonEyesLayer extends RenderLayer<FireDragonRenderer.State, Entity
     DragonEyesLayer(FireDragonRenderer parent, FireDragonPoseModel eyes) { super(parent); this.eyes = eyes; }
     @Override public void submit(PoseStack stack, SubmitNodeCollector collector, int light,
                                  FireDragonRenderer.State state, float yRot, float xRot) {
-        if (state.isInvisible || state.sleeping || state.blinking || state.deathTime > 0) return;
+        if (state.isInvisible || state.corpse || state.sleeping || state.blinking || state.deathTime > 0) return;
         collector.order(1).submitModel(eyes, state, stack, RenderTypes.eyes(FireDragonRenderer.texture(state, "_eyes")),
                 15728880, OverlayTexture.NO_OVERLAY, state.outlineColor);
     }

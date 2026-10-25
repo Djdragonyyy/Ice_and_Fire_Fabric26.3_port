@@ -534,6 +534,33 @@ class FireDragonPoseModelTest {
         }
     }
 
+    @Test void corpseUsesOriginalDeathPoseWithoutIdleTrackingOrAttackMotion() {
+        var model = model(); var s = new FireDragonRenderer.State(); s.male = true; s.corpse = true; s.modelDeadProgress = 20;
+        model.setupAnim(s); var expected = original("dead");
+        for (String name : new String[]{"BodyUpper", "Neck1", "Head", "ThighL", "ThighR", "armL1", "Tail3"}) {
+            var actual = find(model.root(), name); var ref = expected.parts().get(name);
+            for (float[] pair : new float[][]{{actual.xRot, ref.xRot}, {actual.yRot, ref.yRot}, {actual.zRot, ref.zRot}}) {
+                assertEquals(Math.sin(pair[1]), Math.sin(pair[0]), 0.00001, name);
+                assertEquals(Math.cos(pair[1]), Math.cos(pair[0]), 0.00001, name);
+            }
+        }
+        var before = rotations(model); s.ageInTicks = 999; s.yRot = 90; s.xRot = 30;
+        s.flying = true; s.flyProgress = 20; s.attack = 4; s.attackTick = 15; s.walkAnimationSpeed = 1;
+        model.setupAnim(s); assertArrayEquals(before, rotations(model), 0.00001F, "Corpse ignores all live secondary and attack movement");
+        s.corpse = false; s.flying = false; s.flyProgress = 0; s.attack = 0; s.walkAnimationSpeed = 0; model.setupAnim(s);
+        s.corpse = true; model.setupAnim(s); assertArrayEquals(before, rotations(model), 0.00001F, "Returning to corpse cannot accumulate prior poses");
+    }
+
+    @Test void corpseThighsUseOriginalLinearAngleInterpolationAtHalfProgress() {
+        var model = model(); var s = new FireDragonRenderer.State(); s.male = true; s.corpse = true; s.modelDeadProgress = 10;
+        var base = original("ground"); var dead = original("dead"); model.setupAnim(s);
+        for (String name : new String[]{"ThighL", "ThighR"}) {
+            var start = base.parts().get(name); var end = dead.parts().get(name); var actual = find(model.root(), name);
+            assertEquals((start.xRot + end.xRot) / 2, actual.xRot, 0.00001F);
+            assertEquals((start.yRot + end.yRot) / 2, actual.yRot, 0.00001F);
+            assertEquals((start.zRot + end.zRot) / 2, actual.zRot, 0.00001F);
+        }
+    }
     private static float[] rotations(FireDragonPoseModel model) {
         var parts = model.root().getAllParts();
         float[] result = new float[parts.size() * 3];

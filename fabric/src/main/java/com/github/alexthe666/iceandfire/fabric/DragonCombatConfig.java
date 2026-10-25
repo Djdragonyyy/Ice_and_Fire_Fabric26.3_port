@@ -26,6 +26,9 @@ public final class DragonCombatConfig {
     public int dragonFluteDistance = 4;
     public int dragonFlapNoiseDistance = 4;
     public boolean chunkLoadSummonCrystal = true;
+    public boolean dragonDropBlood = true;
+    public boolean dragonDropHeart = true;
+    public boolean dragonDropSkull = true;
 
     boolean validValues() {
         return Double.isFinite(dragonAttackDamageFire) && dragonAttackDamageFire >= 0 && dragonAttackDamageFire <= Float.MAX_VALUE / 5

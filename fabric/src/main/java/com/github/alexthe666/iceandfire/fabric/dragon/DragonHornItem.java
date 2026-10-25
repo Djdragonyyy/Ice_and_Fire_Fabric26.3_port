@@ -39,7 +39,7 @@ public final class DragonHornItem extends Item {
         // Creative Player.interactOn passes a copy; storage must update the real held horn.
         stack = player.getItemInHand(hand);
         if (hand != InteractionHand.MAIN_HAND || !stack.is(this) || stack.getCount() != 1
-                || !(target instanceof FireDragon dragon) || !dragon.isAlive() || !dragon.isOwnedBy(player)
+                || !(target instanceof FireDragon dragon) || (!dragon.isAlive() || dragon.corpse()) || !dragon.isOwnedBy(player)
                 || dragon.level() != player.level() || player.isSpectator() || dragon.isPassenger() || dragon.isVehicle()
                 || dragon.shoulderCarrier() != null) return InteractionResult.FAIL;
         var tag = data(stack);
@@ -73,7 +73,7 @@ public final class DragonHornItem extends Item {
         var dragon = IafContent.FIRE_DRAGON.create(server, EntitySpawnReason.LOAD);
         if (dragon == null) return InteractionResult.FAIL;
         dragon.load(TagValueInput.create(ProblemReporter.DISCARDING, server.registryAccess(), saved));
-        if (!dragon.isAlive()) return InteractionResult.FAIL;
+        if ((!dragon.isAlive() || dragon.corpse())) return InteractionResult.FAIL;
         for (var level : server.getServer().getAllLevels()) if (level.getEntity(dragon.getUUID()) != null) return InteractionResult.FAIL;
         dragon.setPos(context.getClickedPos().getX() + 0.5, context.getClickedPos().getY() + 1, context.getClickedPos().getZ() + 0.5);
         dragon.setYRot(180 + context.getHorizontalDirection().toYRot());

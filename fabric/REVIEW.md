@@ -1,5 +1,27 @@
 # Revisione del port Fabric
 
+## Revisione 0.1.40 - 25 ottobre 2026
+
+Diff completo e nuovi file letti in sola lettura, senza delega, con review-agent
+locale. Confrontati EntityDragonBase/EntityFireDragon, CustomizeToDragon, JSON,
+animatore DEAD e skin originali; hook/codec26 verificati nel bytecode nativo.
+Rilievo reale: morte dentro super.tick continuava negli aggiornamenti vivi;
+corretto con ritorno immediato. Ripristinata anche gravita immediata dopo eiezione.
+Correzioni fuori revisione, test di regressione dedicati; nessun rilievo residuo.
+
+Inventario/XP una sola volta, svuotamento visivo armature, blocchi su corno,
+cristallo/menu/monta/target, rilascio spalla/preda e dismount aereo controllati.
+Config/pesi/quantita mantengono le stranezze originali documentate; nessuna
+semplificazione dei limiti o nuova immunita. Fallback sangue inventario pieno
+ed eliminazione /kill sono adattamenti espliciti contro perdita/irremovibilita.
+
+Ultima suite completa17m14s,94JUnit/133modGameTest+baseline/13client/39PNG. Nove
+casi nuovi e C2S intero ciclo; tutte cinque tavole finali controllate. Timestamp
+PNG tutti successivi all'avvio finale, nessuna prova vecchia riciclata. Il primo
+fixture di persistenza e stato corretto usando un ServerPlayer registrato; UUID
+coincideva ma il mock non registrato non poteva risolversi. Asserzioni mantenute.
+Salvataggio NBT nativo non equivale a prova DedicatedServer/riapertura MP.
+
 ## Revisione 0.1.39 - 25 ottobre 2026
 
 Diff completo e nuovi file letti in sola lettura, senza delega, con skill

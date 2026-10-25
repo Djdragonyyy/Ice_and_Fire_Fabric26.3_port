@@ -49,6 +49,9 @@ public final class FireDragon extends TamableAnimal {
     private static final EntityDataAccessor<Integer> GRIPPED_PREY = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> CRYSTAL_BOUND = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Float> SPEED_MODIFIER = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Boolean> MODEL_DEAD = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> DEATH_STAGE = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.INT);
+    public float modelDeadProgress, prevModelDeadProgress;
     private java.util.UUID loadedPrey;
     private int loadedGripTick;
     private boolean gripImpactDone;
@@ -153,7 +156,7 @@ public final class FireDragon extends TamableAnimal {
     @Override protected net.minecraft.sounds.SoundEvent getHurtSound(net.minecraft.world.damagesource.DamageSource source) { return IafContent.FIRE_HURT[voiceIndex()]; }
     @Override protected net.minecraft.sounds.SoundEvent getDeathSound() { return IafContent.FIRE_DEATH[voiceIndex()]; }
     @Override public void playAmbientSound() {
-        if (!level().isClientSide() && isAlive() && !dragonSleeping()) {
+        if (!level().isClientSide() && isAlive() && !corpse() && !dragonSleeping()) {
             startSpeaking();
             super.playAmbientSound();
         }
@@ -199,6 +202,8 @@ public final class FireDragon extends TamableAnimal {
         builder.define(GRIPPED_PREY, -1);
         builder.define(CRYSTAL_BOUND, false);
         builder.define(SPEED_MODIFIER, 1F);
+        builder.define(MODEL_DEAD, false);
+        builder.define(DEATH_STAGE, 0);
     }
 
     @Override protected void registerGoals() {
@@ -298,8 +303,13 @@ public final class FireDragon extends TamableAnimal {
         }
     }
     @Override public boolean hurtServer(ServerLevel server, net.minecraft.world.damagesource.DamageSource source, float damage) {
+        if (corpse()) {
+            // Native /kill uses genericKill damage; retain administrative cleanup of remains.
+            if (!isRemoved() && source.is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY)) { discard(); return true; }
+            return false;
+        }
         boolean hurt = super.hurtServer(server, source, damage);
-        if (hurt) {
+        if (hurt && !corpse()) {
             setDragonSleeping(false); sleepNotBefore = level().getGameTime() + 20;
             if (source.getEntity() != null && random.nextInt(4) == 0) roar();
         }
@@ -372,6 +382,14 @@ public final class FireDragon extends TamableAnimal {
     }
 
     @Override public void tick() {
+        if (corpse()) {
+            prevModelDeadProgress = modelDeadProgress;
+            modelDeadProgress = Math.min(20, modelDeadProgress + 0.5F);
+            setNoGravity(false);
+            setDeltaMovement(0, getDeltaMovement().y, 0);
+            super.tick();
+            return;
+        }
         if (!level().isClientSide()) entityData.set(SPEED_MODIFIER, (float) DragonCombatConfig.current.dragonFlightSpeedMod);
         if (!level().isClientSide() && loadedPrey != null) restoreGrip();
         Player carrier = shoulderCarrier();
@@ -407,6 +425,7 @@ public final class FireDragon extends TamableAnimal {
         // Flight must be active before vanilla processes this tick's ridden movement.
         setNoGravity(flying() || carrier != null);
         super.tick();
+        if (corpse()) return; // Death inside the native tick must stop this tick's growth/combat too.
         if (level() instanceof ServerLevel server) tickCombat(server);
         if (level() instanceof ServerLevel server && crystalBound() && tickCount % 20 == 0 && server.getEntity(getUUID()) == this)
             DragonPositions.get(server).put(getUUID(), blockPosition());
@@ -868,7 +887,7 @@ public final class FireDragon extends TamableAnimal {
     @Override protected boolean couldAcceptPassenger() {
         // Unlike canAddPassenger, vanilla checks this even for forced mounts and NBT loading.
         // One occupant: the owner's pilot seat or an explicitly registered combat prey.
-        return !isVehicle();
+        return !corpse() && !isVehicle();
     }
 
     @Override protected boolean canAddPassenger(Entity passenger) {
@@ -947,6 +966,7 @@ public final class FireDragon extends TamableAnimal {
     }
 
     @Override public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        if (corpse()) return harvestCorpse(player, hand);
         ItemStack stack = player.getItemInHand(hand);
         if (!isAlive()) return InteractionResult.PASS;
         if (!level().isClientSide() && (isOwnedBy(player) || stack.is(IafContent.CREATIVE_DRAGON_MEAL))) {
@@ -1101,6 +1121,8 @@ public final class FireDragon extends TamableAnimal {
 
     @Override protected void addAdditionalSaveData(ValueOutput output) {
         super.addAdditionalSaveData(output);
+        output.putBoolean("ModelDead", corpse());
+        output.putInt("DeathStage", deathStage());
         output.putInt("AgeTicks", entityData.get(AGE_TICKS));
         output.putInt("Variant", variant());
         output.putInt("Hunger", hunger());
@@ -1125,6 +1147,7 @@ public final class FireDragon extends TamableAnimal {
     }
 
     @Override protected void readAdditionalSaveData(ValueInput input) {
+        entityData.set(MODEL_DEAD, false);
         super.readAdditionalSaveData(input);
         // Carried babies remain independently saved world entities; loading releases them.
         releaseShoulder();
@@ -1153,6 +1176,88 @@ public final class FireDragon extends TamableAnimal {
         setDragonSleeping(input.getBooleanOr("Sleeping", false) && !flying() && command() == 0);
         loadedPrey = input.read("GrippedPrey", net.minecraft.core.UUIDUtil.CODEC).orElse(null);
         loadedGripTick = Math.clamp(input.getIntOr("GripTick", 0), 0, 55);
+        entityData.set(DEATH_STAGE, Math.clamp(input.getIntOr("DeathStage", 0), 0, 25));
+        entityData.set(MODEL_DEAD, false);
+        if (input.getBooleanOr("ModelDead", false)) {
+            setHealth(0); becomeCorpse(); modelDeadProgress = prevModelDeadProgress = 20;
+        }
+    }
+
+    public boolean corpse() { return entityData.get(MODEL_DEAD); }
+    public int deathStage() { return entityData.get(DEATH_STAGE); }
+    public boolean skeletal() { return corpse() && DragonCorpseRules.skeletal(ageDays(), deathStage()); }
+    @Override public boolean isAlive() { return corpse() ? !isRemoved() : super.isAlive(); }
+    @Override public boolean isNoAi() { return corpse() || super.isNoAi(); }
+    @Override public void die(net.minecraft.world.damagesource.DamageSource source) {
+        if (corpse()) return;
+        super.die(source); // Native inventory, kill credit and XP are awarded exactly once here.
+        if (!level().isClientSide() && getHealth() <= 0 && !isRemoved()) becomeCorpse();
+    }
+    private void becomeCorpse() {
+        if (corpse()) return;
+        entityData.set(MODEL_DEAD, true);
+        releaseGrip(true); releaseShoulder(); ejectPassengers();
+        setTarget(null); setDragonSleeping(false); setAutonomousFlight(false, false);
+        setNoGravity(false);
+        flightManager.reset(); combat.reset(); eatingTicks = speakingTicks = roarTicks = roarAnimation = 0;
+        riderControls = 0; takeoff.reset(); loadedPrey = null;
+        syncCombat(); getNavigation().stop();
+        entityData.set(FLIGHT_PITCH, 0F); flightPitch = previousFlightPitch = 0;
+        updateArmor(); deathTime = 0;
+    }
+    @Override protected void tickDeath() {
+        deathTime = 0;
+        if (level() instanceof ServerLevel server) {
+            if (!corpse()) becomeCorpse();
+            if (DragonCorpseRules.exhausted(ageDays(), deathStage())) {
+                server.sendParticles(net.minecraft.core.particles.ParticleTypes.CLOUD, getX(), getY(), getZ(), 40,
+                        getBbWidth(), getBbHeight(), getBbWidth(), 0.02);
+                remove(RemovalReason.KILLED);
+            }
+        }
+    }
+    @Override public InteractionResult interact(Player player, InteractionHand hand, Vec3 location) {
+        return corpse() ? harvestCorpse(player, hand) : super.interact(player, hand, location);
+    }
+    private InteractionResult harvestCorpse(Player player, InteractionHand hand) {
+        if (isRemoved() || player.isSpectator() || !player.mayBuild()) return InteractionResult.PASS;
+        if (!(level() instanceof ServerLevel server)) return InteractionResult.SUCCESS;
+        var stack = player.getItemInHand(hand); var config = DragonCombatConfig.current;
+        var action = DragonCorpseRules.harvest(ageDays(), deathStage(), stack.is(net.minecraft.world.item.Items.GLASS_BOTTLE),
+                stack.isEmpty(), config.dragonDropBlood, config.dragonDropHeart, config.dragonDropSkull);
+        if (action == DragonCorpseRules.Harvest.NONE) return InteractionResult.SUCCESS;
+        entityData.set(DEATH_STAGE, deathStage() + 1);
+        switch (action) {
+            case BLOOD -> {
+                stack.consume(1, player);
+                var blood = new ItemStack(IafContent.FIRE_DRAGON_BLOOD);
+                if (!player.getInventory().add(blood)) player.spawnAtLocation(server, blood);
+            }
+            case HEART -> {
+                spawnAtLocation(server, new ItemStack(IafContent.FIRE_DRAGON_HEART), 1F);
+                if (!male() && stage() > 3) spawnAtLocation(server, new ItemStack(IafContent.FIRE_EGGS[random.nextInt(4)]), 1F);
+            }
+            case SKULL -> {
+                spawnAtLocation(server, DragonSkullItem.stack(new DragonSkullData(stage(), ageDays())), 1F);
+                discard();
+            }
+            case RANDOM -> {
+                var key = net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.LOOT_TABLE,
+                        IafContent.id("entities/dragon/" + (skeletal() ? "fire_dragon_skeleton" : male() ? "fire_dragon_male" : "fire_dragon_female")));
+                var params = new net.minecraft.world.level.storage.loot.LootParams.Builder(server)
+                        .withParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.THIS_ENTITY, this)
+                        .withParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.ORIGIN, position())
+                        .withParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.DAMAGE_SOURCE, damageSources().generic())
+                        .create(net.minecraft.world.level.storage.loot.parameters.LootContextParamSets.ENTITY);
+                var items = server.getServer().reloadableRegistries().getLootTable(key).getRandomItems(params);
+                var drop = items.isEmpty() ? ItemStack.EMPTY : items.getFirst();
+                playSound(drop.is(IafContent.DRAGON_BONE) ? net.minecraft.sounds.SoundEvents.SKELETON_AMBIENT
+                        : net.minecraft.sounds.SoundEvents.ARMOR_EQUIP_LEATHER.value(), 1, 1);
+                if (!drop.isEmpty()) spawnAtLocation(server, drop, 1F);
+            }
+            default -> { }
+        }
+        return InteractionResult.SUCCESS;
     }
 
     public Mob grippedPrey() {

@@ -138,6 +138,7 @@ public final class IafContent {
     }
 
     public static void initialize() {
+        Registry.register(BuiltInRegistries.LOOT_FUNCTION_TYPE, id("customize_to_dragon"), com.github.alexthe666.iceandfire.fabric.dragon.CustomizeToDragon.CODEC);
         IafTerrain.initialize();
         com.github.alexthe666.iceandfire.fabric.dragon.DragonArmorItem.initialize();
         FabricDefaultAttributeRegistry.register(FIRE_DRAGON, FireDragon.attributes());

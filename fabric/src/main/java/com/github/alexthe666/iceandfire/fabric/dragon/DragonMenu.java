@@ -38,7 +38,7 @@ public final class DragonMenu extends AbstractContainerMenu {
         for (int col = 0; col < 9; col++) addSlot(new Slot(playerInventory, col, 8 + col * 18, 190));
     }
     @Override public boolean stillValid(Player player) {
-        return dragon != null && dragon.isAlive() && dragon.isOwnedBy(player) && dragon.distanceToSqr(player) < 64;
+        return dragon != null && dragon.isAlive() && !dragon.corpse() && dragon.isOwnedBy(player) && dragon.distanceToSqr(player) < 64;
     }
     @Override public ItemStack quickMoveStack(Player player, int index) {
         if (index < 0 || index >= slots.size()) return ItemStack.EMPTY;
@@ -61,7 +61,7 @@ public final class DragonMenu extends AbstractContainerMenu {
     }
     @Override public void removed(Player player) { super.removed(player); inventory.stopOpen(player); }
     public static void open(ServerPlayer player, FireDragon dragon) {
-        if (!dragon.isAlive() || !dragon.isOwnedBy(player) || dragon.distanceToSqr(player) >= 64) return;
+        if ((!dragon.isAlive() || dragon.corpse()) || !dragon.isOwnedBy(player) || dragon.distanceToSqr(player) >= 64) return;
         player.openMenu(new ExtendedMenuProvider<Integer>() {
             @Override public Integer getScreenOpeningData(ServerPlayer ignored) { return dragon.getId(); }
             @Override public Component getDisplayName() { return dragon.getDisplayName(); }

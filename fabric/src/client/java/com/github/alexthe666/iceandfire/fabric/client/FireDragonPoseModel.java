@@ -49,7 +49,7 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
                 "bite1", "bite2", "bite3", "attack_blast_charge1", "attack_blast_charge2", "attack_blast_charge3", "attack_stream_breath",
                 "tail1", "tail2", "tail3", "wing_blast1", "wing_blast2", "wing_blast3", "wing_blast4", "wing_blast5", "wing_blast6", "wing_blast7", "attack_tackle", "sleeping",
                 "grab1", "grab2", "grab_shake1", "grab_shake2", "grab_shake3",
-                "roar1", "roar2", "roar3", "epic_roar1", "epic_roar2", "epic_roar3")) {
+                "roar1", "roar2", "roar3", "epic_roar1", "epic_roar2", "epic_roar3", "dead")) {
             poses.put(name, loader.apply(name));
         }
     }
@@ -77,6 +77,26 @@ final class FireDragonPoseModel extends EntityModel<FireDragonRenderer.State> {
 
     @Override public void setupAnim(FireDragonRenderer.State state) {
         super.setupAnim(state);
+        if (state.corpse) {
+            float weight = Math.clamp(state.modelDeadProgress / 20, 0, 1);
+            for (var entry : parts.entrySet()) {
+                String name = entry.getKey(); var cube = entry.getValue();
+                var female = poses.get("base_female").parts().get(name);
+                if (!state.male && female != null) rotateTo(cube, female, 1);
+                var dead = poses.get("dead").parts().get(name);
+                // Original setRotationsLoopDeath applies transitions to changed rotations only.
+                if (dead == null || sameRotation(cube, dead)) continue;
+                if (name.equals("ThighL") || name.equals("ThighR")) {
+                    cube.xRot += (dead.xRot - cube.xRot) * weight;
+                    cube.yRot += (dead.yRot - cube.yRot) * weight;
+                    cube.zRot += (dead.zRot - cube.zRot) * weight;
+                    cube.x += (dead.x - cube.x) * weight;
+                    cube.y += (dead.y - cube.y) * weight;
+                    cube.z += (dead.z - cube.z) * weight;
+                } else transition(cube, dead, weight);
+            }
+            return; // No idle, head tracking, flight, feeding or attack on remains.
+        }
         boolean walking = !state.flying && state.flyProgress <= 0 && state.hoverProgress <= 0;
         float cycle = animationCycle(walking ? state.walkCycle : state.flightCycle, state.partialTick, walking);
         int current = (int) (cycle / 10);

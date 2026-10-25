@@ -1,5 +1,40 @@
 # Prompt temporaneo per la prossima ripresa
 
+## Checkpoint 0.1.40 - carcassa e raccolta originali
+
+Ciclo completo collegato: carcassa persistente, posa DEAD e texture chiuse/scheletro,
+NoAI e crescita/fame ferme, sangue con bottiglia, raccolta a mano vuota, cuore,
+uovo di femmina adulta, ossa e teschio finale con eta/stadio. Loot table native26
+con pesi originali e customize_to_dragon per variante/quantita. XP/inventario alla
+morte restano nativi e una sola volta. Carcasse escluse da monta, corno, cristallo,
+inventario e targeting; rilasciati pilota/spalla/preda senza immunita in volo.
+NBT ModelDead/DeathStage; persistenza con proprietario realmente risolto nel mondo.
+Tre config originali dragonDropBlood/Heart/Skull; preservata anche la priorita del
+sangue sul cuore e il gate originale del teschio su tutta la raccolta a mano.
+Sangue in eccesso cade se inventario pieno; /kill rimuove i resti senza nuovo loot.
+
+Suite definitiva build/server/client verde in17m14s:94JUnit,133GameTest mod
+(134 con baseline),13prove client,39PNG tutte correnti. Nove nuove prove native;
+C2S reale22passaggi di raccolta,3sangue e un solo teschio stadio5/112giorni.
+Cinque tavole GPU originali lette, includono maschi/femmine, occhi chiusi e ossa.
+Revisione ha trovato aggiornamento post-morte nello stesso tick: corretto e
+nuova regressione completa superata. TEST-0.1.40.md contiene regole e limiti.
+Non confondere salvataggio NBT con riapertura di un mondo su DedicatedServer.
+
+PROSSIMO: multipart originale (10hitbox) con interazione/danno nativi e corretta
+vita delle parti, senza modificare collider fisico, posto pilota o danno da caduta.
+Ricerca e bozza coefficienti work/phase41-preparation/, fuori repo; NON ancora
+implementati nella0.1.40. Restano altre parita/config/animazioni, navigazione
+complessa, DedicatedServer/persistenza MP e punte grigie. Tappa1/port aperti.
+
+ULTIMA ISTRUZIONE UTENTE25ottobre2026: continuare fino a esaurimento quota residua,
+POI SPEGNERE il PC dopo salvataggi/test/checkpoint e push verificati. Questo
+sostituisce tutti i vecchi divieti di spegnimento/sospensione nei checkpoint storici.
+Controllo automatico OGNI50MINUTI, NON5; stessa automazione, niente duplicati.
+Non consumare crediti reset o quota artificialmente. Email della sessione24ottobre
+entrambe gia registrate nello stato privato: non ripetere invii.
+
+
 ## Checkpoint 0.1.39 - oggetti di raccolta e teschio piazzabile
 
 Portati osso, quattro scaglie del fuoco, cuore, sangue, carne e teschio con asset

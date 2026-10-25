@@ -32,7 +32,7 @@ public final class SummoningCrystalItem extends Item {
     public SummoningCrystalItem(Properties properties) { super(properties.stacksTo(1)); }
     static CompoundTag data(ItemStack stack) { return stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag(); }
     public static Optional<UUID> dragonUuid(ItemStack stack) { return data(stack).getCompoundOrEmpty("Dragon").read("DragonUUID", UUIDUtil.CODEC); }
-    static boolean owns(FireDragon dragon, Player player) { return dragon.isTame() && dragon.getOwnerReference() != null && dragon.getOwnerReference().matches(player); }
+    static boolean owns(FireDragon dragon, Player player) { return !dragon.corpse() && dragon.isTame() && dragon.getOwnerReference() != null && dragon.getOwnerReference().matches(player); }
     @Override public InteractionResult interactLivingEntity(ItemStack ignored, Player player, LivingEntity target, InteractionHand hand) {
         var stack = player.getItemInHand(hand); // Native creative interactions pass a temporary copy.
         if (!stack.is(this) || stack.getCount() != 1 || player.isSpectator() || !(target instanceof FireDragon dragon)

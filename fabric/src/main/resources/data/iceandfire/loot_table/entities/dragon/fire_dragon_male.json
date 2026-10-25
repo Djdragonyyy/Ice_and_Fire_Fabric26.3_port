@@ -1,0 +1,39 @@
+{
+  "pools": [
+    {
+      "name": "fire_dragon_male",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "iceandfire:dragonscales_red",
+          "weight": 60,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": 1
+            },
+            {
+              "function": "iceandfire:customize_to_dragon"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "iceandfire:fire_dragon_flesh",
+          "weight": 40,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": 1
+            },
+            {
+              "function": "iceandfire:customize_to_dragon"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "type": "minecraft:entity"
+}

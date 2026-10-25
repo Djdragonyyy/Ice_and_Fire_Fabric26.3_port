@@ -37,6 +37,9 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
         float shoulderProgress;
         float sleepProgress;
         boolean sleeping;
+        boolean corpse;
+        boolean skeletal;
+        float modelDeadProgress;
         boolean blinking;
         boolean firstPersonPilot;
         int armor;
@@ -73,6 +76,10 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
         state.breathProgress = dragon.prevBreathProgress + (dragon.breathProgress - dragon.prevBreathProgress) * partialTick;
         state.shoulderProgress = dragon.prevShoulderProgress + (dragon.shoulderProgress - dragon.prevShoulderProgress) * partialTick;
         state.sleeping = dragon.dragonSleeping();
+        state.corpse = dragon.corpse();
+        state.skeletal = dragon.skeletal();
+        state.modelDeadProgress = dragon.prevModelDeadProgress + (dragon.modelDeadProgress - dragon.prevModelDeadProgress) * partialTick;
+        if (state.corpse) state.deathTime = 0;
         state.blinking = dragon.isBlinking();
         state.sleepProgress = dragon.prevSleepProgress + (dragon.sleepProgress - dragon.prevSleepProgress) * partialTick;
         var player = dragon.shoulderCarrier();
@@ -109,7 +116,8 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
     }
 
     @Override public Identifier getTextureLocation(State state) {
-        String suffix = state.sleeping || state.blinking ? "_sleeping" : "";
+        if (state.corpse && state.skeletal) return DragonSkullRenderer.texture(state.stage);
+        String suffix = state.corpse || state.sleeping || state.blinking ? "_sleeping" : "";
         Identifier base = texture(state, suffix);
         if (!state.male) return base;
         Identifier key = IafContent.id("dragon_texture/" + COLORS[state.variant] + "_" + state.stage + suffix + "_male");
