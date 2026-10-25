@@ -1,5 +1,19 @@
 # Prompt completo per continuare il porting su un altro PC
 
+## Checkpoint 0.1.32 — sopra la superficie della lava
+
+Migrato ramo originale del pilota non immerso/non in volo sopra il blocco lava:
+camminata nativa, velocita base*1.8, laterale0.05, sprint1.2, retro0.2,
+inputY conservato, collisioneY0.2 e attrito0.7. Autorita locale nativa.
+Suite definitiva77JUnit/114GameTest mod (115 con baseline)/8client/17immagini,
+passata in8m24s. Controllata immagine nuova delle armature testa/coda.
+Cinque prove fluidi isolate passate; due nuove distinguono superficie,
+immersione, volo e suolo solido. Dettagli e limiti in TEST-0.1.32.md.
+Prossimo: camminata generale e dragonFlightSpeedMod con sincronizzazione
+server-client; ricerca e prova client preparate fuori repo in phase33-preparation.
+Tappa1 e port completo ancora aperti. Non sospendere o spegnere il PC.
+
+
 ## Checkpoint 0.1.31 — acqua e lava
 
 Soglia originale di immersione per stadio, goal di galleggiamento coerente,

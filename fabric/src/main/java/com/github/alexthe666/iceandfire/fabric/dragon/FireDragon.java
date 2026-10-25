@@ -788,6 +788,17 @@ public final class FireDragon extends TamableAnimal {
                 } else setDeltaMovement(Vec3.ZERO);
                 return;
             }
+            if (ridingOverLava()) {
+                if (isLocalInstanceAuthoritative()) {
+                    // Original EntityFireDragon surface branch: walking physics, then lava drag.
+                    setSpeed((float) getAttributeValue(Attributes.MOVEMENT_SPEED) * 1.8F);
+                    super.travel(input);
+                    Vec3 motion = getDeltaMovement();
+                    if (horizontalCollision) motion = new Vec3(motion.x, 0.2, motion.z);
+                    setDeltaMovement(motion.scale(0.7));
+                } else setDeltaMovement(Vec3.ZERO);
+                return;
+            }
             super.travel(input); return;
         }
         if (getControllingPassenger() == null) {
@@ -888,12 +899,20 @@ public final class FireDragon extends TamableAnimal {
         yHeadRot = getYRot();
     }
 
+    private boolean ridingOverLava() {
+        return !flying() && !isInLava() && getControllingPassenger() != null
+                && level().getBlockState(getBlockPosBelowThatAffectsMyMovement()).getFluidState().is(net.minecraft.tags.FluidTags.LAVA);
+    }
+
     @Override protected float getRiddenSpeed(Player player) {
+        if (ridingOverLava()) return (float) getAttributeValue(Attributes.MOVEMENT_SPEED) * 1.8F;
         if (!flying() && isInLava()) return DragonFluidMotion.lavaSpeed(getAttributeValue(Attributes.MOVEMENT_SPEED), player.isSprinting());
         return (float) getAttributeValue(Attributes.MOVEMENT_SPEED);
     }
 
     @Override protected Vec3 getRiddenInput(Player player, Vec3 input) {
+        if (ridingOverLava()) return new Vec3(player.xxa * 0.05F, input.y,
+                player.zza * (player.isSprinting() ? 1.2F : 1) * (player.zza > 0 ? 1 : 0.2F));
         if (!flying() && (isInWater() || isInLava()))
             return new Vec3(player.xxa, DragonFluidMotion.vertical(isInLava(), control(DragonControlPayload.UP), control(DragonControlPayload.DOWN)), player.zza);
         return new Vec3(player.xxa * 0.5F, 0, player.zza < 0 ? player.zza * 0.25F : player.zza);

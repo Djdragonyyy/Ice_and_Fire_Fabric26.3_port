@@ -86,4 +86,46 @@ public class DragonFluidGameTests {
         require(Math.abs(d.getDeltaMovement().y - 0.14) < 1.0E-6, "Lava drag0.7 is applied to existing motion");
         h.succeed();
     }
-}
+    @GameTest(structure = "iceandfire:flight_arena", padding = 12)
+    public void lavaSurfaceUsesOriginalPilotInputWalkingPhysicsAndDrag(GameTestHelper h) {
+        tank(h, true, 1);
+        var d = dragon(h, 50, 3.001);
+        var owner = h.makeMockPlayer(GameType.SURVIVAL);
+        d.setOwner(owner); d.setTame(true, false); owner.setPos(d.position());
+        require(owner.startRiding(d), "Owner mounts above the real lava surface");
+        require(!d.isInLava() && h.getLevel().getFluidState(d.getBlockPosBelowThatAffectsMyMovement()).is(FluidTags.LAVA),
+                "Fixture is above lava, distinct from immersed lava");
+        owner.xxa = 1; owner.zza = 1; owner.setSprinting(true);
+        var input = d.getRiddenInput(owner, new Vec3(0, -0.25, 0));
+        require(Math.abs(input.x - 0.05) < 1.0E-6 && Math.abs(input.z - 1.2) < 1.0E-6 && input.y == -0.25,
+                "Original surface strafe, sprint and incoming vertical input");
+        require(Math.abs(d.getRiddenSpeed(owner) - d.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED) * 1.8) < 1.0E-6,
+                "Surface original default ground speed, independent from lava swimming curve");
+        owner.zza = -1; owner.setSprinting(false);
+        require(Math.abs(d.getRiddenInput(owner, Vec3.ZERO).z + 0.2) < 1.0E-6, "Original reverse factor");
+        d.setDeltaMovement(Vec3.ZERO); d.setOnGround(false); d.setYRot(0);
+        var before = d.position();
+        d.travel(new Vec3(input.x, 0, input.z));
+        require(d.getX() > before.x && d.getZ() > before.z, "Native physical movement consumes the surface input");
+        require(Math.abs(d.getDeltaMovement().y + 0.08 * 0.98 * 0.7) < 1.0E-6,
+                "Native gravity is followed by original surface drag: " + d.getDeltaMovement());
+        h.succeed();
+    }
+
+    @GameTest(structure = "iceandfire:flight_arena", padding = 12)
+    public void surfaceRulesDoNotLeakIntoOrdinaryGroundOrFlyingPilot(GameTestHelper h) {
+        tank(h, true, 1); var d = dragon(h, 50, 3.001);
+        var owner = h.makeMockPlayer(GameType.SURVIVAL); d.setOwner(owner); d.setTame(true, false);
+        owner.setPos(d.position()); require(owner.startRiding(d), "Owner mounts");
+        owner.xxa = 1; owner.zza = -1;
+        d.setAutonomousFlight(true, false);
+        require(d.getRiddenInput(owner, Vec3.ZERO).x == 0.5 && d.getRiddenInput(owner, Vec3.ZERO).z == -0.25,
+                "Surface scaling does not replace aerial input");
+        d.setAutonomousFlight(false, false);
+        h.setBlock(d.getBlockPosBelowThatAffectsMyMovement().subtract(h.absolutePos(BlockPos.ZERO)), Blocks.STONE);
+        require(d.getRiddenInput(owner, Vec3.ZERO).x == 0.5 && d.getRiddenInput(owner, Vec3.ZERO).z == -0.25,
+                "Ordinary ground factors are unchanged");
+        require(Math.abs(d.getRiddenSpeed(owner) - d.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED)) < 1.0E-7,
+                "Surface speed does not leak into solid ground");
+        h.succeed();
+    }}

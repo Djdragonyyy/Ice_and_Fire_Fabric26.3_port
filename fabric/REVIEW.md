@@ -1,5 +1,16 @@
 # Revisione del port Fabric
 
+## Revisione 0.1.32 — 25 ottobre 2026
+
+Revisione in sola lettura dell'intero diff da119ee0105, senza delega. Confrontati
+EntityFireDragon314..353 e bytecode26.3 travelRidden: input elaborato una sola
+volta, autorita nativa e separazione superficie/immersione/volo/suolo.
+No findings. Correzione della fixture fuori revisione: l'inputY produce
+accelerazione prima della gravita, quindi misurati separatamente conservazione
+input e gravita+attrito. Cinque prove native fluidi passate, poi suite completa
+77JUnit/114modGameTests/8client e17immagini passata in8m24s. Rimangono
+moltiplicatore configurabile, camminata generale e due client reali.
+
 ## Revisione 0.1.31 — 25 ottobre 2026
 
 Skill review-agent, sola lettura e senza delega, diff da6e1d3a6ee e tutti i nuovi
