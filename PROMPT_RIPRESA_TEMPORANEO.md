@@ -1,5 +1,25 @@
 # Prompt temporaneo per la prossima ripresa
 
+## Checkpoint 0.1.35 — due client Minecraft separati via TCP
+
+Verifica reale a3JVM: GameTestServer standalone locale, proprietario e osservatore.
+Due slot configurati nel solo harness opt-in, profili fittizi, nessun account
+personale. Non proprietario respinto da montaggio/comandi; volo del proprietario,
+UUID, sesso, head/tail e velocita del server osservati da entrambi. Disconnessioni
+native e tre exit code0. Tre immagini di rete controllate. Un test server rete
+passato, report/XML/log e codici di uscita inclusi; harness assente dal JAR.
+Suite ordinaria finale79JUnit/117modGameTests (118baseline)/10client/20immagini,
+passata in8m45s; rete aggiunge3immagini,23totali. Vedere TEST-0.1.35.md.
+Non e ancora collaudo di DedicatedServer ordinario con account autenticati.
+Contrattacco intermittente e punte grigie aperti; nessuna causa inventata.
+
+PROSSIMA PRIORITA UTENTE: feeding in tutti5gli stadi e modello piu coerente con
+texture, in particolare CORPO E ALI (risposta esplicita). Analisi avviata;
+nessuna correzione di feeding consegnata qui. Confrontare originale, geometria,
+UV e immagini per stadio prima di modificare. Tappa1/port completo aperti.
+Non sospendere o spegnere il PC: obiettivo eliminato e confermato all'utente.
+
+
 ## Checkpoint 0.1.34 — overlay maschile originale
 
 Ripristinata la composizione semitrasparente male_red/green/bronze/gray sulle

@@ -31,7 +31,7 @@ loom {
         gametest {
             server()
             source sourceSets.gametest
-            runDir 'run/0.1.34-gametest'
+            runDir 'run/0.1.35-gametest'
             vmArg '-Dfabric-api.gametest'
             vmArg "-Dfabric-api.gametest.report-file=${file('build/gametest-results.xml').absolutePath}"
         }
@@ -115,8 +115,72 @@ loom {
         clientGametest {
             client()
             source sourceSets.clientGametest
-            runDir 'run/0.1.34-client-gametest'
+            runDir 'run/0.1.35-client-gametest'
             vmArg '-Dfabric.client.gametest'
+        }
+    }
+}
+
+// Explicit opt-in: independent network test processes, never part of the distributed mod.
+if (providers.gradleProperty('iafNetworkTest').isPresent()) {
+    def networkDirectory = file(providers.gradleProperty('iafNetworkDir').getOrElse('build/network-test-session')).absolutePath
+    def networkPort = providers.gradleProperty('iafNetworkPort').getOrElse('25595')
+    sourceSets {
+        networkServerGametest {
+            java.srcDir 'src/networkTestSupport/java'
+            compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+            runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath
+        }
+        networkClientGametest {
+            java.srcDir 'src/networkTestSupport/java'
+            compileClasspath += sourceSets.client.output + sourceSets.client.compileClasspath
+            runtimeClasspath += sourceSets.client.output + sourceSets.client.runtimeClasspath
+        }
+    }
+    tasks.named('processNetworkServerGametestResources') {
+        from('src/gametest/resources') { include 'data/iceandfire/gametest/structure/**' }
+    }
+    loom {
+        mods {
+            iceandfire_network_gametest { sourceSet sourceSets.networkServerGametest }
+            iceandfire_network_client_gametest { sourceSet sourceSets.networkClientGametest }
+        }
+        runs {
+            networkServerGametest {
+                server()
+                source sourceSets.networkServerGametest
+                runDir 'run/0.1.35-network-server'
+                vmArg '-Xmx1G'
+                vmArg '-Dfabric-api.gametest'
+                vmArg '-Dfabric-api.gametest.filter=iceandfire_network_gametest:*'
+                vmArg "-Dfabric-api.gametest.report-file=${file('build/network-gametest-results.xml').absolutePath}"
+                vmArg "-Diaf.network.dir=${networkDirectory}"
+                vmArg "-Diaf.network.port=${networkPort}"
+            }
+            networkOwnerGametest {
+                client()
+                source sourceSets.networkClientGametest
+                runDir 'run/0.1.35-network-owner'
+                vmArg '-Xmx2G'
+                vmArg '-Dfabric.client.gametest'
+                vmArg '-Diaf.network.role=owner'
+                vmArg "-Diaf.network.dir=${networkDirectory}"
+                vmArg "-Diaf.network.port=${networkPort}"
+                programArg '--username'
+                programArg 'PortTestOwner'
+            }
+            networkGuestGametest {
+                client()
+                source sourceSets.networkClientGametest
+                runDir 'run/0.1.35-network-guest'
+                vmArg '-Xmx2G'
+                vmArg '-Dfabric.client.gametest'
+                vmArg '-Diaf.network.role=guest'
+                vmArg "-Diaf.network.dir=${networkDirectory}"
+                vmArg "-Diaf.network.port=${networkPort}"
+                programArg '--username'
+                programArg 'PortTestGuest'
+            }
         }
     }
 }

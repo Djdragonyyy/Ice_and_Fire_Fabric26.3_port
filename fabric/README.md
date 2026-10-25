@@ -4,7 +4,9 @@ Verificati 79 JUnit, 117 GameTest della mod (118 includendo la baseline vanilla)
 
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
-Versione corrente: **0.1.34-stage1-dev**. Overlay maschile originale e ricaricamento nativo delle texture. [TEST-0.1.34.md](TEST-0.1.34.md). Tappa1 incompleta.
+Versione corrente: **0.1.35-stage1-dev**. Due client in processi separati su GameTestServer locale, proprieta/comandi e sincronizzazione verificati. [TEST-0.1.35.md](TEST-0.1.35.md). Tappa1 incompleta.
+
+Versione precedente: **0.1.34-stage1-dev**. Overlay maschile originale e ricaricamento nativo delle texture. [TEST-0.1.34.md](TEST-0.1.34.md). Tappa1 incompleta.
 
 Versione precedente: **0.1.33-stage1-dev**. Camminata originale e velocita sincronizzata dal server. [TEST-0.1.33.md](TEST-0.1.33.md). Tappa1 incompleta.
 
@@ -254,3 +256,6 @@ originale conservato in `src/`. Il port è non ufficiale.
 
 
 Opzione server: dragonFlightSpeedMod in config/iceandfire-combat.json, predefinito1, intervallo finito0..2. Configurazioni precedenti senza chiave usano1; aggiungerla al JSON per modificarla e riavviare Minecraft/server. Vedere TEST-0.1.33.md per comportamento e limiti.
+
+
+Prova di rete opt-in: un GameTestServer standalone con due client indipendenti, tre immagini aggiuntive (23 totali nella consegna). Il collaudo di DedicatedServer ordinario e account autenticati resta aperto. Prossima priorita richiesta: feeding nei cinque stadi, corpo e ali fedeli alle texture. Vedere TEST-0.1.35.md.

@@ -1,5 +1,31 @@
 # Revisione del port Fabric
 
+## Revisione 0.1.35 — 25 ottobre 2026
+
+Diff completo da f6c287d78 letto in sola lettura, senza delega: sourceSet e
+risorse opt-in, supporto file, tre processi, fixture server/client e mixin di
+capienza. Nessuna modifica alla logica produttiva. Confrontati bytecode
+GameTestServer (capienza1), native connessioni/teleport e task Loom1.18.4.
+
+[P1] Controllare gli exit code anche dopo il ciclo — scripts/run-network-launch-plans.ps1.
+Se tutti i processi terminavano fra due poll, l'ultimo errore poteva sfuggire
+al controllo interno. Corretto fuori revisione: ricontrollo finale di tutti3
+codici e manifest, successiva ripetizione completa passata con tre zeri.
+
+No findings residui sul codice finale. Piani creati da Loom, authMicrosoft
+esplicitamente disabilitata, processi avviati con array di argomenti e console
+nascosta, stream drenati, cleanup limitato ai figli creati. Listener127.0.0.1,
+capienza2 nel solo mixin di test. Namespace/mod normali separati e condizione
+opt-in verificata con suite ordinaria invariata. Nessun test/mixin/listener
+nel JAR installabile, controllato anche l'archivio. I piani di lancio e dati
+privati di coordinamento non entrano nella consegna; report/log/screenshot si.
+
+Rete passata con due client render reali; capienza e disconnessioni corrette nel
+solo harness, inquadrature e head/tail verificate nell'ultima prova. Suite
+ordinaria79JUnit/117modGameTests/10client passata in8m45s. Restano server
+dedicato ordinario/account autenticati, contrattacco intermittente e lavoro
+visivo/feeding richiesto dall'utente su corpo e ali. Tappa1 non conclusa.
+
 ## Revisione 0.1.34 — 25 ottobre 2026
 
 Diff completo da3a29e9f51 e due nuovi file letti in sola lettura, senza delega.
