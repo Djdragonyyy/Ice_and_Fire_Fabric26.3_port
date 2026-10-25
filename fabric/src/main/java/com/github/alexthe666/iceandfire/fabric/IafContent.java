@@ -31,6 +31,7 @@ public final class IafContent {
             });
     public static final EntityType<FireDragon> FIRE_DRAGON = registerDragon();
     public static final EntityType<FireDragonEgg> DRAGON_EGG = registerEgg();
+    public static final EntityType<com.github.alexthe666.iceandfire.fabric.dragon.DragonSkull> DRAGON_SKULL = registerSkull();
     public static final EntityType<DragonFireCharge> FIRE_DRAGON_CHARGE = registerCharge();
     public static final SoundEvent FIRE_BREATH = Registry.register(BuiltInRegistries.SOUND_EVENT,
             id("firedragon_breath"), SoundEvent.createVariableRangeEvent(id("firedragon_breath")));
@@ -58,7 +59,26 @@ public final class IafContent {
             registerEggItem("dragonegg_bronze", 2), registerEggItem("dragonegg_gray", 3)
     };
 
+    public static final Item DRAGON_BONE = registerItem("dragonbone", properties("dragonbone"));
+    public static final Item[] FIRE_SCALES = {
+            registerItem("dragonscales_red", properties("dragonscales_red")), registerItem("dragonscales_green", properties("dragonscales_green")),
+            registerItem("dragonscales_bronze", properties("dragonscales_bronze")), registerItem("dragonscales_gray", properties("dragonscales_gray"))
+    };
+    public static final Item FIRE_DRAGON_HEART = registerItem("fire_dragon_heart", properties("fire_dragon_heart"));
+    public static final Item FIRE_DRAGON_BLOOD = registerItem("fire_dragon_blood", properties("fire_dragon_blood"));
+    public static final Item FIRE_DRAGON_FLESH = Registry.register(BuiltInRegistries.ITEM, id("fire_dragon_flesh"),
+            new com.github.alexthe666.iceandfire.fabric.dragon.FireDragonFleshItem(properties("fire_dragon_flesh")));
+    public static final Item DRAGON_SKULL_FIRE = Registry.register(BuiltInRegistries.ITEM, id("dragon_skull_fire"),
+            new com.github.alexthe666.iceandfire.fabric.dragon.DragonSkullItem(properties("dragon_skull_fire")));
+
     private IafContent() {}
+
+    private static EntityType<com.github.alexthe666.iceandfire.fabric.dragon.DragonSkull> registerSkull() {
+        var key = ResourceKey.create(Registries.ENTITY_TYPE, id("dragon_skull"));
+        return Registry.register(BuiltInRegistries.ENTITY_TYPE, key,
+                EntityType.Builder.of(com.github.alexthe666.iceandfire.fabric.dragon.DragonSkull::new, MobCategory.MISC)
+                        .sized(0.9F, 0.65F).clientTrackingRange(10).build(key));
+    }
 
     private static SoundEvent[] dragonSounds(String action) {
         return java.util.Arrays.stream(new String[]{"child", "teen", "adult"}).map(age -> {
@@ -122,6 +142,7 @@ public final class IafContent {
         com.github.alexthe666.iceandfire.fabric.dragon.DragonArmorItem.initialize();
         FabricDefaultAttributeRegistry.register(FIRE_DRAGON, FireDragon.attributes());
         FabricDefaultAttributeRegistry.register(DRAGON_EGG, FireDragonEgg.attributes());
+        FabricDefaultAttributeRegistry.register(DRAGON_SKULL, com.github.alexthe666.iceandfire.fabric.dragon.DragonSkull.attributes());
         CreativeModeTabEvents.modifyOutputEvent(ResourceKey.create(Registries.CREATIVE_MODE_TAB,
                 Identifier.withDefaultNamespace("spawn_eggs"))).register(output -> {
             for (Item egg : FIRE_EGGS) output.accept(egg);
@@ -136,6 +157,10 @@ public final class IafContent {
                     output.accept(DRAGON_FLUTE);
                     output.accept(SUMMONING_CRYSTAL);
                     output.accept(FIRE_STEW);
+                    output.accept(DRAGON_BONE);
+                    for (Item scale : FIRE_SCALES) output.accept(scale);
+                    output.accept(FIRE_DRAGON_HEART); output.accept(FIRE_DRAGON_BLOOD);
+                    output.accept(FIRE_DRAGON_FLESH); output.accept(DRAGON_SKULL_FIRE);
                 });
         CreativeModeTabEvents.modifyOutputEvent(ResourceKey.create(Registries.CREATIVE_MODE_TAB,
                 Identifier.withDefaultNamespace("building_blocks"))).register(output -> IafTerrain.ITEMS.forEach(output::accept));

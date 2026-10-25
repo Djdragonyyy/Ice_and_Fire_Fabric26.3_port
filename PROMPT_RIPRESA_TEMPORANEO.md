@@ -1,5 +1,34 @@
 # Prompt temporaneo per la prossima ripresa
 
+## Checkpoint 0.1.39 - oggetti di raccolta e teschio piazzabile
+
+Portati osso, quattro scaglie del fuoco, cuore, sangue, carne e teschio con asset
+originali. Carne:8nutrimento/.8saturazione, cibo per lupi/carne,5secondi di fuoco.
+Teschio: entita decorativa originale, testa Tabula/texture scheletriche dei cinque
+stadi, posa terra/parete, rotazione con shift, metadati Stage/DragonAge in componenti
+nativi. Salvataggio/recupero conserva anche nome; un solo drop per rottura.
+Piazzamento protetto contro ostacoli/confine mondo e nessuna caccia del drago al
+teschio. Scaglie: colore nel nome localizzato anziche tooltip separato originale.
+
+88JUnit,124GameTest mod (125 con baseline),12prove client,34PNG. Suite server
+completa superata; il primo client ha rilevato l'asset carne chiamato meat e non
+flesh. Corretto il solo riferimento e ripetuti build e tutti i client (2m01s).
+Tavola nuova controllata;9PNG item confrontate byte per byte con originali.
+Vedere TEST-0.1.39.md e log combinato con intestazioni esplicite. Nessuna prova
+rete a due client nuova: quelle37 non sono riusate nella consegna39.
+
+PROSSIMO: collegare questi oggetti alla carcassa persistente e alla raccolta.
+Carcassa NON ancora attivata: morte vanilla con drop inventario e XP originali.
+Ricerca dettagliata/API26 in work/phase40-preparation/RESEARCH.txt, fuori repo.
+Preservare morte/drop/XP una sola volta, proprieta e dismount senza immunita in
+volo. NBT originali ModelDead/DeathStage, pose/texture originali e loot table con
+codec26; controllare esplicitamente tutti i percorsi che usano isAlive.
+Restano multipart, altre parita/configurazioni/animazioni, DedicatedServer
+ordinario e persistenza MP, punte grigie e cause intermittenti sonno/escort.
+Tappa1 e port completo aperti. Proseguire autonomamente nella stessa chat/ramo.
+Non sospendere/spegnere MAI; entrambe le email24ottobre gia registrate, niente duplicati.
+
+
 ## Checkpoint 0.1.38 - esperienza originale per stadio
 
 Ripristinati gli XP base originali:5/20/150/300/650 per gli stadi1..5.

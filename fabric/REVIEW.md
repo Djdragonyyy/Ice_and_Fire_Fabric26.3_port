@@ -1,5 +1,22 @@
 # Revisione del port Fabric
 
+## Revisione 0.1.39 - 25 ottobre 2026
+
+Diff completo e nuovi file letti in sola lettura, senza delega, con skill
+review-agent locale. Sorgenti ItemDragonSkull/EntityDragonSkull/RenderDragonSkull,
+ItemDragonFlesh/GenericFood/Scales confrontati. Registri, componenti, consumo,
+salvataggio, reset del modello e whitelist risorse verificati. Rilievo concreto:
+include della PNG carne usava nome item anziche riferimento del modello; corretto
+fuori revisione e controllati i nove riferimenti/hash originali. Nessun rilievo residuo.
+
+88JUnit/124modGameTest+baseline passati; prima suite client fallita sulla risorsa,
+poi build e tutti12client verdi in2m01s dopo sola correzione risorsa/aspettativa.
+34PNG, nuova tavola letta; C2S piazzamento ai cinque stadi e recupero di un teschio
+senza duplicazione. Fixture iniziale spostato nell'arena per liberare il volume di
+piazzamento; messaggi diagnostici conservati, nessuna asserzione indebolita.
+Scaglie con colore nel nome localizzato, metadati limitati e controlli piazzamento
+sono adattamenti documentati. Carcassa/raccolta NON ancora attivate.
+
 ## Revisione 0.1.38 - 25 ottobre 2026
 
 Diff produttivo/test letto in sola lettura, senza delega. Valori confrontati con

@@ -83,5 +83,17 @@
   "item.iceandfire.summoning_crystal.desc_1": "Usalo su un blocco per richiamarlo.",
   "message.iceandfire.dragonTeleport": "Drago richiamato.",
   "message.iceandfire.noDragonTeleport": "Impossibile richiamare il drago.",
-  "iceandfire.sound.subtitle.firedragon_roar": "Il drago di fuoco ruggisce"
+  "iceandfire.sound.subtitle.firedragon_roar": "Il drago di fuoco ruggisce",
+  "item.iceandfire.dragonbone": "Osso di drago",
+  "item.iceandfire.dragonscales_red": "Scaglie di drago rosso",
+  "item.iceandfire.dragonscales_green": "Scaglie di drago verde",
+  "item.iceandfire.dragonscales_bronze": "Scaglie di drago bronzo",
+  "item.iceandfire.dragonscales_gray": "Scaglie di drago grigio",
+  "item.iceandfire.fire_dragon_heart": "Cuore di drago del fuoco",
+  "item.iceandfire.fire_dragon_blood": "Sangue di drago del fuoco",
+  "item.iceandfire.fire_dragon_flesh": "Carne di drago del fuoco",
+  "item.iceandfire.dragon_skull_fire": "Teschio di drago",
+  "entity.iceandfire.dragon_skull": "Teschio di drago",
+  "dragon.fire": "Drago del fuoco",
+  "dragon.stage": "Stadio"
 }

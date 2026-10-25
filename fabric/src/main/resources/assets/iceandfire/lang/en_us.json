@@ -83,5 +83,17 @@
   "item.iceandfire.summoning_crystal.desc_1": "Use when bound to teleport dragon",
   "message.iceandfire.dragonTeleport": "This dragon has been teleported.",
   "message.iceandfire.noDragonTeleport": "§cCould not find a dragon bound to this crystal.",
-  "iceandfire.sound.subtitle.firedragon_roar": "Fire Dragon roars"
+  "iceandfire.sound.subtitle.firedragon_roar": "Fire Dragon roars",
+  "item.iceandfire.dragonbone": "Dragon Bone",
+  "item.iceandfire.dragonscales_red": "Red Dragon Scales",
+  "item.iceandfire.dragonscales_green": "Green Dragon Scales",
+  "item.iceandfire.dragonscales_bronze": "Bronze Dragon Scales",
+  "item.iceandfire.dragonscales_gray": "Gray Dragon Scales",
+  "item.iceandfire.fire_dragon_heart": "Fire Dragon Heart",
+  "item.iceandfire.fire_dragon_blood": "Fire Dragon Blood",
+  "item.iceandfire.fire_dragon_flesh": "Fire Dragon Flesh",
+  "item.iceandfire.dragon_skull_fire": "Dragon Skull",
+  "entity.iceandfire.dragon_skull": "Dragon Skull",
+  "dragon.fire": "Fire Dragon",
+  "dragon.stage": "Stage"
 }

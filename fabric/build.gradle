@@ -31,7 +31,7 @@ loom {
         gametest {
             server()
             source sourceSets.gametest
-            runDir 'run/0.1.38-gametest'
+            runDir 'run/0.1.39-gametest'
             vmArg '-Dfabric-api.gametest'
             vmArg "-Dfabric-api.gametest.report-file=${file('build/gametest-results.xml').absolutePath}"
         }
@@ -76,6 +76,15 @@ processResources {
         include 'assets/iceandfire/textures/block/chared_*.png', 'assets/iceandfire/textures/block/ash.png'
         include 'assets/iceandfire/models/item/dragonarmor_*.json', 'assets/iceandfire/textures/item/dragonarmor_*.png'
         include 'assets/iceandfire/textures/gui/dragon.png'
+        include 'assets/iceandfire/models/item/dragonbone.json', 'assets/iceandfire/textures/item/dragonbone.png'
+        include 'assets/iceandfire/models/item/dragonscales_red.json', 'assets/iceandfire/textures/item/scales_red.png'
+        include 'assets/iceandfire/models/item/dragonscales_green.json', 'assets/iceandfire/textures/item/scales_green.png'
+        include 'assets/iceandfire/models/item/dragonscales_bronze.json', 'assets/iceandfire/textures/item/scales_bronze.png'
+        include 'assets/iceandfire/models/item/dragonscales_gray.json', 'assets/iceandfire/textures/item/scales_gray.png'
+        include 'assets/iceandfire/models/item/fire_dragon_heart.json', 'assets/iceandfire/textures/item/fire_dragon_heart.png'
+        include 'assets/iceandfire/models/item/fire_dragon_blood.json', 'assets/iceandfire/textures/item/fire_dragon_blood.png'
+        include 'assets/iceandfire/models/item/fire_dragon_flesh.json', 'assets/iceandfire/textures/item/fire_dragon_meat.png'
+        include 'assets/iceandfire/models/item/dragon_skull_fire.json', 'assets/iceandfire/textures/item/dragon_skull_fire.png'
         include 'assets/iceandfire/textures/item/dragon_meal.png'
         include 'assets/iceandfire/textures/item/sickly_dragon_meal.png', 'assets/iceandfire/textures/item/creative_dragon_meal.png'
         include 'assets/iceandfire/textures/item/dragon_stick.png'
@@ -115,7 +124,7 @@ loom {
         clientGametest {
             client()
             source sourceSets.clientGametest
-            runDir 'run/0.1.38-client-gametest'
+            runDir 'run/0.1.39-client-gametest'
             vmArg '-Dfabric.client.gametest'
         }
     }

@@ -10,6 +10,7 @@ public final class IceAndFireFabricClient implements ClientModInitializer {
         EntityRendererRegistry.register(IafContent.FIRE_DRAGON, FireDragonRenderer::new);
         EntityRendererRegistry.register(IafContent.DRAGON_EGG, FireDragonEggRenderer::new);
         EntityRendererRegistry.register(IafContent.FIRE_DRAGON_CHARGE, DragonFireChargeRenderer::new);
+        EntityRendererRegistry.register(IafContent.DRAGON_SKULL, DragonSkullRenderer::new);
         DragonKeyMappings.initialize();
         DragonFlameParticle.initialize();
         net.minecraft.client.gui.screens.MenuScreens.register(IafContent.DRAGON_MENU, DragonScreen::new);
