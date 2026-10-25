@@ -1,5 +1,20 @@
 # Prompt temporaneo per la prossima ripresa
 
+## Checkpoint 0.1.34 — overlay maschile originale
+
+Ripristinata la composizione semitrasparente male_red/green/bronze/gray sulle
+texture originali per stadio e sonno/blink, tramite ReloadableTexture26.3.
+PNG originali invariati; femmina usa la base, cache maschile limitata40chiavi,
+metadati conservati e caricamento/ricaricamento gestiti nativamente.
+Suite finale79JUnit/117GameTest mod (118 con baseline)/10client/20immagini,
+passata in8m35s. Controllate immagini femmina, maschio e dopo ricaricamento.
+La prova verifica tutte40combinazioni e attende la scomparsa dell'overlayMojang.
+Vedere TEST-0.1.34.md. Punte grigie e contrattacco intermittente restano aperti;
+nuova diagnostica di danno/Weakness nel messaggio, asserzioni invariate.
+Prossimo: due client separati su server di test standalone; ricerca locale
+phase35-preparation. Tappa1/port non conclusi; mai sospendere o spegnere il PC.
+
+
 ## Checkpoint 0.1.33 — camminata e velocita sincronizzata
 
 Camminata originale (velocita/input/sprint/retromarcia e inputY), opzione

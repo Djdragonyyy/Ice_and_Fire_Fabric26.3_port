@@ -68,7 +68,7 @@ public class DragonSleepGameTests {
             require(!d.dragonSleeping(), "Damage wakes immediately");
         });
         h.runAfterDelay(50, () -> {
-            require(!d.dragonSleeping() && d.getTarget() == attacker && attacker.getHealth() < 200, "Awakened dragon actually retaliates: sleeping=" + d.dragonSleeping() + ", target=" + (d.getTarget() == attacker) + ", health=" + attacker.getHealth() + ", distance=" + d.distanceTo(attacker) + ", removed=" + attacker.isRemoved() + trace);
+            require(!d.dragonSleeping() && d.getTarget() == attacker && attacker.getHealth() < 200, "Awakened dragon actually retaliates: sleeping=" + d.dragonSleeping() + ", target=" + (d.getTarget() == attacker) + ", health=" + attacker.getHealth() + ", distance=" + d.distanceTo(attacker) + ", removed=" + attacker.isRemoved() + ", damage=" + d.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE) + ", weakness=" + d.hasEffect(net.minecraft.world.effect.MobEffects.WEAKNESS) + trace);
             h.succeed();
         });
     }

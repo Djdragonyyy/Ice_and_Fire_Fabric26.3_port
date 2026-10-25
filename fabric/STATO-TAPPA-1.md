@@ -1,5 +1,20 @@
 # Stato della tappa 1 — drago di fuoco, Fabric 26.3
 
+## Checkpoint 0.1.34 — overlay maschile originale
+
+Ripristinata la composizione semitrasparente male_red/green/bronze/gray sulle
+texture originali per stadio e sonno/blink, tramite ReloadableTexture26.3.
+PNG originali invariati; femmina usa la base, cache maschile limitata40chiavi,
+metadati conservati e caricamento/ricaricamento gestiti nativamente.
+Suite finale79JUnit/117GameTest mod (118 con baseline)/10client/20immagini,
+passata in8m35s. Controllate immagini femmina, maschio e dopo ricaricamento.
+La prova verifica tutte40combinazioni e attende la scomparsa dell'overlayMojang.
+Vedere TEST-0.1.34.md. Punte grigie e contrattacco intermittente restano aperti;
+nuova diagnostica di danno/Weakness nel messaggio, asserzioni invariate.
+Prossimo: due client separati su server di test standalone; ricerca locale
+phase35-preparation. Tappa1/port non conclusi; mai sospendere o spegnere il PC.
+
+
 ## Checkpoint 0.1.33 — camminata e velocita sincronizzata
 
 Camminata originale (velocita/input/sprint/retromarcia e inputY), opzione
@@ -178,7 +193,7 @@ mondo e dalla taglia. Nessuna barriera al pilota o modifica della velocità.
 Vecchi JSON compatibili. Nuovo GameTest salva/ricarica casa e verifica raggio,
 confine e due limiti di quota; estesa validazione JUnit. Tappa1 ancora aperta.
 
-Aggiornato per 0.1.33-stage1-dev, 25 ottobre 2026. La tappa 1 è ancora incompleta.
+Aggiornato per 0.1.34-stage1-dev, 25 ottobre 2026. La tappa 1 è ancora incompleta.
 Questo riepilogo distingue ciò che è nel codice da ciò che manca: build e test
 non sostituiscono il riscontro in gioco, soprattutto per grafica e multiplayer.
 L'utente ha confermato la 0.1.13 funzionante il 24 ottobre e chiesto di continuare.
@@ -434,6 +449,6 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 Restano fuori da questa consegna draghi di ghiaccio/fulmine, altre creature,
 progressione completa, ricette, strutture e generazione naturale: appartengono
 alle tappe successive. Non iniziarle prima del completamento e del riscontro
-sulla tappa 1. La 0.1.13 è confermata; collaudare le novità successive, ora fino alla0.1.33.
+sulla tappa 1. La 0.1.13 è confermata; collaudare le novità successive, ora fino alla0.1.34.
 
 Nota operativa24ottobre: ripresa effettiva alle22:12Roma dopo reset; automazione stessa chat riportata a controllo5min. Sessione in corso, nessuna sospensione.

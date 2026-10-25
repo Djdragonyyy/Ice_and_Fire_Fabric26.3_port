@@ -1,5 +1,23 @@
 # Revisione del port Fabric
 
+## Revisione 0.1.34 — 25 ottobre 2026
+
+Diff completo da3a29e9f51 e due nuovi file letti in sola lettura, senza delega.
+Confrontati RenderDragonBase57..79, overlay originali e API/bytecode26.3
+ReloadableTexture/TextureContents/TextureManager/ARGB. No findings finali.
+Base/overlay caricati dal ResourceManager, immagine base rilasciata in errore,
+overlay chiuso subito, metadati conservati e proprieta GPU al gestore nativo.
+Cache limitata alle40combinazioni, chiavi femminili invariate. Nessuna modifica
+alle risorse originali o alle UV. Non dichiarata parita pixel-per-pixel del
+vecchio shader: composizione nativa26.3 degli asset originali.
+
+Fuori revisione corretta l'attesa dello screenshot post-reload: future conclusa
+non implica dissolvenza gia terminata. Aspettati overlay assente e inventario
+visibile; immagine definitiva controllata. Dieci prove client passate prima e
+dopo, suite completa79JUnit/117modGameTests/10client/20immagini passata in8m35s.
+Contrattacco intermittente non riprodotto in questo ciclo ma non dichiarato
+risolto; aggiunti danno e Weakness soltanto alla diagnostica del test.
+
 ## Revisione 0.1.33 — 25 ottobre 2026
 
 Intero diff da d0fbef697 e nuova prova client letti in sola lettura, senza delega.

@@ -1,10 +1,12 @@
 # Ice and Fire: port Fabric 26.3 in sviluppo
 
-Verificati 79 JUnit, 117 GameTest della mod (118 includendo la baseline vanilla) e 9 prove client con diciassette screenshot. Nessuna prova con due veri client.
+Verificati 79 JUnit, 117 GameTest della mod (118 includendo la baseline vanilla) e 10 prove client con venti screenshot. Nessuna prova con due veri client.
 
 **Checkpoint tecnico parziale. La tappa 1 NON è completata e questo non è un rilascio giocabile approvato.**
 
-Versione corrente: **0.1.33-stage1-dev**. Camminata originale e velocita sincronizzata dal server. [TEST-0.1.33.md](TEST-0.1.33.md). Tappa1 incompleta.
+Versione corrente: **0.1.34-stage1-dev**. Overlay maschile originale e ricaricamento nativo delle texture. [TEST-0.1.34.md](TEST-0.1.34.md). Tappa1 incompleta.
+
+Versione precedente: **0.1.33-stage1-dev**. Camminata originale e velocita sincronizzata dal server. [TEST-0.1.33.md](TEST-0.1.33.md). Tappa1 incompleta.
 
 Versione precedente: **0.1.32-stage1-dev**. Movimento originale sopra la lava. [TEST-0.1.32.md](TEST-0.1.32.md). Tappa1 incompleta.
 

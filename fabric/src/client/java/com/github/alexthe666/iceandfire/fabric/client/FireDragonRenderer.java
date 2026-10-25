@@ -17,6 +17,7 @@ import net.minecraft.client.Minecraft;
 /** Uses the original Tabula geometry, poses and stage/variant textures. */
 public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragonRenderer.State, EntityModel<FireDragonRenderer.State>> {
     private static final String[] COLORS = {"red", "green", "bronze", "gray"};
+    private final java.util.Set<Identifier> maleSkins = new java.util.HashSet<>();
 
     public static final class State extends LivingEntityRenderState {
         int variant;
@@ -108,7 +109,13 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
     }
 
     @Override public Identifier getTextureLocation(State state) {
-        return texture(state, state.sleeping || state.blinking ? "_sleeping" : "");
+        String suffix = state.sleeping || state.blinking ? "_sleeping" : "";
+        Identifier base = texture(state, suffix);
+        if (!state.male) return base;
+        Identifier key = IafContent.id("dragon_texture/" + COLORS[state.variant] + "_" + state.stage + suffix + "_male");
+        if (maleSkins.add(key)) Minecraft.getInstance().getTextureManager().registerAndLoad(key,
+                new DragonSkinTexture(base, IafContent.id("textures/models/firedragon/male_" + COLORS[state.variant] + ".png")));
+        return key;
     }
     static Identifier texture(State state, String suffix) {
         return Identifier.fromNamespaceAndPath("iceandfire", "textures/models/firedragon/" + COLORS[state.variant] + "_" + state.stage + suffix + ".png");
