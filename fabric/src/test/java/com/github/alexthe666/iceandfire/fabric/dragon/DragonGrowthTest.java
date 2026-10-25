@@ -4,6 +4,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DragonGrowthTest {
+    @Test void originalDeathExperienceChangesAtEveryStageBoundary() {
+        int[] ages = {-1, 0, 24, 25, 49, 50, 74, 75, 99, 100, 125, 200};
+        int[] xp = {5, 5, 5, 20, 20, 150, 150, 300, 300, 650, 650, 650};
+        for (int i = 0; i < ages.length; i++) assertEquals(xp[i], DragonGrowth.experienceReward(ages[i]), "age " + ages[i]);
+    }
     @Test void stageTransitionsAndRidingMatchOriginal() {
         int[] ages = {0, 24, 25, 49, 50, 74, 75, 99, 100, 125, 200};
         int[] stages = {1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 5};

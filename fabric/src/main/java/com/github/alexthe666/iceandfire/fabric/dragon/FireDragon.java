@@ -537,6 +537,11 @@ public final class FireDragon extends TamableAnimal {
     /** Render snapshot only; inventory remains the sole persisted/drop source. */
     public ItemStack dragonBanner() { return entityData.get(BANNER).copy(); }
 
+    @Override protected int getBaseExperienceReward(ServerLevel server) {
+        // Keep native killer/enchantment/game-rule handling; replace Animal's 1..3 base XP.
+        return DragonGrowth.experienceReward(ageDays());
+    }
+
     @Override protected void dropCustomDeathLoot(ServerLevel server, net.minecraft.world.damagesource.DamageSource source, boolean recentlyHit) {
         super.dropCustomDeathLoot(server, source, recentlyHit);
         for (ItemStack stack : dragonInventory.removeAllItems()) if (!stack.isEmpty()) spawnAtLocation(server, stack);

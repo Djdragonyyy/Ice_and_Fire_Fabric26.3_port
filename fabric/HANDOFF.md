@@ -1,5 +1,31 @@
 # Prompt completo per continuare il porting su un altro PC
 
+## Checkpoint 0.1.38 - esperienza originale per stadio
+
+Ripristinati gli XP base originali:5/20/150/300/650 per gli stadi1..5.
+Override del solo getBaseExperienceReward: accredito del giocatore, incantesimi,
+regola mobDrops e generazione degli orb restano gestiti dal codice nativo.
+Nessuna generazione manuale o ripetuta di XP; inventario ancora rilasciato una volta.
+
+Build completa passata in9m11s:85JUnit,121GameTest mod (122 con baseline),11prove
+client e33PNG correnti. Due nuove prove server uccidono realmente i draghi dei
+cinque stadi, contano gli orb includendo Count e verificano inventario, tick di
+morte, morte ambientale e mobDrops=false. Vedere TEST-0.1.38.md.
+La prova rete a due client resta quella pubblicata sulla0.1.37: NON rieseguita
+sulla0.1.38, quindi esclusa dalle prove correnti e dal nuovo archivio.
+
+PROSSIMO: carcassa persistente, raccolta, item e teschio piazzabile originale.
+XP completati come passo atomico; carcassa e raccolta NON ancora implementate.
+Oggi rimozione vanilla e solo drop inventario. Ricerca originale dettagliata in
+work/phase38-preparation/RESEARCH.txt fuori repo. Non attivare carcasse persistenti
+senza dipendenze di raccolta complete; preservare proprieta, inventario e regola
+dismount senza immunita in volo. Restano multipart, altre parita, DedicatedServer
+ordinario/persistenza MP, punte grigie e casi intermittenti sonno/escort.
+Tappa1 e port completo aperti. Proseguire nella stessa chat/ramo, senza delega.
+Non sospendere o spegnere MAI il PC. Entrambe le email della sessione24ottobre
+sono gia registrate nello stato privato: non inviarle nuovamente.
+
+
 ## Checkpoint 0.1.37 - movimenti originali del corpo e protezione delle ali
 
 Ripristinati fase normalizzata delle catene, offset verticale bob, onde di collo e

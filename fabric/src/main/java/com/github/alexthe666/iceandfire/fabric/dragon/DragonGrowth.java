@@ -56,6 +56,16 @@ public final class DragonGrowth {
         return stage(ageDays) > 2;
     }
 
+    public static int experienceReward(int ageDays) {
+        return switch (stage(ageDays)) {
+            case 2 -> 20;
+            case 3 -> 150;
+            case 4 -> 300;
+            case 5 -> 650;
+            default -> 5;
+        };
+    }
+
     public static boolean shouldHatch(long incubationTicks, int configuredEggTime) {
         // The original condition is strictly greater, not greater than or equal.
         return incubationTicks > configuredEggTime;

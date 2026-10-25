@@ -1,5 +1,16 @@
 # Revisione del port Fabric
 
+## Revisione 0.1.38 - 25 ottobre 2026
+
+Diff produttivo/test letto in sola lettura, senza delega. Valori confrontati con
+EntityDragonBase originale e hook verificato nel bytecode nativo26.3: viene
+cambiata solo la base XP; LivingEntity applica ancora accredito/incantesimi/regole.
+Test con danno letale reale, orb Count*Value, ripetizione danno/tick, inventario,
+morte ambientale e gamerule ripristinata in finally. Nessun rilievo residuo.
+Suite completa85JUnit/121modGameTests+baseline/11client,33PNG,9m11s. Nessuna
+asserzione precedente indebolita. Rete corrente non rieseguita: il pacchetto non
+riutilizza i report37 come prove38. Carcassa/raccolta e multipart ancora aperti.
+
 ## Revisione 0.1.37 - 25 ottobre 2026
 
 Diff completo da b7f3618c1 letto in sola lettura, senza delega: cinque file di
