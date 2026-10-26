@@ -29,6 +29,7 @@ public final class DragonCombatConfig {
     public boolean dragonDropBlood = true;
     public boolean dragonDropHeart = true;
     public boolean dragonDropSkull = true;
+    public boolean explosiveDragonBreath = false;
 
     boolean validValues() {
         return Double.isFinite(dragonAttackDamageFire) && dragonAttackDamageFire >= 0 && dragonAttackDamageFire <= Float.MAX_VALUE / 5

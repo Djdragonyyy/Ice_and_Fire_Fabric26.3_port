@@ -1,3 +1,32 @@
+## Checkpoint 0.1.42 - 26 ottobre 2026 - esplosioni opzionali
+
+Aggiunta explosiveDragonBreath=false nel config server, come originale. Se
+abilitata, solo l'impatto delle cariche aggiunge esplosione nativa26 con potenza
+min(2,stadio-2), omessa negli stadi1/2. Owner/alleati/carcasse e tutte le parti
+multipart protetti da danno e impulso; il genitore non riceve dieci colpi proxy.
+Distruzione vincolata a mobGriefing, dragonGriefing e tamedDragonGriefing;
+blacklist originale e blocchi infrangibili preservati. Danno/effetti rimangono
+quando il terreno e protetto. Nessuna modifica PNG/mesh/UV o immunita dismount.
+Adattamento esplicito: effetti e drop dell'esplosione sono nativi, non replica
+integrale del vecchio BlockLaunchExplosion. Vecchi JSON mantengono false.
+
+Suite completa phase42-final.log verde in11m06s:94JUnit,141modGameTest+baseline
+=142,14prove client e40PNG correnti. Tre nuove prove native mirate verdi in28s:
+carica reale, opzione/stadio, owner registrato e alleati, proxy, terrain gates e
+blacklist. Non ancora prova visiva client dell'esplosione abilitata; vedere
+TEST-0.1.42.md. La0.1.41 precedente e pubblicata al commit7ce22198f.
+
+Prossimo: collaudo DedicatedServer ordinario con due client e mondo realmente
+salvato/riaperto. Ricerca privata work/phase43-preparation/RESEARCH.txt, nessuna
+implementazione43 ancora. Restano altre parita/config/temporizzazioni,
+DragonForge, uova/riproduzione/sonno, navigazione complessa, anteprima passeggeri
+e punte grigie. Tappa1 e port completo NON conclusi.
+
+Istruzioni operative: stessa chat/ramo; controllo ogni50minuti, non5. Email
+ANNULLATE dall'utente: niente invii/ricerche/ritentativi. Continuare fino a quota
+esaurita, poi salvataggi, checkpoint/push e spegnimento ordinato senza forzare
+applicazioni con dati non salvati. Vecchi divieti storici superati.
+
 ## Checkpoint 0.1.41 - 26 ottobre 2026 - multipart nativo
 
 Portate le dieci parti originali (testa, collo, quattro ali e quattro segmenti

@@ -1,3 +1,21 @@
+## Revisione 0.1.42 - 26 ottobre 2026
+
+No findings.
+
+Diff e nuovi file letti interamente in sola lettura, chiamante chargeImpact,
+config e test compresi; confronto con causeExplosion originale e bytecode
+ExplosionDamageCalculator26. La potenza e quella originale e configfalse
+preserva il comportamento precedente. Il body riceve area damage una volta,
+proxy multipart esclusi, owner/alleati protetti anche dal knockback. Grief gates,
+blacklist e blocchi infrangibili applicati al calcolo nativo. Nessun cambiamento
+al dismount o ai PNG/modelli. Il test owner usa un player registrato nel mondo.
+
+Suite definitiva11m06s:94JUnit,141modGameTest+baseline142,14client,40PNG correnti.
+Tre prove nuove anche sull'impatto di una carica, non solo sul calcolatore.
+Limiti: esplosioni abilitata non ancora controllata visivamente con client;
+drop/suoni/particelle nativi sono un adattamento dichiarato del legacy, non
+parita visiva integrale. DedicatedServer e riapertura mondo restano aperti.
+
 ## Revisione 0.1.41 - 26 ottobre 2026
 
 No findings.

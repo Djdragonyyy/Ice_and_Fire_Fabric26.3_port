@@ -91,6 +91,7 @@ public final class DragonFireCombat {
         double radius = stage <= 3 ? 2 : (stage == 4 ? 3 : 4);
         damageArea(level, dragon, point, radius, Math.max(1, stage - 1) * 2F, 15, charge);
         DragonFireTerrain.charge(level, BlockPos.containing(point), dragon);
+        DragonFireExplosion.trigger(level, dragon, charge, point);
     }
 
     private static void damageArea(ServerLevel level, FireDragon dragon, Vec3 center, double radius,

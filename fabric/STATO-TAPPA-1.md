@@ -1,3 +1,32 @@
+## Checkpoint 0.1.42 - 26 ottobre 2026 - esplosioni opzionali
+
+Aggiunta explosiveDragonBreath=false nel config server, come originale. Se
+abilitata, solo l'impatto delle cariche aggiunge esplosione nativa26 con potenza
+min(2,stadio-2), omessa negli stadi1/2. Owner/alleati/carcasse e tutte le parti
+multipart protetti da danno e impulso; il genitore non riceve dieci colpi proxy.
+Distruzione vincolata a mobGriefing, dragonGriefing e tamedDragonGriefing;
+blacklist originale e blocchi infrangibili preservati. Danno/effetti rimangono
+quando il terreno e protetto. Nessuna modifica PNG/mesh/UV o immunita dismount.
+Adattamento esplicito: effetti e drop dell'esplosione sono nativi, non replica
+integrale del vecchio BlockLaunchExplosion. Vecchi JSON mantengono false.
+
+Suite completa phase42-final.log verde in11m06s:94JUnit,141modGameTest+baseline
+=142,14prove client e40PNG correnti. Tre nuove prove native mirate verdi in28s:
+carica reale, opzione/stadio, owner registrato e alleati, proxy, terrain gates e
+blacklist. Non ancora prova visiva client dell'esplosione abilitata; vedere
+TEST-0.1.42.md. La0.1.41 precedente e pubblicata al commit7ce22198f.
+
+Prossimo: collaudo DedicatedServer ordinario con due client e mondo realmente
+salvato/riaperto. Ricerca privata work/phase43-preparation/RESEARCH.txt, nessuna
+implementazione43 ancora. Restano altre parita/config/temporizzazioni,
+DragonForge, uova/riproduzione/sonno, navigazione complessa, anteprima passeggeri
+e punte grigie. Tappa1 e port completo NON conclusi.
+
+Istruzioni operative: stessa chat/ramo; controllo ogni50minuti, non5. Email
+ANNULLATE dall'utente: niente invii/ricerche/ritentativi. Continuare fino a quota
+esaurita, poi salvataggi, checkpoint/push e spegnimento ordinato senza forzare
+applicazioni con dati non salvati. Vecchi divieti storici superati.
+
 ## Checkpoint 0.1.41 - 26 ottobre 2026 - multipart nativo
 
 Portate le dieci parti originali (testa, collo, quattro ali e quattro segmenti
@@ -559,7 +588,7 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 
 ## Da completare nella tappa 1
 
-- Multipart completato nella0.1.41: dieci parti originali, tracking/danno/interazioni e lifecycle verificati; collaudo DedicatedServer ancora aperto.
+Multipart completato nella0.1.41 e esplosioni opzionali native nella0.1.42; collaudo DedicatedServer ancora aperto.
 
 - Combattimento autonomo: ulteriori dettagli di presa e
   parità delle configurazioni/temporizzazioni originali, reazioni e
@@ -571,8 +600,7 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
   assetti stretti restano da collaudare, senza dichiarare un pathfinder universale.
 - Passeggeri nell'anteprima GUI; ulteriori dettagli visivi maschio/femmina,
   animazioni secondarie/attacchi, ulteriori suoni e particelle ancora mancanti.
-- Configurazioni originali non ancora esposte; integrazione DragonForge ed
-  esplosioni opzionali del combattimento.
+- Configurazioni originali non ancora esposte; integrazione DragonForge e ulteriori dettagli del combattimento.
 - Difetto delle punte grigie ancora aperto: non è stato risolto né modificato
   alla cieca. Continuare con confronto equivalente all'originale.
 - Collaudo in gioco di camera, seduta, attacchi, armature e volo ai vari stadi;
@@ -582,6 +610,6 @@ riprova: non viene piazzato alla cieca sulle coordinate del giocatore.
 Restano fuori da questa consegna draghi di ghiaccio/fulmine, altre creature,
 progressione completa, ricette, strutture e generazione naturale: appartengono
 alle tappe successive. Non iniziarle prima del completamento e del riscontro
-sulla tappa 1. La 0.1.13 è confermata; collaudare le novità successive, ora fino alla0.1.41. L'utente ha autorizzato il proseguimento autonomo; il riscontro non impone una nuova pausa.
+sulla tappa 1. La 0.1.13 è confermata; collaudare le novità successive, ora fino alla0.1.42. L'utente ha autorizzato il proseguimento autonomo; il riscontro non impone una nuova pausa.
 
 Nota operativa25ottobre: ultima richiesta continua fino a esaurimento quota, poi spegni il PC dopo checkpoint sicuro. Controllo automatico50min, non5. Superati i vecchi divieti storici; proseguimento del port autorizzato.
