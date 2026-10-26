@@ -1,3 +1,34 @@
+## Checkpoint 0.1.44 - 26 ottobre 2026 - logout montato e rientro in volo
+
+Verificato DedicatedServer ordinario: logout ANCORA IN SELLA, salvataggio nativo
+RootVehicle, arresto/riavvio dello stesso mondo e rientro dei medesimi due profili
+locali. Il proprietario torna pilota dello stesso UUID drago; volo ripristinato
+su server e su entrambi i client, eta/sesso/armature head-tail/nome e flagNoAI
+conservati. Carcassa75/DeathStage2 nel mondo,20proxy ricreati senza duplicati.
+Sei processi exit0: due server e quattro client (due profili prima/dopo).
+Piani esportati con username sintetici stabili e --nogui esplicito per server.
+Nessuna autenticazione/account personale modificata, tutto su loopback.
+
+Suite ordinaria phase44-final.log verde10m34s:94JUnit,141modGameTest+baseline142,
+14client e40PNG correnti. Prova dedicata finale phase44-dedicated-launch-3.log,
+cinque PNG correnti,45totali. Nuove immagini rientro owner/guest controllate:
+attesa GUI nulla corretta prima dello screenshot (il primo tentativo mostrava
+LoadingTerrain). Report/log/6exit0 in dedicated-mounted-test-results.
+Tutte99classi produzione SHA identiche alla43, nessun harness nelJAR. Si aggiunge
+collaudo, non una finta correzione di perdita drago: RootVehicle e nativo.
+TEST-0.1.44.md descrive caso e limiti.43unmounted-world resta prova precedente.
+
+Restano DragonForge, altre parita/config/temporizzazioni, ciclo uova e dettagli
+riproduzione/sonno, navigazione complessa, anteprima passeggeri e punte grigie.
+Tappa1 e port completo NON conclusi. Prossimo candidato: condizioni ed effetti
+originali di schiusa del fuoco (lava, posizione centrata, suoni e movimento uovo).
+Nessuna implementazione45 ancora; ricerca sul codice originale/Forge.
+
+Stessa chat/ramo, controllo OGNI50minuti, non5. Ultimo controllo21:10Roma:
+53%primaria/39%settimanale usata. Email ANNULLATE. Proseguire lavoro utile fino
+quota esaurita; poi salvataggi/checkpoint/push e spegnimento ordinato senza
+forzare applicazioni con dati non salvati. Vecchi divieti storici superati.
+
 ## Checkpoint 0.1.43 - 26 ottobre 2026 - server dedicato e mondo riaperto
 
 Collaudato un DedicatedServer ORDINARIO con due processi client rendering via

@@ -1,3 +1,25 @@
+## Revisione 0.1.44 - 26 ottobre 2026
+
+No findings.
+
+Diff completo, nuovi harness, sourceSet opt-in, export e launcher letti in sola
+lettura.99classi produzione44 SHA identiche43, helper esclusi dalJAR. Il nuovo
+caso mantiene il pilota al logout, distingue RootVehicle da entity nel mondo,
+riavvia davvero il processo e fa rientrare gli stessi profili locali. Assert
+owner/vehicle/UUID/volo su server e client, carcassa e20proxy senza duplicati.
+Sei exit finali controllati anche quando tutti i processi sono gia terminati.
+
+Rilievo corretto fuori revisione: screenshot preso con player/metadata presenti
+ma LoadingTerrain ancora visibile. Ora attende screen/overlay nulli e10tick;
+prova dedicata ripetuta e nuove immagini in gioco controllate. Assert funzionali
+mantenuti. Export --username e --nogui espliciti, nessun uso account personali.
+Default43world-only preservato, modalita44 opt-in; niente nuova immunita dismount.
+
+Regressione completa10m34s,94JUnit/141modGT+baseline142/14client/40PNG; prova
+aggiuntiva6exit0/5PNG/RootVehicle+riavvio+rientro.45PNG totali, 2nuove viste rientro
+controllate; guest iniziale tagliato dichiarato. Account autenticati, crash/timeout
+reali e arresto forzato non certificati. Tappa1/port restano aperti.
+
 ## Revisione 0.1.43 - 26 ottobre 2026
 
 No findings.

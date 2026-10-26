@@ -15,7 +15,10 @@ import java.util.UUID;
 public class DragonNetworkClientTest implements FabricClientGameTest {
     private static void require(boolean ok, String message) { if (!ok) throw new AssertionError(message); }
     @Override public void runTest(ClientGameTestContext context) {
-        try { runConnectedTest(context); }
+        try {
+            if (NetworkTestFiles.read("mounted-mode").equals("yes") && NetworkTestFiles.read("phase").equals("REJOIN")) runRejoinedTest(context);
+            else runConnectedTest(context);
+        }
         catch (RuntimeException | Error error) {
             NetworkTestFiles.write(System.getProperty("iaf.network.role") + "-failed", error.toString());
             throw error;
@@ -79,6 +82,45 @@ public class DragonNetworkClientTest implements FabricClientGameTest {
         context.waitFor(client -> client.player == null && client.level == null, 600);
         context.setScreen(net.minecraft.client.gui.screens.TitleScreen::new);
         NetworkTestFiles.write(role + "-disconnected", "yes");
+    }
+    private void runRejoinedTest(ClientGameTestContext context) {
+        String role = System.getProperty("iaf.network.role");
+        String address = "127.0.0.1:" + System.getProperty("iaf.network.port");
+        UUID expectedPlayer = UUID.fromString(NetworkTestFiles.read(role + "-uuid"));
+        UUID dragonId = UUID.fromString(NetworkTestFiles.read("dragon-uuid"));
+        context.runOnClient(client -> ConnectScreen.startConnecting(client.gui.screen(), client, ServerAddress.parseString(address),
+                new ServerData("Local mounted relogin test", address, ServerData.Type.OTHER), false, null));
+        context.waitFor(client -> client.player != null && client.level != null && client.gui.overlay() == null, 1200);
+        context.runOnClient(client -> require(client.player.getUUID().equals(expectedPlayer), "Same development profile reconnects after server restart"));
+        context.waitFor(client -> find(client, dragonId) != null && find(client, dragonId).getOwnerReference() != null, 1200);
+        context.waitFor(client -> NetworkTestFiles.read("rejoin-server-verified").equals("yes"), 1200);
+        context.waitFor(client -> client.level.getEntitiesOfClass(com.github.alexthe666.iceandfire.fabric.dragon.DragonPart.class,
+                find(client, dragonId).getBoundingBox().inflate(35)).stream().filter(p -> p.parent() == find(client, dragonId)).count() == 10, 1200);
+        if (role.equals("owner")) {
+            context.waitFor(client -> client.player.getVehicle() instanceof FireDragon d && d.getUUID().equals(dragonId), 1200);
+            context.runOnClient(client -> client.options.setCameraType(net.minecraft.client.CameraType.THIRD_PERSON_BACK));
+            context.getInput().lookAt(0, 15);
+        } else {
+            context.waitFor(client -> client.player.distanceToSqr(find(client, dragonId)) > 900, 1200);
+            context.runOnClient(client -> {
+                client.options.setCameraType(net.minecraft.client.CameraType.FIRST_PERSON);
+                client.player.lookAt(net.minecraft.commands.arguments.EntityAnchorArgument.Anchor.EYES, find(client, dragonId).getBoundingBox().getCenter());
+                require(client.player.getVehicle() == null, "Guest does not become the restored pilot");
+            });
+        }
+        context.runOnClient(client -> {
+            var d = find(client, dragonId);
+            require(d.getOwnerReference().getUUID().toString().equals(NetworkTestFiles.read("owner-uuid")) && d.male()
+                    && d.ageDays() == 50 && d.armorParts() == 0x1001 && d.flying(), "Owner, age, flight, gender and head/tail armor synchronize after mounted relogin");
+        });
+        context.waitFor(client -> client.gui.screen() == null && client.gui.overlay() == null, 1200);
+        context.waitTicks(10); context.takeScreenshot("dragon-mounted-rejoin-" + role + "-0.1.44");
+        NetworkTestFiles.write(role + "-rejoined", "yes");
+        context.waitFor(client -> NetworkTestFiles.read("phase").equals("REJOIN_DISCONNECT"), 1200);
+        context.runOnClient(client -> client.disconnectWithProgressScreen());
+        context.waitFor(client -> client.player == null && client.level == null, 600);
+        context.setScreen(net.minecraft.client.gui.screens.TitleScreen::new);
+        NetworkTestFiles.write(role + "-rejoin-disconnected", "yes");
     }
     private static FireDragon find(net.minecraft.client.Minecraft client, UUID uuid) {
         if (client.level == null) return null;

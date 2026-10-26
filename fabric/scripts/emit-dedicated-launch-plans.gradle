@@ -25,6 +25,10 @@ gradle.projectsEvaluated {
                             arguments:task.allJvmArgs + [task.mainClass.get()] + task.args,
                             workingDirectory:runDir.invoke(task).get().asFile.absolutePath,
                             environment:env.invoke(task).get()]
+                if (role == 'server') plan.arguments += ['--nogui']
+                if (role != 'server' && root.providers.gradleProperty('iafMountedReloginTest').isPresent()) {
+                    plan.arguments += ['--username', role == 'owner' ? 'PortTestOwner' : 'PortTestGuest']
+                }
                 planDirectory.mkdirs()
                 new File(planDirectory, "launch-${role}.json").text = JsonOutput.prettyPrint(JsonOutput.toJson(plan))
                 throw new StopExecutionException("Saved ${role} test launch plan")
