@@ -30,6 +30,7 @@ public final class IafContent {
                 @Override public net.minecraft.network.codec.StreamCodec<? super net.minecraft.network.RegistryFriendlyByteBuf, com.github.alexthe666.iceandfire.fabric.dragon.DragonFlameOptions> streamCodec() { return com.github.alexthe666.iceandfire.fabric.dragon.DragonFlameOptions.STREAM_CODEC; }
             });
     public static final EntityType<FireDragon> FIRE_DRAGON = registerDragon();
+    public static final EntityType<com.github.alexthe666.iceandfire.fabric.dragon.DragonPart> DRAGON_MULTIPART = registerPart();
     public static final EntityType<FireDragonEgg> DRAGON_EGG = registerEgg();
     public static final EntityType<com.github.alexthe666.iceandfire.fabric.dragon.DragonSkull> DRAGON_SKULL = registerSkull();
     public static final EntityType<DragonFireCharge> FIRE_DRAGON_CHARGE = registerCharge();
@@ -87,6 +88,13 @@ public final class IafContent {
         }).toArray(SoundEvent[]::new);
     }
     public static Identifier id(String path) { return Identifier.fromNamespaceAndPath(IceAndFireFabric.MOD_ID, path); }
+
+    private static EntityType<com.github.alexthe666.iceandfire.fabric.dragon.DragonPart> registerPart() {
+        var key = ResourceKey.create(Registries.ENTITY_TYPE, id("dragon_multipart"));
+        return Registry.register(BuiltInRegistries.ENTITY_TYPE, key,
+                EntityType.Builder.of(com.github.alexthe666.iceandfire.fabric.dragon.DragonPart::new, MobCategory.MISC)
+                        .sized(0.5F, 0.5F).fireImmune().noSave().noSummon().clientTrackingRange(16).updateInterval(1).build(key));
+    }
 
     private static EntityType<FireDragon> registerDragon() {
         var key = ResourceKey.create(Registries.ENTITY_TYPE, id("fire_dragon"));

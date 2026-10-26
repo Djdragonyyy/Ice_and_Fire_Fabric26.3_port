@@ -1,3 +1,35 @@
+## Checkpoint 0.1.41 - 26 ottobre 2026 - multipart nativo
+
+Portate le dieci parti originali (testa, collo, quattro ali e quattro segmenti
+coda) come entita native transitorie sincronizzate, associate tramite ID e UUID.
+Posizioni/dimensioni seguono renderSize/3 originale nei cinque stadi, senza
+cambiare collider fisico, navigazione o posto pilota. Danno originale: testa e
+punta coda x1.5, ali x0.5, altre parti x1, con cooldown/armatura del genitore.
+Interazione nativa completa inoltrata una sola volta: bastone, corno, monta e
+raccolta della carcassa. Armi survival consumano durabilita una volta grazie
+alla callback nativa risolta sul genitore; nessun secondo danno nel mixin.
+Crescita ridimensiona le stesse parti; cattura/rimozione/unload eliminano la
+famiglia. Parti mancanti ricostruite, orfane scadono, nessun salvataggio autonomo.
+Cariche proprie non colpiscono la testa; pilota non seleziona le proprie parti.
+
+Verifica completa phase41-final-4.log: BUILD SUCCESSFUL in16m04s,94JUnit
+(build up-to-date),138GameTest mod+baseline=139,14prove client e40PNG correnti.
+Cinque nuovi GameTest e una prova C2S reale; XML senza errori. Il log final-3
+interrotto NON e la prova consegnata. Panoramica0039 controllata: non mostra
+wireframe; dimensioni e selezione sono provate dalle asserzioni native/C2S.
+Nessuna modifica PNG, UV o geometria. Vedere TEST-0.1.41.md e REVIEW.md.
+
+Restano nella tappa1: altre parita/config/temporizzazioni, DragonForge ed
+esplosioni opzionali, ulteriori interazioni/uova/riproduzione/sonno, navigazione
+complessa, anteprima passeggeri, punte grigie, DedicatedServer ordinario e
+persistenza MP su mondo riaperto. Tappa1 e port completo NON conclusi.
+Prossimo: audit e completamento delle configurazioni originali di combattimento.
+
+Istruzioni operative correnti: ripresa autorizzata26ottobre18:50; stessa chat e
+ramo port/fabric-26.3; controllo ogni50minuti, non5; email annullate dall'utente.
+Continuare fino a esaurimento quota, poi salvare/test/checkpoint/push e spegnere
+ordinatamente senza forzare applicazioni. Vecchi divieti storici superati.
+
 # Prompt temporaneo per la prossima ripresa
 
 ## Checkpoint 0.1.40 - carcassa e raccolta originali

@@ -11,7 +11,7 @@
   },
   "license": "LGPL-3.0",
   "environment": "*",
-  "mixins": [{"config": "iceandfire.client.mixins.json", "environment": "client"}],
+  "mixins": ["iceandfire.mixins.json", {"config": "iceandfire.client.mixins.json", "environment": "client"}],
   "entrypoints": {
     "main": ["com.github.alexthe666.iceandfire.fabric.IceAndFireFabric"],
     "client": ["com.github.alexthe666.iceandfire.fabric.client.IceAndFireFabricClient"]

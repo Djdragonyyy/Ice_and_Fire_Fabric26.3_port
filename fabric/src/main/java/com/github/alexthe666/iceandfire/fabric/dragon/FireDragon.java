@@ -52,6 +52,7 @@ public final class FireDragon extends TamableAnimal {
     private static final EntityDataAccessor<Boolean> MODEL_DEAD = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> DEATH_STAGE = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.INT);
     public float modelDeadProgress, prevModelDeadProgress;
+    private final java.util.List<DragonPart> multipart = new java.util.ArrayList<>();
     private java.util.UUID loadedPrey;
     private int loadedGripTick;
     private boolean gripImpactDone;
@@ -388,6 +389,7 @@ public final class FireDragon extends TamableAnimal {
             setNoGravity(false);
             setDeltaMovement(0, getDeltaMovement().y, 0);
             super.tick();
+            updateParts();
             return;
         }
         if (!level().isClientSide()) entityData.set(SPEED_MODIFIER, (float) DragonCombatConfig.current.dragonFlightSpeedMod);
@@ -425,7 +427,7 @@ public final class FireDragon extends TamableAnimal {
         // Flight must be active before vanilla processes this tick's ridden movement.
         setNoGravity(flying() || carrier != null);
         super.tick();
-        if (corpse()) return; // Death inside the native tick must stop this tick's growth/combat too.
+        if (corpse()) { updateParts(); return; } // Stop this tick's growth/combat after native death.
         if (level() instanceof ServerLevel server) tickCombat(server);
         if (level() instanceof ServerLevel server && crystalBound() && tickCount % 20 == 0 && server.getEntity(getUUID()) == this)
             DragonPositions.get(server).put(getUUID(), blockPosition());
@@ -482,6 +484,7 @@ public final class FireDragon extends TamableAnimal {
         riderWalkingLift = !flying() && rider != null && rider.zza > 0
                 ? Math.min(DragonRiderLayout.walkingLiftLimit(ageDays()), riderWalkingLift + 0.1F)
                 : Math.max(0, riderWalkingLift - 0.15F);
+        updateParts();
     }
 
     private void tickSleep(ServerLevel server) {
@@ -1260,6 +1263,26 @@ public final class FireDragon extends TamableAnimal {
         return InteractionResult.SUCCESS;
     }
 
+    public java.util.List<DragonPart> dragonParts() { return java.util.List.copyOf(multipart); }
+    boolean ownsPart(DragonPart part) { return multipart.contains(part); }
+    private void updateParts() {
+        if (!(level() instanceof ServerLevel server) || isRemoved() || server.getEntity(getUUID()) != this) return;
+        if (multipart.stream().anyMatch(part -> part.isRemoved() || part.level() != level())) removeParts();
+        if (multipart.isEmpty()) {
+            for (int i = 0; i < DragonPartLayout.PARTS.size(); i++) {
+                var part = IafContent.DRAGON_MULTIPART.create(server, EntitySpawnReason.TRIGGERED);
+                if (part == null) { removeParts(); return; }
+                part.attach(this, i);
+                if (!server.addFreshEntity(part)) { part.discard(); removeParts(); return; }
+                multipart.add(part);
+            }
+        }
+        for (var part : multipart) part.follow(this);
+    }
+    private void removeParts() {
+        for (var part : multipart) part.discard();
+        multipart.clear();
+    }
     public Mob grippedPrey() {
         return getFirstPassenger() instanceof Mob mob && mob.getId() == entityData.get(GRIPPED_PREY) ? mob : null;
     }
@@ -1326,6 +1349,7 @@ public final class FireDragon extends TamableAnimal {
     }
 
     @Override public void remove(RemovalReason reason) {
+        removeParts();
         if (reason.shouldDestroy()) releaseGrip(true);
         super.remove(reason);
     }

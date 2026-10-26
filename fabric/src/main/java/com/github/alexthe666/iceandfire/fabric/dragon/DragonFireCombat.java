@@ -29,6 +29,7 @@ public final class DragonFireCombat {
     }
 
     static boolean protectedTarget(FireDragon dragon, Entity target) {
+        if (target instanceof DragonPart part) return part.parent() == null || protectedTarget(dragon, part.parent());
         if (target instanceof DragonSkull || target instanceof FireDragon remains && remains.corpse()) return true; // Decorative remains, never living combat prey.
         if (target == dragon || dragon.isAlliedTo(target)) return true;
         var owner = dragon.getOwnerReference();

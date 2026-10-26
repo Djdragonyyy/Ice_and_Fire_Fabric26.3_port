@@ -1,3 +1,22 @@
+## Revisione 0.1.41 - 26 ottobre 2026
+
+No findings.
+
+Diff completo e nuovi file letti in sola lettura con review-agent locale, senza
+delega. Controllati chiamanti tick/rimozione, mapping delle parti originale,
+tracking ID/UUID, parent canonico, danni/interazioni e test. Revisione conclusa;
+documentazione e confezionamento eseguiti fuori dalla revisione.
+La callback armi nativa e stata aggiunta prima dell'ultima suite completa e
+verificata con attacco survival/usura1. Nessun doppio danno o pacchetto custom
+con importi di danno scelti dal client. Parti non salvate, nessun posto aggiunto,
+cleanup/crescita/carcassa/protezione carica e pilota coperti da prove native.
+
+Suite definitiva16m04s:94JUnit,138modGameTest+baseline,14client,40PNG correnti.
+Panoramica0039 controllata, senza wireframe visibili; prove picking/bbox native,
+nessuna rivendicazione visiva dei contorni. Nessuna nuova prova a due client o
+DedicatedServer ordinario, mondo riaperto e prestazioni di grandi gruppi ancora
+aperti. Non equivale a completamento della tappa1 o del port.
+
 # Revisione del port Fabric
 
 ## Revisione 0.1.40 - 25 ottobre 2026
