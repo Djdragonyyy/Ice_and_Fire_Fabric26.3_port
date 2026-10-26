@@ -31,7 +31,9 @@ public class DragonNetworkClientTest implements FabricClientGameTest {
         NetworkTestFiles.write(role + "-uuid", context.computeOnClient(client -> client.player.getUUID().toString()));
         context.waitFor(client -> !NetworkTestFiles.read("dragon-uuid").isEmpty(), 1200);
         UUID dragonId = UUID.fromString(NetworkTestFiles.read("dragon-uuid"));
-        context.waitFor(client -> find(client, dragonId) != null && find(client, dragonId).getFlightSpeedModifier() == 0.5, 1200);
+        // Dedicated servers may send the initial spawn before a subsequently assigned owner is tracked.
+        context.waitFor(client -> find(client, dragonId) != null && find(client, dragonId).getFlightSpeedModifier() == 0.5
+                && find(client, dragonId).getOwnerReference() != null, 1200);
         context.runOnClient(client -> {
             FireDragon dragon = find(client, dragonId);
             require(DragonCombatConfig.current.dragonFlightSpeedMod == 1, "Client config differs from authoritative server value");

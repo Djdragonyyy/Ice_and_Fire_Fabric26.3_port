@@ -1,0 +1,34 @@
+// Test-only launch-plan extraction from pinned Loom1.18.4. No Microsoft account files are read.
+import groovy.json.JsonOutput
+import org.gradle.api.tasks.StopExecutionException
+
+gradle.projectsEvaluated {
+    def root = gradle.rootProject
+    def planDirectory = root.file(root.providers.gradleProperty('iafNetworkDir').get())
+    ['runDedicatedWorldServerTest':'server', 'runDedicatedWorldOwnerTest':'owner', 'runDedicatedWorldGuestTest':'guest'].each { taskName, role ->
+        root.tasks.named(taskName).configure { task ->
+            task.microsoftAuthenticationEnabled.set(false)
+            task.doFirst {
+                def runClass = task.class
+                while (runClass.name != 'net.fabricmc.loom.task.AbstractRunTask') runClass = runClass.superclass
+                def argFileProperty = runClass.getDeclaredMethod('getUseArgFile')
+                argFileProperty.setAccessible(true)
+                assert argFileProperty.invoke(task).get(): 'Native argument-file support is required'
+                def writeArgFile = runClass.getDeclaredMethod('writeArgFile')
+                writeArgFile.setAccessible(true)
+                writeArgFile.invoke(task)
+                def runDir = runClass.getDeclaredMethod('getInternalRunDir')
+                runDir.setAccessible(true)
+                def env = runClass.getDeclaredMethod('getInternalEnvironmentVars')
+                env.setAccessible(true)
+                def plan = [executable:task.javaLauncher.get().executablePath.asFile.absolutePath,
+                            arguments:task.allJvmArgs + [task.mainClass.get()] + task.args,
+                            workingDirectory:runDir.invoke(task).get().asFile.absolutePath,
+                            environment:env.invoke(task).get()]
+                planDirectory.mkdirs()
+                new File(planDirectory, "launch-${role}.json").text = JsonOutput.prettyPrint(JsonOutput.toJson(plan))
+                throw new StopExecutionException("Saved ${role} test launch plan")
+            }
+        }
+    }
+}

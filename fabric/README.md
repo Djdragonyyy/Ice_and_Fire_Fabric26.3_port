@@ -1,10 +1,12 @@
 # Ice and Fire: port Fabric 26.3 in sviluppo
 
-Verificati 94 JUnit, 141 GameTest della mod (142 con baseline vanilla), 14 prove client e 40 immagini nella 0.1.42. Prova rete precedente sulla0.1.37, non rieseguita qui. DedicatedServer ordinario ancora da collaudare.
+Verificati 94 JUnit, 141 GameTest della mod (142 con baseline vanilla), 14 prove client ordinarie e 40 immagini nella 0.1.43. Inoltre due client su DedicatedServer ordinario e riapertura reale del mondo, con 3 immagini dedicate: 43 totali. Profili locali di sviluppo; limiti in TEST-0.1.43.md.
 
 **Checkpoint di sviluppo: la tappa 1 e il port completo restano aperti.**
 
-Versione corrente: **0.1.42-stage1-dev**. Esplosioni opzionali delle cariche, native e protette dalle regole del terreno. [TEST-0.1.42.md](TEST-0.1.42.md). Tappa1 incompleta.
+Versione corrente: **0.1.43-stage1-dev**. Collaudo DedicatedServer ordinario con due client e riapertura del mondo salvato; stessi 99 bytecode di produzione della 0.1.42. [TEST-0.1.43.md](TEST-0.1.43.md). Tappa1 incompleta.
+
+Versione precedente: **0.1.42-stage1-dev**. Esplosioni opzionali delle cariche, native e protette dalle regole del terreno. [TEST-0.1.42.md](TEST-0.1.42.md). Tappa1 incompleta.
 
 Versione precedente: **0.1.41-stage1-dev**. Dieci hitbox originali sincronizzate, danni/interazioni e callback native delle armi. [TEST-0.1.41.md](TEST-0.1.41.md). Tappa1 incompleta.
 

@@ -1,3 +1,34 @@
+## Checkpoint 0.1.43 - 26 ottobre 2026 - server dedicato e mondo riaperto
+
+Collaudato un DedicatedServer ORDINARIO con due processi client rendering via
+TCP locale, profili di sviluppo distinti. Owner/ospite, rifiuto dei comandi
+falsificati, volo, velocita/sesso e armature head-tail sincronizzati verificati.
+Dopo dismount, logout e arresto ordinato, un NUOVO processo riapre lo STESSO mondo:
+UUID/owner offline, eta/comando/nome/NoAI/armature del drago e carcassa75giorni
+DeathStage2 conservati.20parti ricreate con UUID nuovi, nessun duplicato/orfano.
+Quattro processi exit0, report actualWorldRestart=true;49chunk persistenti letti.
+Tre immagini dedicate correnti controllate; quella ospite e tagliata, non prova
+l'intero modello. Harness opt-in separato, nessun helper nel JAR distribuito.
+99classi di produzione SHA identiche alla0.1.42; nessun nuovo gameplay inventato.
+
+Anche regressione ordinaria phase43-final.log verde10m52s:94JUnit,141modGameTest
++baseline142,14client e40PNG correnti, oltre ai2client/3PNG dedicati.43PNGtotali.
+Report/log/config test e confronto classi in dedicated-world-test-results.
+Vedere TEST-0.1.43.md per riproduzione, correzioni fixture e limiti precisi.
+Il drago del tentativo montato non era perso: trovato su disco in RootVehicle
+player nativo. Per il test di persistenza NEL MONDO si smonta prima del logout.
+Logout/relogin montato, account autenticati e arresti improvvisi NON certificati.
+
+Ultimo gameplay0.1.42: esplosioni opzionali native (defaultfalse), multipart41.
+Restano DragonForge, altre parita/config/temporizzazioni, uova/riproduzione/sonno,
+navigazione complessa, anteprima passeggeri e punte grigie. Tappa1/port aperti.
+Prossimo: valutare prova mounted logout/relogin con profili di sviluppo stabili;
+ricerca privata work/phase43-preparation/RESEARCH.txt. Nessuna nuova fase avviata.
+
+Stessa chat e ramo; controllo ogni50minuti, non5; email ANNULLATE. Continuare
+fino a quota esaurita, poi salvare/checkpoint/push e spegnere ordinatamente senza
+forzare applicazioni con dati non salvati. Vecchi divieti storici superati.
+
 ## Checkpoint 0.1.42 - 26 ottobre 2026 - esplosioni opzionali
 
 Aggiunta explosiveDragonBreath=false nel config server, come originale. Se

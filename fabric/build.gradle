@@ -31,7 +31,7 @@ loom {
         gametest {
             server()
             source sourceSets.gametest
-            runDir 'run/0.1.42-gametest'
+            runDir 'run/0.1.43-gametest'
             vmArg '-Dfabric-api.gametest'
             vmArg "-Dfabric-api.gametest.report-file=${file('build/gametest-results.xml').absolutePath}"
         }
@@ -124,7 +124,7 @@ loom {
         clientGametest {
             client()
             source sourceSets.clientGametest
-            runDir 'run/0.1.42-client-gametest'
+            runDir 'run/0.1.43-client-gametest'
             vmArg '-Dfabric.client.gametest'
         }
     }
@@ -187,6 +187,66 @@ if (providers.gradleProperty('iafNetworkTest').isPresent()) {
                 vmArg '-Diaf.network.role=guest'
                 vmArg "-Diaf.network.dir=${networkDirectory}"
                 vmArg "-Diaf.network.port=${networkPort}"
+                programArg '--username'
+                programArg 'PortTestGuest'
+            }
+        }
+    }
+}
+
+// Explicit opt-in ordinary DedicatedServer + two rendering clients; no GameTest server substitution.
+if (providers.gradleProperty('iafDedicatedWorldTest').isPresent()) {
+    def sessionDirectory = file(providers.gradleProperty('iafNetworkDir').get()).absolutePath
+    def testPort = providers.gradleProperty('iafNetworkPort').getOrElse('25596')
+    sourceSets {
+        dedicatedWorldTest {
+            java.srcDir 'src/networkTestSupport/java'
+            compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+            runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath
+        }
+        dedicatedWorldClientTest {
+            java.srcDir 'src/networkTestSupport/java'
+            java.srcDir 'src/networkClientGametest/java'
+            resources.srcDir 'src/networkClientGametest/resources'
+            compileClasspath += sourceSets.client.output + sourceSets.client.compileClasspath
+            runtimeClasspath += sourceSets.client.output + sourceSets.client.runtimeClasspath
+        }
+    }
+    loom {
+        mods {
+            iceandfire_dedicated_world_test { sourceSet sourceSets.dedicatedWorldTest }
+            iceandfire_network_client_gametest { sourceSet sourceSets.dedicatedWorldClientTest }
+        }
+        runs {
+            dedicatedWorldServerTest {
+                server()
+                source sourceSets.dedicatedWorldTest
+                runDir 'run/0.1.43-dedicated-server'
+                vmArg '-Xmx1G'
+                vmArg "-Diaf.network.dir=${sessionDirectory}"
+                programArg '--nogui'
+            }
+            dedicatedWorldOwnerTest {
+                client()
+                source sourceSets.dedicatedWorldClientTest
+                runDir 'run/0.1.43-dedicated-owner'
+                vmArg '-Xmx2G'
+                vmArg '-Dfabric.client.gametest'
+                vmArg '-Diaf.network.role=owner'
+                vmArg "-Diaf.network.dir=${sessionDirectory}"
+                vmArg "-Diaf.network.port=${testPort}"
+                programArg '--username'
+                programArg 'PortTestOwner'
+            }
+            dedicatedWorldGuestTest {
+                client()
+                source sourceSets.dedicatedWorldClientTest
+                runDir 'run/0.1.43-dedicated-guest'
+                vmArg '-Xmx2G'
+                vmArg '-Dfabric.client.gametest'
+                vmArg '-Diaf.network.role=guest'
+                vmArg "-Diaf.network.dir=${sessionDirectory}"
+                vmArg "-Diaf.network.port=${testPort}"
                 programArg '--username'
                 programArg 'PortTestGuest'
             }

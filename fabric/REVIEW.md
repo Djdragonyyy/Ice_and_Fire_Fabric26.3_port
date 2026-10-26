@@ -1,3 +1,27 @@
+## Revisione 0.1.43 - 26 ottobre 2026
+
+No findings.
+
+Intero diff e nuovi file letti in sola lettura, sourceSet opt-in, event lifecycle,
+launcher, export piani e fixture client inclusi.99classi produzione43 identiche
+viaSHA alla42, nessun harness nelJAR. DedicatedServer verificato anche dal tipo
+runtime, non dalla sola stringa nel report. Quattro exit0 e riapertura reale di
+un mondo salvato,20proxy UUID nuovi. Artefatti dedicati distinguono fase rete e
+fase restart, niente riciclo del vecchio GameTestServer come prova dedicata.
+
+Correzioni fixture: cartelle client, whitelist esplicita, attesa metadati owner
+prima di asserzione esatta, dismount prima di world-save/logout. Nel caso ancora
+montato, live dragon trovato su disco in RootVehicle player nativo: non era
+perdita della mod. Non modificata la produzione per adattarla al test. Resta
+non verificato il rientro montato. Il launcher controlla anche tutti gli exit
+finali e tenta stop ordinato dei propri processi se la prova fallisce.
+
+Suite ordinaria verde10m52s,94JUnit/141modGT+baseline142/14client/40PNG; piu2client
+reali dedicati e3PNG correnti controllate (ospite ravvicinato/tagliato, non full
+model proof). Profili locali non autenticati e bind loopback, non server pubblico.
+No perdita connessione improvvisa o arresto non ordinato certificati. Sintassi
+PowerShell verificata; confronto classi e log inclusi nella consegna.
+
 ## Revisione 0.1.42 - 26 ottobre 2026
 
 No findings.
