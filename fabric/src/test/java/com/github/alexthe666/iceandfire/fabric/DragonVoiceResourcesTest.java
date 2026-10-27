@@ -8,6 +8,18 @@ import java.nio.charset.StandardCharsets;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DragonVoiceResourcesTest {
+    @Test void originalEggHatchDefinitionAndAudioArePackagedUnchanged() throws Exception {
+        Path legacy = Path.of(System.getProperty("iceandfire.legacyResources"));
+        var original = JsonParser.parseString(Files.readString(legacy.resolve("assets/iceandfire/sounds.json"))).getAsJsonObject();
+        try (var input = getClass().getClassLoader().getResourceAsStream("assets/iceandfire/sounds.json")) {
+            var migrated = JsonParser.parseString(new String(input.readAllBytes(), StandardCharsets.UTF_8)).getAsJsonObject();
+            assertEquals(original.get("egg_hatch"), migrated.get("egg_hatch"));
+        }
+        String path = "assets/iceandfire/sounds/effects/egg_hatch.ogg";
+        try (var sound = getClass().getClassLoader().getResourceAsStream(path)) {
+            assertNotNull(sound); assertArrayEquals(Files.readAllBytes(legacy.resolve(path)), sound.readAllBytes());
+        }
+    }
     @Test void originalFlightSamplesArePackagedUnchanged() throws Exception {
         Path legacy = Path.of(System.getProperty("iceandfire.legacyResources"));
         var original = JsonParser.parseString(Files.readString(legacy.resolve("assets/iceandfire/sounds.json"))).getAsJsonObject();

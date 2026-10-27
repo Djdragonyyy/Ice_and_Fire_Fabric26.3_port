@@ -36,6 +36,10 @@ public final class FireDragonEgg extends Mob {
     public void setVariant(int value) { entityData.set(VARIANT, Math.clamp(value, 0, 3)); }
     public void setOwner(LivingEntity value) { owner = EntityReference.of(value); }
     public java.util.UUID ownerId() { return owner == null ? null : owner.getUUID(); }
+    public static boolean canIncubate(net.minecraft.world.level.block.state.BlockState state) {
+        // Forge isBurning includes vanilla lava; keep the existing native fire-tag support too.
+        return state.is(BlockTags.FIRE) || state.is(Blocks.LAVA);
+    }
     @Override public boolean isPushable() { return false; }
     @Override protected void doPush(Entity other) { }
 
@@ -49,21 +53,24 @@ public final class FireDragonEgg extends Mob {
 
     @Override public void tick() {
         super.tick();
-        if (!(level() instanceof ServerLevel server)) return;
+        if (!(level() instanceof ServerLevel server) || isRemoved()) return;
         setAirSupply(200);
-        if (server.getBlockState(blockPosition()).is(BlockTags.FIRE) && incubationTicks < Long.MAX_VALUE) incubationTicks++;
+        if (canIncubate(server.getBlockState(blockPosition())) && incubationTicks < Long.MAX_VALUE) incubationTicks++;
         if (!DragonGrowth.shouldHatch(incubationTicks, com.github.alexthe666.iceandfire.fabric.DragonCombatConfig.current.dragonEggTime)) return;
         FireDragon dragon = IafContent.FIRE_DRAGON.create(server, EntitySpawnReason.BREEDING);
         if (dragon == null) return;
         dragon.setVariant(variant());
         dragon.setMale(random.nextBoolean());
-        dragon.setPos(getX(), getY() + 1, getZ());
+        var at = blockPosition();
+        dragon.setPos(at.getX() + 0.5, at.getY() + 1, at.getZ() + 0.5);
         dragon.setCustomName(getCustomName());
         dragon.setHunger(50);
         dragon.setTame(true, false);
         dragon.setOwnerReference(owner);
         if (server.addFreshEntity(dragon)) {
-            server.setBlockAndUpdate(blockPosition(), Blocks.AIR.defaultBlockState());
+            server.setBlockAndUpdate(at, Blocks.AIR.defaultBlockState());
+            server.playSound(null, getX(), getY() + getEyeHeight(), getZ(), net.minecraft.sounds.SoundEvents.FIRE_EXTINGUISH, getSoundSource(), 2.5F, 1);
+            server.playSound(null, getX(), getY() + getEyeHeight(), getZ(), IafContent.EGG_HATCH, getSoundSource(), 2.5F, 1);
             discard();
         }
     }

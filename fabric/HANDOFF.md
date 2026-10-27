@@ -1,3 +1,36 @@
+## Checkpoint 0.1.45 - 27 ottobre 2026 - incubazione e schiusa
+
+Completata la verifica avviata il 26 ottobre: phase45-final.log termina BUILD
+SUCCESSFUL in 10m35s. 95 JUnit, 145 GameTest mod + baseline = 146 server,
+15 entrypoint client e 42 PNG correnti. XML senza errori/failure. Quattro nuovi
+GameTest di incubazione passati anche isolatamente in phase45-focused.log.
+
+Uova di fuoco: lava valida per incubare come nel Forge originale; FIRE tag
+preesistente conservato (anche soul fire). Acqua pausa il progresso senza
+azzerarlo; magma/campfire non aggiunti come fonti arbitrarie. Schiusa centrata
+sul blocco, nome/proprietario/colore/fame50 conservati. Guardia isRemoved dopo
+super.tick impedisce di generare un piccolo da un uovo gia raccolto durante
+il tick nativo: provato con effetto WITHER reale, un oggetto e zero draghi.
+Suono egg_hatch originale e spegnimento fuoco trasmessi dal server; OGG invariato.
+Movimento originale X/Z dell'uovo soltanto sul calore valido, reset a freddo.
+
+Nuova prova client con quattro colori, fuoco/lava e freddo, controllo del reset
+sul modello condiviso e schiusa effettiva con nome/owner. Due PNG nuove lette:
+uova complete e piccolo completo. Le etichette della tavola uova sono troppo
+lunghe in alcune colonne e si toccano; limite della tavola test, non del renderer
+in gioco. Istantanee non costituiscono da sole prova di movimento o audio udito.
+Nessuna nuova prova DedicatedServer nella45: quella44 resta nel suo pacchetto.
+Vedere TEST-0.1.45.md e REVIEW.md. Tappa1 e port NON conclusi.
+
+Restano DragonForge, parita/config/temporizzazioni e altre interazioni originali,
+dettagli riproduzione/sonno, navigazione complessa, anteprima passeggeri e punte
+grigie. Prima del prossimo intervento confrontare le differenze con l'originale.
+Stessa chat/ramo port/fabric-26.3, nessuna email. Ripresa27ottobre autorizzata.
+Controllo quota ogni50 minuti; nessun credito di reset. Proseguire lavoro utile
+fino a esaurimento residuo, poi salvare/checkpoint/push e spegnere ordinatamente
+senza forzare applicazioni con dati non salvati; pausa del controllo dopo tale
+spegnimento fino a nuova autorizzazione. Non confondere fine sessione con port finito.
+
 ## Checkpoint 0.1.44 - 26 ottobre 2026 - logout montato e rientro in volo
 
 Verificato DedicatedServer ordinario: logout ANCORA IN SELLA, salvataggio nativo

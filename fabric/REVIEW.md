@@ -1,3 +1,19 @@
+## Revisione 0.1.45 - 27 ottobre 2026
+
+No findings.
+
+Diff e nuovi test letti in sola lettura. Calore condiviso client/server,
+progresso64bit e soglia invariati; schiusa solo dopo tick nativo su entita viva,
+con addFreshEntity prima degli effetti/rimozione. Variante/owner/nome preservati.
+Renderer resetta ogni posa: niente trascinamento caldo/freddo sul modello
+condiviso. Risorse originali sonore identiche, sottotitolo risolto. Nessuna
+modifica alla geometria/UV del drago o ai callback multipart.
+
+95JUnit/146server/15client passati nel full10m35s,42PNG. Quattro nuovi GameTest
+passati anche in focus. Due nuove immagini lette: entita complete, alcune
+etichette della sola tavola uova si toccano. Audio risolto dal client ma non
+ascoltato manualmente. DedicatedServer44 non rieseguito nella45. Tappa1 aperta.
+
 ## Revisione 0.1.44 - 26 ottobre 2026
 
 No findings.

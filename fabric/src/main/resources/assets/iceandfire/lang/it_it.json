@@ -95,5 +95,6 @@
   "item.iceandfire.dragon_skull_fire": "Teschio di drago",
   "entity.iceandfire.dragon_skull": "Teschio di drago",
   "dragon.fire": "Drago del fuoco",
-  "dragon.stage": "Stadio"
+  "dragon.stage": "Stadio",
+  "iceandfire.sound.subtitle.dragon_hatch": "Schiusa di un uovo di drago"
 }

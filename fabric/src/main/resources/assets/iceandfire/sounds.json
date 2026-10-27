@@ -230,5 +230,15 @@
         "volume": 0.4
       }
     ]
+  },
+  "egg_hatch": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "iceandfire:effects/egg_hatch",
+        "volume": 0.4
+      }
+    ],
+    "subtitle": "iceandfire.sound.subtitle.dragon_hatch"
   }
 }

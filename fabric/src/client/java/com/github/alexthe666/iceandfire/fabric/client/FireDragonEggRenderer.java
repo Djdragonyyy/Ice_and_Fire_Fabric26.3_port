@@ -15,8 +15,17 @@ import java.util.*;
 /** Geometry and UV coordinates from the original ModelDragonEgg, LGPL-3.0. */
 public final class FireDragonEggRenderer extends MobRenderer<FireDragonEgg, FireDragonEggRenderer.State, EntityModel<FireDragonEggRenderer.State>> {
     private static final String[] COLORS = {"red", "green", "bronze", "gray"};
-    public static final class State extends LivingEntityRenderState { int variant; }
-    private static final class Model extends EntityModel<State> { Model(ModelPart root) { super(root); } }
+    public static final class State extends LivingEntityRenderState { int variant; boolean warming; }
+    private static final class Model extends EntityModel<State> {
+        Model(ModelPart root) { super(root); }
+        @Override public void setupAnim(State state) {
+            super.setupAnim(state);
+            var egg = root().getChild("Egg1");
+            // Original ModelDragonEgg walk/flap: speed .3, degree .3, inverted X phase1.
+            egg.xRot = state.warming ? (float) -Math.cos(state.ageInTicks * 0.3F + 1) * 0.3F : 0;
+            egg.zRot = state.warming ? (float) Math.cos(state.ageInTicks * 0.3F) * 0.3F : 0;
+        }
+    }
 
     public FireDragonEggRenderer(EntityRendererProvider.Context context) {
         super(context, new Model(eggModel()), 0.3F);
@@ -43,6 +52,7 @@ public final class FireDragonEggRenderer extends MobRenderer<FireDragonEgg, Fire
     @Override public void extractRenderState(FireDragonEgg egg, State state, float partialTick) {
         super.extractRenderState(egg, state, partialTick);
         state.variant = egg.variant();
+        state.warming = FireDragonEgg.canIncubate(egg.level().getBlockState(egg.blockPosition()));
     }
     @Override public Identifier getTextureLocation(State state) {
         return IafContent.id("textures/models/firedragon/egg_" + COLORS[state.variant] + ".png");

@@ -95,5 +95,6 @@
   "item.iceandfire.dragon_skull_fire": "Dragon Skull",
   "entity.iceandfire.dragon_skull": "Dragon Skull",
   "dragon.fire": "Fire Dragon",
-  "dragon.stage": "Stage"
+  "dragon.stage": "Stage",
+  "iceandfire.sound.subtitle.dragon_hatch": "Dragon egg hatches"
 }

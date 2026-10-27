@@ -42,6 +42,8 @@ public final class IafContent {
     public static final SoundEvent[] FIRE_ROAR = dragonSounds("roar");
     public static final SoundEvent DRAGON_FLIGHT = Registry.register(BuiltInRegistries.SOUND_EVENT,
             id("dragon_flight"), SoundEvent.createVariableRangeEvent(id("dragon_flight")));
+    public static final SoundEvent EGG_HATCH = Registry.register(BuiltInRegistries.SOUND_EVENT,
+            id("egg_hatch"), SoundEvent.createVariableRangeEvent(id("egg_hatch")));
     public static final SoundEvent DRAGON_FLUTE_SOUND = Registry.register(BuiltInRegistries.SOUND_EVENT,
             id("dragonflute"), SoundEvent.createVariableRangeEvent(id("dragonflute")));
     public static final Item DRAGON_MEAL = registerItem("dragon_meal", properties("dragon_meal"));
