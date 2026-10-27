@@ -1,3 +1,35 @@
+## Checkpoint 0.1.48 - 27 ottobre 2026 - DragonForge autonoma e comparatore
+
+Il nucleo richiama un drago di fuoco addomesticato, sveglio, a terra, stage2+,
+con visuale libera e distanza originale al quadrato <115*stage. Prenotazione
+transiente di un input, rinnovo/timeout e rilascio alla rimozione del nucleo,
+ingredienti esauriti o produzione bloccata. Getto reale continuo con warmup,
+nessun proiettile o teletrasporto. Difesa, scorta, pilota, NoAI, sonno e volo
+hanno precedenza; durante il lavoro fermo non vaga o decolla casualmente.
+Comparatore nativo proporzionale ai tre slot, valori0/1/15 verificati.
+
+Full pulito phase48-final.log PASS in 11m 11s:98JUnit,158GameTest mod
++baseline159server,16client e46PNG correnti. XML senza errori/failure.
+Cinque nuove prove native: produzione con IA e consumo esatto, priorita/range/
+vista/prenotazione, interruzione scorta/NoAI/difesa, comparatore e rilascio
+immediato alla distruzione del nucleo. Due nuove JUnit per warmup/continuita
+e transizione al melee. Probes precedenti verdi2m35s includevano solo4nuove
+prove native; la quinta e inclusa nel full. Nuova PNG client del getto reale
+aperta e rivista dopo il full; fixtureGUI70000 resta test separato dichiarato.
+
+Correzioni dei test: quattro accessi package-private risolti con bridge SOLO
+nel gametest; target di combattimento impostato in comando libero, perche il
+comando fermo impedisce attacchi. API produttiva non allargata per la fixture.
+Revisione diff completata; nessun rilievo residuo. Nessuna nuova certificazione
+di riavvio dedicato/chunk unload della forge: prove44 restano precedenti.
+
+Forge ancora incompleta: ricette costruzione e catena blocchi di scaglie da
+portare. Ricognizione originale completata in appunti privati. Restano altre
+parita/config/ciclo vitale, navigazione complessa, anteprima passeggeri e punte
+grigie. Tappa1 e port NON conclusi. Precedente47:52bd0afbd.
+Stessa chat/ramo; email annullate. Quota ogni50minuti, niente reset/consumo
+artificiale. All'esaurimento salvare/testcleanup/checkpoint/push e spegnere
+ordinatamente senza forzare app; poi automazione in pausa fino ad autorizzazione.
 ## Checkpoint 0.1.47 - 27 ottobre 2026 - prima DragonForge manuale
 
 Forge di fuoco funzionante tramite il percorso reale del soffio: multiblocco

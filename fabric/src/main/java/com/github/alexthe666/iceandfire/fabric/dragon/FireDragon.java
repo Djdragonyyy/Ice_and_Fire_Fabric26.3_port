@@ -77,6 +77,9 @@ public final class FireDragon extends TamableAnimal {
     private int roarAnimation, roarTicks;
     boolean seekingFood;
     private DragonTemptGoal temptGoal;
+    private BlockPos forgeInput;
+    private long forgeLeaseUntil;
+    private boolean wasForging;
     private DragonFoodGoal foodGoal;
     private LivingEntity previousAutonomousTarget;
     private boolean rangedChargePending, autonomousCharging;
@@ -149,7 +152,7 @@ public final class FireDragon extends TamableAnimal {
     }
 
     private boolean canRoar() {
-        return isAlive() && !isNoAi() && !dragonSleeping() && shoulderCarrier() == null
+        return isAlive() && !isNoAi() && !dragonSleeping() && !fuelingForge() && shoulderCarrier() == null
                 && combat.animation() == DragonCombatState.NONE && !combat.breathing() && eatingTicks == 0
                 && getTarget() == null && getControllingPassenger() == null;
     }
@@ -168,7 +171,7 @@ public final class FireDragon extends TamableAnimal {
         super.playHurtSound(source);
     }
     private void startSpeaking() {
-        if (!isNoAi() && !dragonSleeping() && speakingTicks == 0 && roarTicks == 0 && combat.animation() == DragonCombatState.NONE
+        if (!isNoAi() && !dragonSleeping() && !fuelingForge() && speakingTicks == 0 && roarTicks == 0 && combat.animation() == DragonCombatState.NONE
                 && !combat.breathing() && eatingTicks == 0) speakingTicks = DragonCombatState.duration(DragonCombatState.SPEAK);
     }
 
@@ -232,12 +235,12 @@ public final class FireDragon extends TamableAnimal {
             @Override public boolean canContinueToUse() { return canMoveOnGround() && command() != 2 && (level().isBrightOutside() || !hasHome()) && !flightManager.wantsRoost() && super.canContinueToUse(); }
         });
         goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8) {
-            @Override public boolean canUse() { return !dragonSleeping() && super.canUse(); }
-            @Override public boolean canContinueToUse() { return !dragonSleeping() && super.canContinueToUse(); }
+            @Override public boolean canUse() { return !dragonSleeping() && !fuelingForge() && super.canUse(); }
+            @Override public boolean canContinueToUse() { return !dragonSleeping() && !fuelingForge() && super.canContinueToUse(); }
         });
         goalSelector.addGoal(9, new RandomLookAroundGoal(this) {
-            @Override public boolean canUse() { return !dragonSleeping() && super.canUse(); }
-            @Override public boolean canContinueToUse() { return !dragonSleeping() && super.canContinueToUse(); }
+            @Override public boolean canUse() { return !dragonSleeping() && !fuelingForge() && super.canUse(); }
+            @Override public boolean canContinueToUse() { return !dragonSleeping() && !fuelingForge() && super.canContinueToUse(); }
         });
         // Original defensive priorities stay above food and non-defensive hunting.
         targetSelector.addGoal(1, new OwnerHurtTargetGoal(this));
@@ -294,7 +297,28 @@ public final class FireDragon extends TamableAnimal {
     boolean hasPriorityFood() { return foodGoal != null && foodGoal.canUse(); }
     boolean isTempted() { return temptGoal != null && temptGoal.isRunning(); }
     public boolean canMoveAutonomously() {
-        return autonomousControlsAllowed() && !dragonSleeping() && attackAnimation() != DragonCombatState.SHAKE;
+        return autonomousControlsAllowed() && !dragonSleeping() && !fuelingForge() && attackAnimation() != DragonCombatState.SHAKE;
+    }
+    private boolean forgeActorAvailable() {
+        return isAlive() && !corpse() && isTame() && stage() >= 2 && !isNoAi() && !dragonSleeping() && !isInWater()
+                && !flying() && !hovering() && !isVehicle() && !isPassenger() && shoulderCarrier() == null
+                && command() != 2 && getTarget() == null && !isInLove() && grippedPrey() == null
+                && combat.animation() == DragonCombatState.NONE && roarTicks == 0 && speakingTicks == 0 && eatingTicks == 0;
+    }
+    public boolean fuelingForge() { return forgeInput != null && level().getGameTime() <= forgeLeaseUntil && forgeActorAvailable(); }
+    public BlockPos forgeInput() { return forgeInput; }
+    public boolean canSupplyForgeAt(BlockPos input) {
+        if (!forgeActorAvailable() || input == null) return false;
+        Vec3 target = Vec3.atCenterOf(input);
+        return distanceToSqr(target) < 115 * stage() && DragonFireCombat.clip(this, headPosition(), target).distanceToSqr(target) <= 1;
+    }
+    public boolean claimForgeInput(BlockPos input) {
+        if (!canSupplyForgeAt(input) || forgeInput != null && level().getGameTime() <= forgeLeaseUntil && !forgeInput.equals(input)) return false;
+        forgeInput = input.immutable(); forgeLeaseUntil = level().getGameTime() + 25;
+        getNavigation().stop(); return true;
+    }
+    public void releaseForgeInput(BlockPos input) {
+        if (java.util.Objects.equals(forgeInput, input)) { forgeInput = null; forgeLeaseUntil = 0; }
     }
     private boolean autonomousControlsAllowed() {
         return isAlive() && !isNoAi() && command() != 1 && (!isVehicle() || grippedPrey() != null)
@@ -496,7 +520,7 @@ public final class FireDragon extends TamableAnimal {
         if (isNoAi()) return;
         boolean supported = onGround() && !server.noCollision(this, getBoundingBox().move(0, -0.1, 0));
         if (!DragonCombatConfig.current.doDragonsSleep || !isAlive() || flying() || isInWater() || !supported
-                || isVehicle() || isPassenger() || shoulderCarrier() != null || command() != 0 || getTarget() != null || isInLove()
+                || isVehicle() || isPassenger() || shoulderCarrier() != null || command() != 0 || getTarget() != null || isInLove() || fuelingForge()
                 || attackAnimation() == DragonCombatState.SHAKE) {
             setDragonSleeping(false);
             return;
@@ -575,6 +599,7 @@ public final class FireDragon extends TamableAnimal {
     }
 
     private void tickCombat(ServerLevel server) {
+        if (tickForgeBreath(server)) { syncCombat(); return; }
         if (combat.animation() == DragonCombatState.SHAKE || grippedPrey() != null) {
             tickGrip(server);
             syncCombat();
@@ -624,6 +649,30 @@ public final class FireDragon extends TamableAnimal {
             }
         }
         syncCombat();
+    }
+
+    private boolean tickForgeBreath(ServerLevel server) {
+        var core = forgeInput != null && server.hasChunkAt(forgeInput)
+                && server.getBlockState(forgeInput).is(com.github.alexthe666.iceandfire.fabric.forge.IafDragonForge.INPUT)
+                ? com.github.alexthe666.iceandfire.fabric.forge.IafDragonForge.connected(server, forgeInput) : null;
+        if (!fuelingForge() || !canSupplyForgeAt(forgeInput) || core == null || !core.assembled() || !core.canSmelt()) {
+            forgeInput = null; forgeLeaseUntil = 0;
+            if (wasForging) { combat.stopForgeBreath(); wasForging = false; }
+            return false;
+        }
+        if (!wasForging) combat.reset();
+        wasForging = true;
+        Vec3 aim = Vec3.atCenterOf(forgeInput), offset = aim.subtract(position());
+        float yaw = (float) Math.toDegrees(Math.atan2(offset.z, offset.x)) - 90;
+        setYRot(yaw); yBodyRot = yHeadRot = yaw;
+        getLookControl().setLookAt(aim.x, aim.y, aim.z, 180, 180);
+        getNavigation().stop();
+        combat.tickForgeBreath();
+        if (combat.emitting()) {
+            DragonFireCombat.breath(server, this, DragonFireCombat.clip(this, getEyePosition(), headPosition()), aim, combat.streamProgress());
+            if (tickCount % 5 == 0) playSound(IafContent.FIRE_BREATH, 4, 1);
+        }
+        return true;
     }
 
     private void tickAutonomousCombat(ServerLevel server) {
@@ -800,7 +849,7 @@ public final class FireDragon extends TamableAnimal {
 
     @Override public void travel(Vec3 input) {
         if (isPassenger() || shoulderCarrier() != null) { setDeltaMovement(Vec3.ZERO); return; }
-        if (dragonSleeping()) {
+        if (dragonSleeping() || fuelingForge()) {
             setDeltaMovement(0, getDeltaMovement().y, 0);
             super.travel(Vec3.ZERO);
             setDeltaMovement(0, getDeltaMovement().y, 0);

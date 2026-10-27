@@ -109,6 +109,10 @@ public final class IafDragonForge {
             return level.isClientSide() ? null : createTickerHelper(type, CORE_TYPE, DragonForgeCore::tick);
         }
         @Override protected RenderShape getRenderShape(BlockState state) { return RenderShape.MODEL; }
+        @Override protected boolean hasAnalogOutputSignal(BlockState state) { return true; }
+        @Override protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction side) {
+            return net.minecraft.world.inventory.AbstractContainerMenu.getRedstoneSignalFromBlockEntity(level.getBlockEntity(pos));
+        }
         @Override protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player p, BlockHitResult hit) { return open(level, pos, p); }
     }
 }

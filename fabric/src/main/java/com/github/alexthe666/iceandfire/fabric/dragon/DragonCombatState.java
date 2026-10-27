@@ -53,6 +53,14 @@ public final class DragonCombatState {
         breathing = false;
     }
 
+    /** Forge work keeps the original warmup but does not use the combat breath timeout. */
+    public void tickForgeBreath() {
+        if (!breathing) { breathing = true; fireTicks = 0; }
+        fireTicks = Math.min(40, fireTicks + 1);
+        fireStopTicks = 10;
+    }
+    public void stopForgeBreath() { breathing = false; fireTicks = fireStopTicks = 0; }
+
     public int animation() { return animation; }
     public int animationTick() { return animationTick; }
     public boolean breathing() { return breathing; }

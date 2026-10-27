@@ -14,7 +14,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class DragonForgeGameTests {
     private static void require(boolean ok, String message) { if (!ok) throw new AssertionError(message); }
-    private static DragonForgeCore structure(GameTestHelper h) {
+    static DragonForgeCore structure(GameTestHelper h) {
         var base = new BlockPos(24, 3, 24);
         for (int y = -1; y <= 1; y++) for (int x = -1; x <= 1; x++) for (int z = -1; z <= 1; z++) {
             var block = y == 0 && x == 0 && z == 0 ? IafDragonForge.CORE
@@ -26,7 +26,7 @@ public class DragonForgeGameTests {
         require(core != null && core.assembled(), "Native block entity and original3x3x3 structure");
         return core;
     }
-    private static void ingredients(DragonForgeCore core, int count) {
+    static void ingredients(DragonForgeCore core, int count) {
         core.setItem(0, new ItemStack(Items.IRON_INGOT, count)); core.setItem(1, new ItemStack(IafContent.FIRE_DRAGON_BLOOD, count));
     }
     @GameTest(structure = "iceandfire:flight_arena", padding = 12)

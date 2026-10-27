@@ -18,12 +18,14 @@ public final class DragonForgeCore extends BaseContainerBlockEntity implements W
     private NonNullList<ItemStack> items = NonNullList.withSize(3, ItemStack.EMPTY);
     private int cookTime, flameTicks;
     private long poweredAt = Long.MIN_VALUE;
+    private final DragonForgeFueling fueling = new DragonForgeFueling(this);
     private final ContainerData data = new ContainerData() {
         @Override public int get(int index) { int n = index < 2 ? cookTime : maxCookTime(); return (index & 1) == 0 ? n & 65535 : n >>> 16; }
         @Override public void set(int index, int value) { }
         @Override public int getCount() { return 4; }
     };
     public DragonForgeCore(BlockPos pos, BlockState state) { super(IafDragonForge.CORE_TYPE, pos, state); }
+    @Override public void setRemoved() { fueling.release(); super.setRemoved(); }
     @Override public int getContainerSize() { return 3; }
     @Override protected NonNullList<ItemStack> getItems() { return items; }
     @Override protected void setItems(NonNullList<ItemStack> value) { items = value; }
@@ -74,6 +76,7 @@ public final class DragonForgeCore extends BaseContainerBlockEntity implements W
         if (!(level instanceof ServerLevel)) return;
         if (core.flameTicks > 0) core.flameTicks--;
         boolean assembled = core.assembled();
+        core.fueling.tick(assembled && core.canSmelt());
         if (state.getValue(IafDragonForge.ACTIVE) != assembled) level.setBlockAndUpdate(pos, state.setValue(IafDragonForge.ACTIVE, assembled));
         for (Direction side : Direction.Plane.HORIZONTAL) {
             BlockPos at = pos.relative(side); BlockState adjacent = level.getBlockState(at);

@@ -1,6 +1,7 @@
 package com.github.alexthe666.iceandfire.fabric.client;
 
 import com.github.alexthe666.iceandfire.fabric.IafContent;
+import com.github.alexthe666.iceandfire.fabric.dragon.FireDragon;
 import com.github.alexthe666.iceandfire.fabric.forge.*;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
@@ -11,6 +12,7 @@ import net.minecraft.core.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.GameType;
@@ -84,6 +86,36 @@ public class DragonForgeClientTest implements FabricClientGameTest {
                 p.teleportTo(pos.getX() + 20, pos.getY(), pos.getZ());
             });
             context.waitFor(c -> c.player.containerMenu == c.player.inventoryMenu);
+            int dragonId = world.getServer().computeOnServer(server -> {
+                var p = world.getConnection().getServerPlayer();
+                var core = (DragonForgeCore) p.level().getBlockEntity(pos);
+                core.setItem(0, new ItemStack(Items.IRON_INGOT, 64));
+                core.setItem(1, new ItemStack(IafContent.FIRE_DRAGON_BLOOD, 64)); core.setItem(2, ItemStack.EMPTY);
+                for (int x = -8; x <= 8; x++) for (int z = -15; z <= -2; z++) {
+                    p.level().setBlockAndUpdate(pos.offset(x, -2, z), Blocks.STONE.defaultBlockState());
+                    for (int y = -1; y <= 6; y++) p.level().setBlockAndUpdate(pos.offset(x, y, z), Blocks.AIR.defaultBlockState());
+                }
+                var d = IafContent.FIRE_DRAGON.create(p.level(), EntitySpawnReason.TRIGGERED);
+                for (int i = 0; i < 25; i++) d.growOneDay();
+                d.setOwner(p); d.setTame(true, false); d.setCommand(1); d.setHunger(100);
+                d.setPos(pos.getX() + 0.5, pos.getY() - 1, pos.getZ() - 10.5);
+                d.setYRot(0); d.yBodyRot = d.yHeadRot = 0; d.setOnGround(true);
+                require(p.level().addFreshEntity(d), "Real autonomous forge dragon spawned");
+                p.teleportTo(pos.getX() - 10, pos.getY() + 3, pos.getZ() - 6);
+                return d.getId();
+            });
+            context.waitFor(c -> c.level.getEntity(dragonId) instanceof FireDragon d && d.breathProgress >= 9.5F
+                    && c.level.getBlockState(pos.north()).getValue(IafDragonForge.ACTIVE));
+            world.getServer().runOnServer(server -> {
+                var p = world.getConnection().getServerPlayer();
+                var d = (FireDragon) p.level().getEntity(dragonId); var core = (DragonForgeCore) p.level().getBlockEntity(pos);
+                require(d.fuelingForge() && !d.isNoAi() && core.cookTime() > 0 && core.maxCookTime() == 1000,
+                        "Actual AI breath heats the original iron recipe on the authoritative server");
+            });
+            context.waitFor(c -> c.player.distanceToSqr(pos.getX() - 10, pos.getY() + 3, pos.getZ() - 6) < 0.1
+                    && c.gui.screen() == null && c.gui.overlay() == null);
+            context.runOnClient(c -> { c.player.setYRot(-84.3F); c.player.setXRot(22); }); context.waitTicks(12);
+            context.takeScreenshot("dragonforge-autonomous-dragon-stream-0.1.48");
         }
     }
     private static Item[] icons() { return new Item[]{IafDragonForge.BONE.asItem(), IafDragonForge.BRICK.asItem(), IafDragonForge.CORE.asItem(), IafDragonForge.INPUT.asItem(), IafDragonForge.INGOT}; }

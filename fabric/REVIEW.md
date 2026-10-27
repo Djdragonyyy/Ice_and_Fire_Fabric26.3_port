@@ -1,3 +1,21 @@
+## Revisione 0.1.48 - 27 ottobre 2026
+
+No findings.
+
+Diff produttivo e nuovi file/test letti in sola lettura. Controller per nucleo
+con UUID e posizione transiente, lease limitata e nessun riferimento entity
+persistente. Rimozione della BE rilascia il drago; target rivalutato nel tick
+del drago. Priorita difesa/comandi/pilota e NoAI mantengono precedenza. Ricerca
+solo su entita caricate; niente forza-caricamento. Warmup continuo separato
+dal timeout del combattimento, stop del soffio non cancella nuovo melee.
+Comparator delegato al contenitore nativo. Nessun cambiamento alle ricette,
+risorse grafiche produttive o al percorso danni preesistente.
+
+Full pulito:98JUnit/159server/16client/46PNG in 11m 11s. Cinque nuove prove
+native e due JUnit; nuova immagine del getto autonomo letta dopo il full.
+Limiti: prenotazione fra due posizioni eleggibili testata, non due multiblocchi
+completi concorrenti; nessun nuovo restart/chunk unload durante produzione.
+Ricette costruzione/scaglie ancora aperte, niente falsa parita completa.
 ## Revisione 0.1.47 - 27 ottobre 2026
 
 No findings.
