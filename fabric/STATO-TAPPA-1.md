@@ -1,3 +1,35 @@
+## Checkpoint 0.1.50 - 27 ottobre 2026 - visuale automatica del pilota
+
+Portata opzione client originale dragonAuto3rdPerson, defaulttrue, nel nuovo
+config/iceandfire-client.json. Solo montando come pilota il proprio drago:
+cattura vista precedente, passa a THIRD_PERSON_BACK, ripristina alla discesa
+o disconnessione. I cambi manuali durante la cavalcata restano disponibili;
+false conserva le scelte del giocatore. Nessun nuovo pacchetto/serverconfig.
+Vecchi cameraoffset, firstpersonheadhide, controlli e dismount invariati.
+
+Full pulito phase50-final.log PASS in 11m 14s:99JUnit,162GameTest mod
++baseline163server,17client e48PNG correnti, XML senzaerrori/failure.
+Probes99JUnit/17client verdi2m35s. Nuova prova nativeC2Smount, scelta manuale
+tenuta20tick, dismount autorevole e uscita mondo ancora montato; true/false
+caricati realmente da file poi bytes/config/opzioni ripristinati. Non e prova
+fisica del tastoF5/Shift o nuovo DedicatedServer. PNG finale montato aperta e
+rivista, hint nativo lasciato svanire80tick nel solo fixture prima dello scatto.
+
+Confronto JAR49/50:115classi produttive byte-identiche, una sola precedente
+modificata(IceAndFireFabricClient) e due nuove classi client; nessuna rimossa.
+Logica server/entity/modello/rete non cambiata. Test/helper esclusi dal JAR.
+Revisione diff e nuovi file completata senza rilievi residui.
+
+Tappa1/port NON conclusi: restano audit parita/config/ciclo vitale, navigazione
+complessa, anteprima passeggeri e diagnosi punte grigie. Prossimo51 candidato
+ricerca di persistenza Forge in ordinaryDedicatedServer, non implementazione.
+Precedente49:1dfb5eb80, Forge costruibile e blocchi scaglie. TEST-0.1.50.md.
+
+Ultima istruzione27ottobre: continuare fino al5%residuo/95%usato, poi finire
+test/salvareancheWIP/checkpoint/push e spegnere ordinatamente senza forzareapp.
+Quota ogni50minuti, nessun reset/consumoartificiale; dopo shutdown automazione
+in pausa fino nuova autorizzazione. Emailannullate, stessa chat/ramo.
+
 ## Checkpoint 0.1.49 - 27 ottobre 2026 - costruzione della DragonForge
 
 Portati quattro blocchi di scaglie di fuoco, compressione/decompressione,

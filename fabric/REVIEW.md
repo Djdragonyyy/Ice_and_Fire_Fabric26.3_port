@@ -1,3 +1,19 @@
+## Revisione 0.1.50 - 27 ottobre 2026
+
+No findings.
+
+Diff completo e nuovi file letti in sola lettura: loader config client UTF8,
+registrazione tick e transizioni di prospettiva, nuove prove e metadati build.
+Cambi applicati su transizioni UUID/ClientLevel, evitando forzatura continua
+durante la cavalcata. Ripristino vincolato all'effettiva applicazione iniziale,
+false conserva la vista manuale; disconnect pulisce riferimenti al mondo.
+Prova client reale con C2Smount, dismount server, true/false da file e uscita
+ancora montato. Fixture ripristina file/opzioni. Nessuna mutazione di server,
+controlli, renderer o rete:115classi byte-identiche; solo initclient modificato
+e due nuove classi client. Full verde 11m 14s:99JUnit/163server/17client48PNG.
+Nuova PNG finale rivista. F5 fisico/Shift e server autenticati non certificati
+da questa prova; vedere TEST-0.1.50.md. Tappa1 resta aperta.
+
 ## Revisione 0.1.49 - 27 ottobre 2026
 
 No findings.
