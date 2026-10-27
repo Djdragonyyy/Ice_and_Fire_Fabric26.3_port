@@ -7,7 +7,10 @@
     "iceandfire:dragonscale_red",
     "iceandfire:dragonscale_green",
     "iceandfire:dragonscale_bronze",
-    "iceandfire:dragonscale_gray"
+    "iceandfire:dragonscale_gray",
+    "iceandfire:gold_pile",
+    "iceandfire:silver_pile",
+    "iceandfire:copper_pile"
   ],
   "replace": false
 }

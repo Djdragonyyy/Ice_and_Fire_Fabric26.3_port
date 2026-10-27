@@ -8,7 +8,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.AbstractChestBlock;
 
-/** Original ServerEvents chest interaction/break alarm; treasure piles are not registered yet (LGPL-3.0). */
+/** Original ServerEvents chest interaction/break alarm; including the original three metal piles on break (LGPL-3.0). */
 public final class DragonChestGuard {
     public static void initialize() {
         UseBlockCallback.EVENT.register((player, level, hand, hit) -> {
@@ -17,7 +17,8 @@ public final class DragonChestGuard {
             return InteractionResult.PASS;
         });
         PlayerBlockBreakEvents.BEFORE.register((level, player, pos, state, blockEntity) -> {
-            if (level instanceof ServerLevel server && state.getBlock() instanceof AbstractChestBlock) alarm(server, player);
+            if (level instanceof ServerLevel server && (state.getBlock() instanceof AbstractChestBlock
+                    || com.github.alexthe666.iceandfire.fabric.treasure.IafTreasure.isPile(state.getBlock()))) alarm(server, player);
             return true;
         });
     }

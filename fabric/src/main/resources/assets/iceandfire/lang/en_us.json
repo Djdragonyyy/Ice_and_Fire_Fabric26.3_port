@@ -112,5 +112,11 @@
   "block.iceandfire.dragonscale_gray": "Block of Dragon Scales",
   "dragon.gray": "Gray",
   "tag.item.c.storage_blocks.scales.dragon.fire": "Fire dragon scale blocks",
-  "key.iceandfire.dragon_change_view": "Change Dragon Camera"
+  "key.iceandfire.dragon_change_view": "Change Dragon Camera",
+  "block.iceandfire.gold_pile": "Pile of Gold",
+  "block.iceandfire.silver_pile": "Pile of Silver",
+  "block.iceandfire.copper_pile": "Pile of Copper",
+  "item.iceandfire.silver_nugget": "Silver Nugget",
+  "iceandfire.sound.subtitle.gold_pile_step": "Coins clatter",
+  "iceandfire.sound.subtitle.gold_pile_break": "Coins scatter"
 }

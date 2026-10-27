@@ -112,5 +112,11 @@
   "block.iceandfire.dragonscale_gray": "Blocco di scaglie di drago",
   "dragon.gray": "Grigio",
   "tag.item.c.storage_blocks.scales.dragon.fire": "Blocchi di scaglie di drago di fuoco",
-  "key.iceandfire.dragon_change_view": "Drago: distanza della visuale"
+  "key.iceandfire.dragon_change_view": "Drago: distanza della visuale",
+  "block.iceandfire.gold_pile": "Cumulo d'oro",
+  "block.iceandfire.silver_pile": "Cumulo d'argento",
+  "block.iceandfire.copper_pile": "Cumulo di rame",
+  "item.iceandfire.silver_nugget": "Pepita d'argento",
+  "iceandfire.sound.subtitle.gold_pile_step": "Monete tintinnano",
+  "iceandfire.sound.subtitle.gold_pile_break": "Monete spostate"
 }

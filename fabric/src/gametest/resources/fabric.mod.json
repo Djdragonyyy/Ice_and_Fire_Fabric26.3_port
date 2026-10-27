@@ -37,7 +37,8 @@
       "com.github.alexthe666.iceandfire.fabric.dragon.DragonFlightPathGameTests",
       "com.github.alexthe666.iceandfire.fabric.dragon.DragonFluidGameTests",
       "com.github.alexthe666.iceandfire.fabric.dragon.DragonFearGameTests",
-      "com.github.alexthe666.iceandfire.fabric.dragon.DragonChestGuardGameTests"
+      "com.github.alexthe666.iceandfire.fabric.dragon.DragonChestGuardGameTests",
+      "com.github.alexthe666.iceandfire.fabric.dragon.MetalPileGameTests"
     ]
   },
   "depends": {

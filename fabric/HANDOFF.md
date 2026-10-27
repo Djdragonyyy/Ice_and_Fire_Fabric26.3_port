@@ -1,3 +1,39 @@
+## Checkpoint 0.1.55 - 27 ottobre 2026 - pile di tesori originali
+
+Tre MetalPileBlock oro/argento/rame,8livelli con altezza2L/16 e collisione
+2(L-1)/16. Supporti/sogliepath/regoleSourceBlockGoldPile, nonSnowmelt. Uso
+NativeItemStackconsume mano effettiva, survival1perlayer/creativefree,
+clamp8 e piazzamentoVanilla nuova pila sopra. Tre ricette2nuggets->1pile,
+loot2nuggets/layer, CopperNative26Nugget, SilverNuggetSimpleItem solo dipendenza
+materiale. Miningpickaxe3/guardedByPiglinsGold originali; creative4icone,
+2OriginalOGG/SoundType. Ripristinato ramo allarme break per tutte3pile;
+aggiungere pile non simula chestuse. Generazione minerali/strutture ancora
+nelle tappe successive, non nuova worldgen o catena argento completa.
+
+Full phase55-final.log PASS12m37s100JUnit/177server(176mod+baseline)/19client/
+56PNG. Focus4PASS47s100JUnit5GT+clientcompile. All24shape/collision/loots2N,
+actualsurvival8break16nuggets, support/neighbor/path/sounds, native1..8stack/
+upper1/consumoexact/creativefree, actual3CraftingMenuResultSlots/mixednegative,
+all3breakalarms+nostackalarm. NativeRealServerPlayer+embedded/AItrue fixture.
+ClientprobesPASS2m51s19client56PNG;2newimagesopenedreviewed24worldstates+
+4icons noMissingTexture/loading, C2SSurvivallayer1->2/items8->7 authoritative
+10ticklater. CameraFIRSTPERSONtemporanea/restore;full ripete tutto.
+
+Prima catturalambda test corretta; focus2/3failedlootactual1nuggetperlayer:
+Native26ignora vecchi conditions/functions. Verificato JARprimarioSnow/Melon,
+convertite3tabelle a condition.type=match_block/blocks/state e modifier.type=
+set_count,8alternative. Nessun codicefallback permascherare.37originalasset
+byteidentical(modelli/states/PNG/audio/item), vecchivalorilang/sounds invariati.
+26.3SpriteContents/ChunkSectionLayer.byTransparency automatico, PNGalpha255;
+vecchioCUTOUTbindingGold/Silver nonrichiede nuovaMixin.NativeGoldadvancement
+IDrecipes/food preservato, Copperdecorations, Silverhelperunlockaggiunto.
+
+JAR54->55:120identiche,3oldchanged(content/init/chestguard),2newPile/Treasure,
+noharness/noDragon/renderchanges. TEST-0.1.55.md documenta materialehelper,
+formati e limiti. Tappa1/port ancora aperti; prossimi audit navigazione/rottura
+corpo e configurazioni/ciclo vitale, GUIpasseggeri/puntegrigie ancora aperti.
+Prova riavvio Forge52 distinta, non nuova prova55/autenticazione pubblica.
+
 ## Checkpoint 0.1.54 - 27 ottobre 2026 - reazione ai forzieri
 
 Portato il ramo forzieri originale: interazione e rottura tramite callback

@@ -240,5 +240,25 @@
       }
     ],
     "subtitle": "iceandfire.sound.subtitle.dragon_hatch"
+  },
+  "gold_pile_step": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "iceandfire:effects/gold_pile_step",
+        "volume": 0.8
+      }
+    ],
+    "subtitle": "iceandfire.sound.subtitle.gold_pile_step"
+  },
+  "gold_pile_break": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "iceandfire:effects/gold_pile_break",
+        "volume": 0.8
+      }
+    ],
+    "subtitle": "iceandfire.sound.subtitle.gold_pile_break"
   }
 }

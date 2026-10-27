@@ -1,3 +1,27 @@
+## Revisione 0.1.55 - 27 ottobre 2026
+
+No findings residui.
+
+Confrontati BlockGoldPile, ServerEvents e loot/ricette/modelli originali.
+Forme visive/collisioni diverse mantenute, supporti particolari e percorso,
+stack manuale piu normale piazzamento sopra8, consumo NativeStack creativo.
+DueOGG/SoundType originali;3breakalarms e nessuna falsa chestinterazione su
+stack. SilverNugget chiude dipendenza dei loot, CopperNugget vanilla26.3;
+nessuna generazione o catena mineraria dichiarata. NativeMaterial automatico
+per texture alpha255 verificato nelloSDK, senza obsolete mappature/mixin.
+
+Il focus ha trovato la vera incompatibilita dati loot26: vecchi campi
+ignorati davano1nugget. Nuovo dialect primarioSnow/Melon preserva2*layer,
+verificato tutti24stati e rottura reale16nuggets. Nessun fallback/testfake.
+TreResultSlot reali e costi esatti; negativo metalli misti; callbackNative
+su3materiali.37assetbitidentical e oldlang/sounds invariati. GOLDadvancement
+ID originale preservato. ClientC2Sautorita10tickdopo predizione,19client
+verdi e2nuoveimmagini riviste, sourceHUD/firstpersoncamera ripristinata.
+
+Full100JUnit/177server/19client/56PNG, noerror.120classi identiche54,3oldchanged
+piu2new, nessun harness; classi drago/renderer non toccate. Tappa1/port aperti,
+nessuna nuova certificazione di riavvio/accountautentici oltre prova52.
+
 ## Revisione 0.1.54 - 27 ottobre 2026
 
 No findings residui.
