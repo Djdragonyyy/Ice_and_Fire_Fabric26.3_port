@@ -1,3 +1,25 @@
+## Revisione 0.1.53 - 27 ottobre 2026
+
+No findings residui.
+
+Confrontati ServerEvents, VillagerAIFearUntamed, canTameDragonAttack e tag
+originali. Goal nativo, config defaulttrue compatibili con vecchio JSON,
+nessun danno o sostituzione dei goal esistenti; installazione transitoria
+su evento server e dedup. Predicato animali completo anche per tag custom
+villager/golem/tamepet. Due tag identici byteperbyte all'originale.
+
+La prima prova di spostamento poteva confondere passeggio o ritorno dopo la
+fuga; il full falliva il suo limite arbitrario100tick. Rafforzata la fixture:
+goal realmente in esecuzione, distanza aumentata durante la fuga, stessa
+soglia e300tick di pianificazione nativa. Nessuna modifica produttiva per
+forzare il risultato. Focus4 fallito e vecchio full conservati come falliti;
+focus5 e full2 finali verdi. Native h.assertTrue consente report di errore.
+
+99JUnit/168server/18client verdi.118classi identiche52,2modificate config/init
+piu2Fear nuove, nessun test nel JAR. Nessuna nuovaMixin/render/modelchange.
+Non certifica tutti18tipi in ogni terreno ne accountautentici o riavvio53;
+la prova Forge dedicata52 e distinta. Tappa1 e port rimangono aperti.
+
 ## Revisione 0.1.52 - 27 ottobre 2026
 
 No findings residui.

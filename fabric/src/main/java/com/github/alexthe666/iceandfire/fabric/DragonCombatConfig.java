@@ -15,6 +15,8 @@ public final class DragonCombatConfig {
     public int dragonBreakBlockCooldown = 5;
     public double dragonBlockBreakingDropChance = 0.1;
     public boolean doDragonsSleep = true;
+    public boolean animalsFearDragons = true;
+    public boolean villagersFearDragons = true;
     public int dragonTargetSearchLength = 128;
     public double dragonHealth = 500;
     public int dragonAttackDamage = 17;

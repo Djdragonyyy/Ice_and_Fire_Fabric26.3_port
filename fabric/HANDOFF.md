@@ -1,3 +1,29 @@
+## Checkpoint 0.1.53 - 27 ottobre 2026 - reazioni di animali e villager
+
+Portati i goal di fuga originali per il drago di fuoco: villagersFearDragons
+ed animalsFearDragons true, tag originali18animali/2villager byteidentici.
+AvoidEntityGoal nativo priority1, raggio8 velocita0.8/0.8 villager e raggio30
+velocita1/0.5 bestiame. Predicateoriginale esclude tamepet/villager/golem
+nel ramo animali, non dipende da owner/tame del drago. ENTITY_LOAD ripristina
+goal transitori anche per mob salvati, controllo duplicati, APIpubblica
+getGoalSelector senza nuoveMixin. Opzioni al caricamento, non reload dinamico.
+
+Verifica finale phase53-final-2.log PASS 11m 36s,99JUnit/168server(167mod+
+baseline)/18client/54PNG. Focus finale5PASS43s: actualcow/villagerBrain/trader
+fuga durante goal attivo entro300tick e distanzaSquared>iniziale+16, salute
+piena; configfalse, savedcowreload1goal, dedup, zombieexcluded, tamecat,
+range8/30 e dragondead. Primo full fallito per vecchia distanza finale100tick:
+non verde, client non eseguiti. Diagnostica focus4 identificava cow goalattivo
+ma distanza insufficiente a100. Corretto SOLO test: campiona goal realmente
+attivo e movimento durante fuga, stessa soglia, pianificazione naturale300tick;
+niente destinazioni forzate/RNGseed/productionfix. Nativeassert evita crash.
+
+JAR52->53:118classi identiche,2precedenti cambiate(config/init),2nuoveFear;
+nessun harness distribuito, classi del drago e renderer invariate. Riavvio
+Forge52 resta prova precedente, non nuova certificazione53. TEST-0.1.53.md
+contiene condizioni e limiti. Tappa1/port aperti: config/ciclo vitale/AI e
+navcomplessa, passeggeri GUI e puntegrigie richiedono altro lavoro.
+
 ## Checkpoint 0.1.52 - 27 ottobre 2026 - Forge durante riavvio reale
 
 Nuova prova opt-in su DedicatedServer ordinario e due profili locali stabili.

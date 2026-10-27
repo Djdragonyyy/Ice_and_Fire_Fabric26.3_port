@@ -1,10 +1,12 @@
 # Ice and Fire: port Fabric 26.3 in sviluppo
 
-Verificati 99 JUnit, 162 GameTest della mod (163 con baseline vanilla), 18 prove client e 54 immagini nella 0.1.52. Prova dedicata separata: riavvio reale della Forge durante produzione, due client, sei processi a exit 0 e cinque immagini aggiuntive. Condizioni e limiti in TEST-0.1.52.md.
+Verificati 99 JUnit, 167 GameTest della mod (168 con baseline vanilla), 18 prove client e 54 immagini nella 0.1.53. Animali, villager e mercanti fuggono dal drago secondo tag e opzioni originali. Condizioni e limiti in TEST-0.1.53.md.
 
 **Checkpoint di sviluppo: la tappa 1 e il port completo restano aperti.**
 
-Versione corrente: **0.1.52-stage1-dev**. Regressione di persistenza Forge; codice di gioco identico alla 0.1.51. [TEST-0.1.52.md](TEST-0.1.52.md). Tappa 1 incompleta.
+Versione corrente: **0.1.53-stage1-dev**. Reazioni di fuga originali e configurazione. [TEST-0.1.53.md](TEST-0.1.53.md). Tappa 1 incompleta.
+
+Versione precedente: **0.1.52-stage1-dev**. Regressione di persistenza Forge; codice di gioco identico alla 0.1.51. [TEST-0.1.52.md](TEST-0.1.52.md). Tappa 1 incompleta.
 
 Versione precedente: **0.1.51-stage1-dev**. Distanze originali della camera e F7. [TEST-0.1.51.md](TEST-0.1.51.md).
 

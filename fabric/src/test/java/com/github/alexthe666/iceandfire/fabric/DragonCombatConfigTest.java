@@ -14,6 +14,7 @@ class DragonCombatConfigTest {
         assertEquals(4, config.dragonFluteDistance);
         assertEquals(4, config.dragonFlapNoiseDistance);
         assertTrue(config.chunkLoadSummonCrystal);
+        assertTrue(config.animalsFearDragons); assertTrue(config.villagersFearDragons);
         assertFalse(config.explosiveDragonBreath);
         assertTrue(config.validValues());
     }
