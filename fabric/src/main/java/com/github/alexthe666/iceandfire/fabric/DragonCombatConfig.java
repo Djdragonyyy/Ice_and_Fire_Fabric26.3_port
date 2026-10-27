@@ -18,6 +18,7 @@ public final class DragonCombatConfig {
     public boolean animalsFearDragons = true;
     public boolean villagersFearDragons = true;
     public int dragonTargetSearchLength = 128;
+    public int dragonGoldSearchLength = 30;
     public double dragonHealth = 500;
     public int dragonAttackDamage = 17;
     public int dragonHungerTickRate = 3000;
@@ -37,6 +38,7 @@ public final class DragonCombatConfig {
         return Double.isFinite(dragonAttackDamageFire) && dragonAttackDamageFire >= 0 && dragonAttackDamageFire <= Float.MAX_VALUE / 5
                 && dragonGriefing >= 0 && dragonGriefing <= 2 && dragonBreakBlockCooldown >= 0 && dragonBreakBlockCooldown <= 10000
                 && dragonTargetSearchLength >= 1 && dragonTargetSearchLength <= 10000
+                && dragonGoldSearchLength >= 0 && dragonGoldSearchLength <= 10000
                 && Double.isFinite(dragonBlockBreakingDropChance) && dragonBlockBreakingDropChance >= 0 && dragonBlockBreakingDropChance <= 1
                 && Double.isFinite(dragonHealth) && dragonHealth >= 1 && dragonHealth <= 100000
                 && dragonAttackDamage >= 1 && dragonAttackDamage <= 10000

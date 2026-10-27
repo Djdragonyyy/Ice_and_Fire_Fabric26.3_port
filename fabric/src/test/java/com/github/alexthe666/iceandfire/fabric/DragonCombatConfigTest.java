@@ -12,6 +12,7 @@ class DragonCombatConfigTest {
         assertEquals(1, config.dragonFlightSpeedMod);
         assertEquals(256, config.maxDragonFlight); assertEquals(40, config.dragonWanderFromHomeDistance);
         assertEquals(4, config.dragonFluteDistance);
+        assertEquals(30, config.dragonGoldSearchLength);
         assertEquals(4, config.dragonFlapNoiseDistance);
         assertTrue(config.chunkLoadSummonCrystal);
         assertTrue(config.animalsFearDragons); assertTrue(config.villagersFearDragons);
@@ -39,4 +40,12 @@ class DragonCombatConfigTest {
             config.dragonFlightSpeedMod = bad; assertFalse(config.validValues());
         }
     }
+    @Test void originalTreasureAlarmRangeAcceptsZeroAndRejectsOutOfBounds() {
+        var config = new DragonCombatConfig();
+        config.dragonGoldSearchLength = 0; assertTrue(config.validValues());
+        config.dragonGoldSearchLength = 10000; assertTrue(config.validValues());
+        config.dragonGoldSearchLength = -1; assertFalse(config.validValues());
+        config.dragonGoldSearchLength = 10001; assertFalse(config.validValues());
+    }
+
 }

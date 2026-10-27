@@ -1,3 +1,24 @@
+## Revisione 0.1.54 - 27 ottobre 2026
+
+No findings residui.
+
+Confrontati i due eventi originali ServerEvents. AABBplayer e range originali,
+nessun LOS inventato, esclusioni tame/dead/owner/creative e comando preservato.
+Callback PASS/true senza bypassare controlli nativi o annullare altri mod.
+Server-only, nessun packet/Mixin. Sono portati i forzieri; le pile non ancora
+registrate restano esplicitamente aperte, non sostituite da blocchi metallici.
+
+Test attraverso API GameMode reali e osservatori dei callback nel modtest.
+Due errori delle fixture identificati nel bytecode26.3 (mock creative fisso e
+NoAI target rejected) corretti senza aggiungere immunita o allargare API.
+Native mode assert, AIattiva, controlli tick0 prima caccia e owner distinto
+da tame. Giocatori embedded/observerUUID chiusi nel full finale.
+
+Full100JUnit/172server/18client verde;120classi identiche53,2oldchanged e1nuova,
+nessun harness distribuito. Classi renderer/drago non cambiate. NoAI continua
+a rispettare il filtro nativo. Non e una nuova prova di server pubblico o
+restart; certificazione Forge52 distinta. Tappa1/port ancora incompleti.
+
 ## Revisione 0.1.53 - 27 ottobre 2026
 
 No findings residui.

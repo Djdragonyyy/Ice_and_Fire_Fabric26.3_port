@@ -1,3 +1,32 @@
+## Checkpoint 0.1.54 - 27 ottobre 2026 - reazione ai forzieri
+
+Portato il ramo forzieri originale: interazione e rottura tramite callback
+Fabric server, PASS/true senza cancellare azioni. Sveglia selvatici vivi
+non posseduti e seleziona il giocatore non creativo; clearsleep/orderedSit
+senza cambiare comando. dragonGoldSearchLength30valid0..10000, AABBgiocatore
+sui3assi, non sfera/centroforziere e nessun LOSaggiuntivo. Pile metalli non
+ancora registrate: non dichiarare completa tutta la reazione ai tesori.
+
+Full phase54-final.log PASS11m52s100JUnit/172server(171mod+baseline)/18client/
+54PNG. Quattro GT actualServerPlayer.gameMode.useItemOn menuaperto e
+DestroyBlock chestvsstone, creative/tame/owned/deadexcluded, raggio2centro
+player. Osservatori testonly provano realicallback, non chiamano alarm.
+Ownembeddedplayers disconnessi a fine prova, observerUUIDrimossi.
+
+Primi4focus fallivano fixture: MockServerPlayerInLevel26inner3.gameMode sempre
+CREATIVE; poi NoAI drago fa rifiutare bersaglio a Mob.setTarget/asValidTarget.
+Bytecodeverificato; fixturefinale RealServerPlayer+embedded+modeassert e AI
+normale, asserzioni tick0 prima caccia. Nativequery includeva d e callback
+svegliava maNoAIrifiutavatarget; nessuna produzione aggirata pertestverde.
+Focus5 PASS38s100JUnit4GT, cleanupaggiunto prima full e incluso nel full.
+
+JAR53->54:120classi identiche,2oldchanged(config/init),1nuovaChestGuard,
+no harness, nessuna modifica a classi drago/render. TEST-0.1.54.md descrive
+NoAI nativo, raggio0nonoff e callback prima risultatoazione. Prova restart
+Forge52 e precedente, non nuova certificazione54. Tappa1 e port aperti.
+Prossimo: ricerca rottura blocchi corpo/navigazione e digWhenStuck originali;
+navcomplessa, GUIpasseggeri, puntegrigie e altre parita restano aperti.
+
 ## Checkpoint 0.1.53 - 27 ottobre 2026 - reazioni di animali e villager
 
 Portati i goal di fuga originali per il drago di fuoco: villagersFearDragons

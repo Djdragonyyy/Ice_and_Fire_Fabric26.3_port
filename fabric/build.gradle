@@ -31,7 +31,7 @@ loom {
         gametest {
             server()
             source sourceSets.gametest
-            runDir 'run/0.1.53-gametest'
+            runDir 'run/0.1.54-gametest'
             vmArg '-Dfabric-api.gametest'
             vmArg "-Dfabric-api.gametest.report-file=${file('build/gametest-results.xml').absolutePath}"
         }
@@ -136,7 +136,7 @@ loom {
         clientGametest {
             client()
             source sourceSets.clientGametest
-            runDir 'run/0.1.53-client-gametest'
+            runDir 'run/0.1.54-client-gametest'
             vmArg '-Dfabric.client.gametest'
         }
     }
@@ -236,7 +236,7 @@ if (providers.gradleProperty('iafDedicatedWorldTest').isPresent()) {
             dedicatedWorldServerTest {
                 server()
                 source sourceSets.dedicatedWorldTest
-                runDir 'run/0.1.53-dedicated-server'
+                runDir 'run/0.1.54-dedicated-server'
                 vmArg '-Xmx1G'
                 vmArg "-Diaf.network.dir=${sessionDirectory}"
                 programArg '--nogui'
@@ -244,7 +244,7 @@ if (providers.gradleProperty('iafDedicatedWorldTest').isPresent()) {
             dedicatedWorldOwnerTest {
                 client()
                 source sourceSets.dedicatedWorldClientTest
-                runDir 'run/0.1.53-dedicated-owner'
+                runDir 'run/0.1.54-dedicated-owner'
                 vmArg '-Xmx2G'
                 vmArg '-Dfabric.client.gametest'
                 vmArg '-Diaf.network.role=owner'
@@ -256,7 +256,7 @@ if (providers.gradleProperty('iafDedicatedWorldTest').isPresent()) {
             dedicatedWorldGuestTest {
                 client()
                 source sourceSets.dedicatedWorldClientTest
-                runDir 'run/0.1.53-dedicated-guest'
+                runDir 'run/0.1.54-dedicated-guest'
                 vmArg '-Xmx2G'
                 vmArg '-Dfabric.client.gametest'
                 vmArg '-Diaf.network.role=guest'

@@ -17,6 +17,7 @@ public final class IceAndFireFabric implements ModInitializer {
         com.github.alexthe666.iceandfire.fabric.forge.IafDragonScales.initialize();
         com.github.alexthe666.iceandfire.fabric.dragon.CrystalSummons.initialize();
         com.github.alexthe666.iceandfire.fabric.dragon.DragonFear.initialize();
+        com.github.alexthe666.iceandfire.fabric.dragon.DragonChestGuard.initialize();
         DragonControlPayload.initialize();
         com.github.alexthe666.iceandfire.fabric.dragon.DragonBreathPayload.initialize();
         LOGGER.info("Ice and Fire Fabric port: development build; milestone 1 is not complete.");

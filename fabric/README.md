@@ -1,10 +1,12 @@
 # Ice and Fire: port Fabric 26.3 in sviluppo
 
-Verificati 99 JUnit, 167 GameTest della mod (168 con baseline vanilla), 18 prove client e 54 immagini nella 0.1.53. Animali, villager e mercanti fuggono dal drago secondo tag e opzioni originali. Condizioni e limiti in TEST-0.1.53.md.
+Verificati 100 JUnit, 171 GameTest della mod (172 con baseline vanilla), 18 prove client e 54 immagini nella 0.1.54. I draghi selvatici reagiscono alle interazioni e alla rottura dei forzieri secondo la configurazione originale. Condizioni e limiti in TEST-0.1.54.md.
 
 **Checkpoint di sviluppo: la tappa 1 e il port completo restano aperti.**
 
-Versione corrente: **0.1.53-stage1-dev**. Reazioni di fuga originali e configurazione. [TEST-0.1.53.md](TEST-0.1.53.md). Tappa 1 incompleta.
+Versione corrente: **0.1.54-stage1-dev**. Reazione originale ai forzieri. [TEST-0.1.54.md](TEST-0.1.54.md). Tappa1 incompleta.
+
+Versione precedente: **0.1.53-stage1-dev**. Reazioni di fuga originali e configurazione. [TEST-0.1.53.md](TEST-0.1.53.md). Tappa 1 incompleta.
 
 Versione precedente: **0.1.52-stage1-dev**. Regressione di persistenza Forge; codice di gioco identico alla 0.1.51. [TEST-0.1.52.md](TEST-0.1.52.md). Tappa 1 incompleta.
 
