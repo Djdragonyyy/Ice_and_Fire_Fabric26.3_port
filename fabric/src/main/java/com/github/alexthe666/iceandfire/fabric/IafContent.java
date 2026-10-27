@@ -172,9 +172,13 @@ public final class IafContent {
                     for (Item scale : FIRE_SCALES) output.accept(scale);
                     output.accept(FIRE_DRAGON_HEART); output.accept(FIRE_DRAGON_BLOOD);
                     output.accept(FIRE_DRAGON_FLESH); output.accept(DRAGON_SKULL_FIRE);
+                    output.accept(com.github.alexthe666.iceandfire.fabric.forge.IafDragonForge.INGOT);
                 });
         CreativeModeTabEvents.modifyOutputEvent(ResourceKey.create(Registries.CREATIVE_MODE_TAB,
-                Identifier.withDefaultNamespace("building_blocks"))).register(output -> IafTerrain.ITEMS.forEach(output::accept));
+                Identifier.withDefaultNamespace("building_blocks"))).register(output -> {
+                    IafTerrain.ITEMS.forEach(output::accept);
+                    com.github.alexthe666.iceandfire.fabric.forge.IafDragonForge.ITEMS.forEach(output::accept);
+                });
         CreativeModeTabEvents.modifyOutputEvent(ResourceKey.create(Registries.CREATIVE_MODE_TAB,
                 Identifier.withDefaultNamespace("combat"))).register(output -> com.github.alexthe666.iceandfire.fabric.dragon.DragonArmorItem.ITEMS.forEach(output::accept));
     }

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "name": "iceandfire:dragonforge_fire_input",
+          "type": "minecraft:item"
+        }
+      ]
+    }
+  ]
+}

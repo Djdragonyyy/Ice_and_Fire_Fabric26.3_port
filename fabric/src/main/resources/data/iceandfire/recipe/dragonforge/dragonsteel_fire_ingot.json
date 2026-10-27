@@ -1,0 +1,11 @@
+{
+  "result": {
+    "id": "iceandfire:dragonsteel_fire_ingot",
+    "count": 1
+  },
+  "input": "#c:ingots/iron",
+  "blood": "iceandfire:fire_dragon_blood",
+  "type": "iceandfire:dragonforge",
+  "dragon_type": "fire",
+  "cook_time": 1000
+}

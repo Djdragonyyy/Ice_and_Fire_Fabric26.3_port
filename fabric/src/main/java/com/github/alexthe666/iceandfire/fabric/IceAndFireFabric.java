@@ -13,6 +13,7 @@ public final class IceAndFireFabric implements ModInitializer {
     public void onInitialize() {
         DragonCombatConfig.load();
         IafContent.initialize();
+        com.github.alexthe666.iceandfire.fabric.forge.IafDragonForge.initialize();
         com.github.alexthe666.iceandfire.fabric.dragon.CrystalSummons.initialize();
         DragonControlPayload.initialize();
         com.github.alexthe666.iceandfire.fabric.dragon.DragonBreathPayload.initialize();

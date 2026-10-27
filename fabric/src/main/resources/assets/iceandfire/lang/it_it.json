@@ -96,5 +96,11 @@
   "entity.iceandfire.dragon_skull": "Teschio di drago",
   "dragon.fire": "Drago del fuoco",
   "dragon.stage": "Stadio",
-  "iceandfire.sound.subtitle.dragon_hatch": "Schiusa di un uovo di drago"
+  "iceandfire.sound.subtitle.dragon_hatch": "Schiusa di un uovo di drago",
+  "container.dragonforge_fire": "Forgia del drago di fuoco",
+  "block.iceandfire.dragon_bone_block": "Blocco di ossa di drago",
+  "block.iceandfire.dragonforge_fire_brick": "Mattoni della forgia di fuoco",
+  "block.iceandfire.dragonforge_fire_core": "Nucleo della forgia di fuoco",
+  "block.iceandfire.dragonforge_fire_input": "Bocca della forgia di fuoco",
+  "item.iceandfire.dragonsteel_fire_ingot": "Lingotto di acciaio di drago di fuoco"
 }

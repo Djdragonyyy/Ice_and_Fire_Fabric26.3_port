@@ -1,0 +1,98 @@
+package com.github.alexthe666.iceandfire.fabric.client;
+
+import com.github.alexthe666.iceandfire.fabric.IafContent;
+import com.github.alexthe666.iceandfire.fabric.forge.*;
+import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
+import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.core.*;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.inventory.ContainerInput;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.phys.*;
+
+public class DragonForgeClientTest implements FabricClientGameTest {
+    private static void require(boolean ok, String message) { if (!ok) throw new AssertionError(message); }
+    @Override public void runTest(ClientGameTestContext context) {
+        try (var world = context.worldBuilder().create()) {
+            context.waitFor(c -> c.player != null && c.level != null && c.gui.screen() == null && c.gui.overlay() == null);
+            var pos = world.getServer().computeOnServer(server -> {
+                var p = world.getConnection().getServerPlayer(); p.setGameMode(GameType.CREATIVE);
+                p.getAbilities().flying = true; p.onUpdateAbilities();
+                var base = p.blockPosition().offset(2, 0, 2);
+                for (int x = -6; x <= 6; x++) for (int z = -6; z <= 6; z++) {
+                    p.level().setBlockAndUpdate(base.offset(x, -2, z), Blocks.STONE.defaultBlockState());
+                    for (int y = -1; y <= 6; y++) p.level().setBlockAndUpdate(base.offset(x, y, z), Blocks.AIR.defaultBlockState());
+                }
+                for (int y = -1; y <= 1; y++) for (int x = -1; x <= 1; x++) for (int z = -1; z <= 1; z++)
+                    p.level().setBlockAndUpdate(base.offset(x, y, z), (y == 0 && x == 0 && z == 0 ? IafDragonForge.CORE
+                            : y != 0 && x != 0 && z != 0 ? IafDragonForge.BONE : IafDragonForge.BRICK).defaultBlockState());
+                p.level().setBlockAndUpdate(base.north(), IafDragonForge.INPUT.defaultBlockState());
+                var core = (DragonForgeCore) p.level().getBlockEntity(base);
+                core.setItem(0, new ItemStack(Items.COPPER_INGOT, 2)); core.setItem(1, new ItemStack(IafContent.FIRE_DRAGON_BLOOD, 2));
+                // Deterministic inventory/progress fixture; actual flame processing is tested on the native server.
+                core.setItem(2, new ItemStack(IafDragonForge.INGOT));
+                var data = core.saveWithFullMetadata(p.level().registryAccess()); data.putInt("CookTime", 70000);
+                core.loadCustomOnly(TagValueInput.create(ProblemReporter.DISCARDING, p.level().registryAccess(), data));
+                p.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY); p.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
+                require(core.assembled() && core.maxCookTime() == 100000, "Test-only long recipe verifies native32bit menu progress");
+                return base;
+            });
+            context.waitFor(c -> c.level.getBlockState(pos).is(IafDragonForge.CORE)
+                    && c.level.getBlockState(pos).getValue(IafDragonForge.ACTIVE));
+            context.runOnClient(c -> {
+                for (Item item : icons()) {
+                    var state = new ItemStackRenderState();
+                    c.getItemModelResolver().updateForTopItem(state, new ItemStack(item), ItemDisplayContext.GUI, null, null, 0);
+                    require(!state.isEmpty(), "Nonempty native model for " + item);
+                }
+            });
+            context.setScreen(Icons::new); context.waitTicks(10);
+            context.takeScreenshot("dragonforge-fire-original-icons-0.1.47"); context.setScreen(() -> null);
+            world.getServer().runOnServer(server -> {
+                var p = world.getConnection().getServerPlayer(); p.getAbilities().flying = true; p.onUpdateAbilities();
+                p.teleportTo(pos.getX() - 4, pos.getY() + 1.5, pos.getZ() - 4);
+            });
+            context.waitFor(c -> c.player.distanceToSqr(pos.getX() - 4, pos.getY() + 1.5, pos.getZ() - 4) < 0.1);
+            context.runOnClient(c -> { c.player.setYRot(-45); c.player.setXRot(22); }); context.waitTicks(12);
+            context.takeScreenshot("dragonforge-fire-native-multiblock-0.1.47");
+            world.getServer().runOnServer(server -> {
+                var p = world.getConnection().getServerPlayer(); p.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() - 3);
+            });
+            context.waitFor(c -> c.player.distanceToSqr(pos.getX() + 0.5, pos.getY(), pos.getZ() - 3) < 0.1);
+            context.runOnClient(c -> require(c.gameMode.useItemOn(c.player, InteractionHand.MAIN_HAND,
+                    new BlockHitResult(Vec3.atCenterOf(pos.north()), Direction.NORTH, pos.north(), false)).consumesAction(), "Native C2S aperture interaction accepted"));
+            context.waitForScreen(DragonForgeScreen.class);
+            context.waitFor(c -> c.player.containerMenu instanceof DragonForgeMenu m && m.progress() == 70000 && m.duration() == 100000
+                    && m.getSlot(0).getItem().getCount() == 2 && m.getSlot(1).getItem().is(IafContent.FIRE_DRAGON_BLOOD)
+                    && m.getSlot(2).getItem().is(IafDragonForge.INGOT));
+            context.waitTicks(10); context.takeScreenshot("dragonforge-fire-native-menu-progress-0.1.47");
+            context.runOnClient(c -> c.gameMode.handleContainerInput(c.player.containerMenu.containerId, 2, 0, ContainerInput.QUICK_MOVE, c.player));
+            context.waitFor(c -> c.player.containerMenu instanceof DragonForgeMenu m && m.getSlot(2).getItem().isEmpty());
+            context.waitTicks(10); // Client prediction empties the slot before the server handles the C2S packet.
+            world.getServer().runOnServer(server -> {
+                var p = world.getConnection().getServerPlayer(); var core = (DragonForgeCore) p.level().getBlockEntity(pos);
+                require(core.getItem(2).isEmpty() && p.getInventory().countItem(IafDragonForge.INGOT) == 1,
+                        "C2S shift click transfers exactly one actual output: core=" + core.getItem(2) + " playerCount=" + p.getInventory().countItem(IafDragonForge.INGOT));
+                p.teleportTo(pos.getX() + 20, pos.getY(), pos.getZ());
+            });
+            context.waitFor(c -> c.player.containerMenu == c.player.inventoryMenu);
+        }
+    }
+    private static Item[] icons() { return new Item[]{IafDragonForge.BONE.asItem(), IafDragonForge.BRICK.asItem(), IafDragonForge.CORE.asItem(), IafDragonForge.INPUT.asItem(), IafDragonForge.INGOT}; }
+    private static final class Icons extends Screen {
+        Icons() { super(Component.literal("Original fire forge assets")); }
+        @Override public void extractRenderState(GuiGraphicsExtractor g, int mx, int my, float delta) {
+            g.fill(0, 0, width, height, 0xff17202a);
+            String[] labels = {"Bone block", "Brick", "Core", "Aperture", "Ingot"}; var items = icons();
+            for (int i = 0; i < items.length; i++) { int x = (2 * i + 1) * width / 10; g.item(new ItemStack(items[i]), x - 8, height / 2 - 8); g.centeredText(font, Component.literal(labels[i]), x, height / 2 + 22, 0xffffffff); }
+        }
+    }
+}

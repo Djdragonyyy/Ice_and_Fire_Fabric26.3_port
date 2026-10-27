@@ -96,5 +96,11 @@
   "entity.iceandfire.dragon_skull": "Dragon Skull",
   "dragon.fire": "Fire Dragon",
   "dragon.stage": "Stage",
-  "iceandfire.sound.subtitle.dragon_hatch": "Dragon egg hatches"
+  "iceandfire.sound.subtitle.dragon_hatch": "Dragon egg hatches",
+  "block.iceandfire.dragon_bone_block": "Block of Dragon Bones",
+  "block.iceandfire.dragonforge_fire_core": "Dragonforge Fire Core",
+  "block.iceandfire.dragonforge_fire_input": "Dragonforge Fire Aperture",
+  "block.iceandfire.dragonforge_fire_brick": "Dragonforge Fire Brick",
+  "item.iceandfire.dragonsteel_fire_ingot": "Fire Dragonsteel Ingot",
+  "container.dragonforge_fire": "Fire Dragon Forge"
 }

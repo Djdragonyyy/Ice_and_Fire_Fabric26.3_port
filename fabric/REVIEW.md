@@ -1,3 +1,29 @@
+## Revisione 0.1.47 - 27 ottobre 2026
+
+No findings.
+
+Diff completo e nuovi file letti in sola lettura: blocchi/BE, codec dati/rete,
+inventario, menu/screen, risorse/tag e test. Output compatibile per componenti
+e capacita, consumo dopo verifica, potenza una volta per game tick, inventario
+unico delegato dai blocchi. Callback di rimozione nativo evita doppio drop;
+ACTIVE nello stesso blocco preserva BE e menu. Recupero input/griglie senza
+nucleo e schedulazione limitata; query su adiacenze caricate. GUI legge dati
+server, trasporto32bit e prodotto dallo shift-click reale verificati.
+
+Durante implementazione corretti fuori revisione: codec ItemStackTemplate26.3,
+filtro sangue e layout sided confrontati con sorgente, callback input orfano,
+proprieta luce/osso originali e fixture C2S che anticipava il pacchetto server.
+Nessun rilievo rimasto nella prima funzione manuale. Funzioni intenzionalmente
+ancora assenti: automatismo drago, comparatore e ricette di costruzione. Il
+checkpoint e descritto come parziale, non come chiusura della Forge o tappa1.
+
+Full10m50s:96JUnit/154server/16client/45PNG, zero errori. Sei nuovi metodi native
+coprono codec, produzione con vero percorso soffio, calore/fallback, persistenza,
+slot/drop/hopper e callback. Tre nuove immagini finali aperte: struttura3strati
+e GUI integre. Fixture client70000/100000 e risultato preimpostato distinguono
+il test rete dalla produzione server; mod test e ricetta lunga esclusi dalJAR.
+Salvataggio BE non spacciato per riavvio reale del mondo o prova dedicata nuova.
+
 ## Revisione 0.1.46 - 27 ottobre 2026
 
 No findings.

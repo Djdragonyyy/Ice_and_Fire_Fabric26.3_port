@@ -1,0 +1,8 @@
+{
+  "type": "iceandfire:dragonforge",
+  "dragon_type": "fire",
+  "cook_time": 100000,
+  "input": "minecraft:copper_ingot",
+  "blood": "iceandfire:fire_dragon_blood",
+  "result": {"id": "iceandfire:dragonsteel_fire_ingot", "count": 1}
+}

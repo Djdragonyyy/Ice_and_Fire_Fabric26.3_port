@@ -1,10 +1,12 @@
 # Ice and Fire: port Fabric 26.3 in sviluppo
 
-Verificati 95 JUnit, 147 GameTest della mod (148 con baseline vanilla), 15 prove client e 42 immagini nella 0.1.46. Richiamo originale con stufato di fuoco: camminata e interruzione verificate nel selettore nativo. Limiti in TEST-0.1.46.md; DedicatedServer44 resta prova precedente.
+Verificati 96 JUnit, 153 GameTest della mod (154 con baseline vanilla), 16 prove client e45immagini nella0.1.47. Prima DragonForge manuale con ricetta, inventario e GUI native. Automatismo, comparatore e ricette di costruzione restano aperti. Dettagli in TEST-0.1.47.md.
 
 **Checkpoint di sviluppo: la tappa 1 e il port completo restano aperti.**
 
-Versione corrente: **0.1.46-stage1-dev**. Richiamo con stufato di fuoco e priorita IA. [TEST-0.1.46.md](TEST-0.1.46.md). Tappa1 incompleta.
+Versione corrente: **0.1.47-stage1-dev**. Prima DragonForge di fuoco alimentata dal soffio, GUI e inventario. [TEST-0.1.47.md](TEST-0.1.47.md). Tappa1 incompleta.
+
+Versione precedente: **0.1.46-stage1-dev**. Richiamo con stufato di fuoco e priorita IA. [TEST-0.1.46.md](TEST-0.1.46.md). Tappa1 incompleta.
 
 Versione precedente: **0.1.45-stage1-dev**. Incubazione, movimento e schiusa originali delle uova. [TEST-0.1.45.md](TEST-0.1.45.md). Tappa1 incompleta.
 

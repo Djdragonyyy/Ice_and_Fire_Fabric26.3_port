@@ -49,8 +49,11 @@ public final class DragonFireTerrain {
         }
     }
     public static void breath(ServerLevel level, BlockPos center, FireDragon dragon) {
-        if (!allowed(level, dragon)) return;
         int radius = dragon.stage() <= 3 ? 1 : dragon.stage() == 4 ? 2 : 3;
+        // Original forge input receives the stream even when terrain griefing is disabled.
+        for (BlockPos pos : BlockPos.betweenClosed(center.offset(-radius, -radius, -radius), center.offset(radius, radius, radius)))
+            if (level.hasChunkAt(pos)) com.github.alexthe666.iceandfire.fabric.forge.IafDragonForge.feedInput(level, pos);
+        if (!allowed(level, dragon)) return;
         float area = radius * 0.999F + 0.5F;
         float square = area * area;
         for (BlockPos pos : BlockPos.betweenClosed(center.offset(-radius, -radius, -radius), center.offset(radius, radius, radius))) {

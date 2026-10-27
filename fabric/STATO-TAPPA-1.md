@@ -1,3 +1,42 @@
+## Checkpoint 0.1.47 - 27 ottobre 2026 - prima DragonForge manuale
+
+Forge di fuoco funzionante tramite il percorso reale del soffio: multiblocco
+3x3x3, inventario a3slot, ricetta ferro+sangue->lingotto di acciaio di fuoco,
+progresso/heat originali, fallback in cenere, salvataggio e automazione hopper.
+Modelli/texture/GUI originali, blocchi in creativo, luce15 del nucleo assemblato,
+blocchi protetti dal soffio e input/griglie disattivati alla perdita del nucleo.
+GUI aperta via C2S, progresso32bit e trasferimento output autorevole verificati.
+
+Full phase47-final.log verde10m50s:96JUnit,153GameTest mod+baseline154,16client,
+45PNG correnti. XML senza failure/error. Sei nuove prove server: ricetta e codec
+rete, struttura/power/output, salvataggio/drop, hopper/menu, fallback/heat,
+callback input orfano e produzione con DragonFireCombat.breath/mobGriefingfalse.
+Tre nuove PNG finali aperte: icone, tutte3le altezze del multiblocco e GUI.
+Nessun test/helper o ricetta di prova lunga nel JAR distribuito.
+
+Adattamenti nativi: un solo ID core con ACTIVE preserva la block entity;
+input/brick delegano inventario senza BEs ridondanti. Ricette usano codec26.3
+ItemStackTemplate e tag comune c:ingots/iron. CookTime int e dati GUI divisi in
+quattro16bit. Test client usa SOLTANTO nel mod test ricetta rame100000/progresso
+70000 per verificare overflow; produzione originaleferro1000 testata sul server.
+Il risultato in screenshot GUI e fixture, non una finta prova di lavorazione.
+Primo test C2S leggeva previsione client prima del pacchetto server: attesa
+corretta, asserzione su conteggio effettivo mantenuta, backend testato separato.
+
+Forge NON ancora completa: mancano richiamo/alimentazione automatica del drago,
+comparatori originali e ricette di costruzione/progressione. Blocchi disponibili
+in creativo/comandi, come altri strumenti del checkpoint. TEST-0.1.47.md spiega
+struttura, uso e differenze. Ricognizione prossima48 in lavoro privato
+work/phase48-preparation/RESEARCH.txt, nessun codice48 ancora avviato.
+Restano le altre parita/config/ciclo vitale, navigazione complessa, anteprima
+passeggeri e punte grigie. Tappa1 e port NON conclusi. Precedente46:25b623f89.
+
+Stessa chat/ramo port/fabric-26.3. Email annullate. Controllo quota ogni50minuti,
+niente reset o consumo artificiale. Continuare lavoro utile fino a esaurimento,
+poi salvare/checkpoint/push e spegnere ordinatamente senza forzare app con dati
+non salvati. Dopo tale spegnimento mettere il controllo in pausa fino a nuova
+autorizzazione. Le prove dedicate44 restano precedenti, non riciclate come47.
+
 ## Checkpoint 0.1.46 - 27 ottobre 2026 - richiamo con stufato di fuoco
 
 Portato TemptGoal originale con tag tempt_dragon: solo fire_stew, velocita 1,
@@ -732,7 +771,7 @@ Multipart completato nella0.1.41 e esplosioni opzionali native nella0.1.42; caso
   assetti stretti restano da collaudare, senza dichiarare un pathfinder universale.
 - Passeggeri nell'anteprima GUI; ulteriori dettagli visivi maschio/femmina,
   animazioni secondarie/attacchi, ulteriori suoni e particelle ancora mancanti.
-- Configurazioni originali non ancora esposte; integrazione DragonForge e ulteriori dettagli del combattimento.
+- Configurazioni originali non ancora esposte; alimentazione autonoma, comparatore e ricette di costruzione della DragonForge (prima parte manuale nella0.1.47); ulteriori dettagli del combattimento.
 - Difetto delle punte grigie ancora aperto: non è stato risolto né modificato
   alla cieca. Continuare con confronto equivalente all'originale.
 - Collaudo in gioco di camera, seduta, attacchi, armature e volo ai vari stadi;

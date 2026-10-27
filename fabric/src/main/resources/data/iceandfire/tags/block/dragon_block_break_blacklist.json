@@ -1,10 +1,17 @@
 {
   "replace": false,
   "values": [
-    {"id": "#c:chests", "required": false},
+    {
+      "id": "#c:chests",
+      "required": false
+    },
     "minecraft:chest",
     "minecraft:trapped_chest",
     "minecraft:end_stone",
-    "minecraft:iron_bars"
+    "minecraft:iron_bars",
+    "iceandfire:dragon_bone_block",
+    "iceandfire:dragonforge_fire_core",
+    "iceandfire:dragonforge_fire_input",
+    "iceandfire:dragonforge_fire_brick"
   ]
 }
