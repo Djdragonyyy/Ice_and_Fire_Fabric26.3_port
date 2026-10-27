@@ -1,3 +1,22 @@
+## Revisione 0.1.52 - 27 ottobre 2026
+
+No findings residui.
+
+Revisione del diff e di tutti i nuovi file: harness separato con opt-in,
+chunk/entity load nativi, snapshot prima dei tick, pausa fredda e produzione
+tramite soffio autonomo reale; nessuna alimentazione sintetica. Regressione
+montata conserva le asserzioni precedenti e aggiunge inventario owner e terza
+famiglia multipart. Una correzione allo script di export estende i profili
+stabili anche al solo flag ForgeRestart; export finale verificato, runtime
+precedente gia usava entrambi i flag. Nessuna classe produttiva modificata:
+120 classi identiche al JAR51, zero classi di test distribuite.
+
+Sei exit0 e report veri; primo tentativo whitelist non contato come prova.
+Cinque immagini attuali riviste; nomi storici e HUD esplicitati in TEST52.
+Full pulito99JUnit/163server/18client senza errori. Non confondere la fixture
+NoAI di20tick con comportamento normale; non certifica unload a server acceso,
+autenticazione o GUIForge. Tappa1 e port ancora aperti.
+
 ## Revisione 0.1.51 - 27 ottobre 2026
 
 No findings.

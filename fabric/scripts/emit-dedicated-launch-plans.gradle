@@ -26,7 +26,7 @@ gradle.projectsEvaluated {
                             workingDirectory:runDir.invoke(task).get().asFile.absolutePath,
                             environment:env.invoke(task).get()]
                 if (role == 'server') plan.arguments += ['--nogui']
-                if (role != 'server' && root.providers.gradleProperty('iafMountedReloginTest').isPresent()) {
+                if (role != 'server' && (root.providers.gradleProperty('iafMountedReloginTest').isPresent() || root.providers.gradleProperty('iafForgeRestartTest').isPresent())) {
                     plan.arguments += ['--username', role == 'owner' ? 'PortTestOwner' : 'PortTestGuest']
                 }
                 planDirectory.mkdirs()

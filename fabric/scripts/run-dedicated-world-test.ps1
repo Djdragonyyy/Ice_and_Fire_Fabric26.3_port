@@ -1,5 +1,6 @@
-param([Parameter(Mandatory=$true)][string]$SessionDirectory,[switch]$MountedRelogin)
+param([Parameter(Mandatory=$true)][string]$SessionDirectory,[switch]$MountedRelogin,[switch]$ForgeRestart)
 $ErrorActionPreference='Stop'
+if($ForgeRestart){$MountedRelogin=$true}
 $taskSession=[IO.Path]::GetFullPath($SessionDirectory)
 if(Test-Path -LiteralPath (Join-Path $taskSession 'ready')){throw 'Use a fresh dedicated session directory'}
 if($MountedRelogin){'yes' | Set-Content -LiteralPath (Join-Path $taskSession 'mounted-mode')}
@@ -57,6 +58,7 @@ try {
     $report=Get-Content -LiteralPath (Join-Path $taskSession 'report.json') -Raw|ConvertFrom-Json
     if($report.status-ne'passed'-or!$report.actualWorldRestart){throw 'Actual world restart did not pass'}
     if($MountedRelogin-and!$report.mountedLogoutRelogin){throw 'Mounted logout/relogin did not pass'}
+    if($ForgeRestart-and(!$report.forgeInventoryAndCookPersist-or!$report.forgeColdRestartPausedCookStable-or!$report.forgeActualAutonomousProductAfterRestart)){throw 'Actual forge restart did not pass'}
     $exits=[ordered]@{}
     foreach($child in $taskChildren){
         $child.Process.WaitForExit(); [void]$child.OutCopy.GetAwaiter().GetResult(); [void]$child.ErrCopy.GetAwaiter().GetResult()

@@ -1,3 +1,31 @@
+## Checkpoint 0.1.52 - 27 ottobre 2026 - Forge durante riavvio reale
+
+Nuova prova opt-in su DedicatedServer ordinario e due profili locali stabili.
+Il drago fabbro produce autonomamente un lingotto e progresso parziale22;
+il server chiude e riapre lo stesso mondo. Tre slot/progresso preservati,
+20 tick senza nuovo calore non avanzano, AI riattivata riprende il soffio e
+produce esattamente un nuovo lingotto consumando un ferro e un sangue.
+Conservati rientro montato, volo, armatura, proprieta, inventario owner sangue2,
+carcassa parziale e tre famiglie multipart con30parti senza duplicati.
+
+phase52-dedicated-launch-2.log:6processi exit0, tre flagForge e riavvio/monta
+veri.5PNG freschi aperti/rivisti, nessun LoadingTerrain. I suffissi35/44 sono
+nomi storici del client condiviso, non report riciclati. Primo tentativo
+respinto da whitelist prima gameplay; chiuso e conservato, secondo nuovo
+mondo/UTF8/loopbackonly/white-listfalse. Nessun bug produttivo inventato.
+
+Full pulito phase52-final.log PASS11m37s,99JUnit/163server/18client/54PNG;
+120classi del JAR identiche51, nessun harness distribuito. Solo versione,
+sourceSet di test e script export/launch modificati. Review ha corretto il
+flag export ForgeRestart da solo: profili stabili verificati con export10s,
+nessun nuovo riavvio attribuito a quella verifica. TEST-0.1.52.md distingue
+condizioni controllate, limiti e prove precedenti. Nessuna certificazione
+account autentici/server pubblici o chunk unload con server acceso.
+
+Tappa1/port aperti. Prossimo: reazioni/fuga animali e villager, configoriginali,
+navcomplessa/anteprima passeggeri/puntegrigie ancora da migrare o verificare.
+Ricerca privata NEXT-PARITY.md, nessuna funzione53 implementata finora.
+
 ## Checkpoint 0.1.51 - 27 ottobre 2026 - distanze camera originali e F7
 
 Portate quattro distanze originali0/1.2/3/5*(renderSize/3), con resetmedio2
@@ -911,7 +939,7 @@ Multipart completato nella0.1.41 e esplosioni opzionali native nella0.1.42; caso
   assetti stretti restano da collaudare, senza dichiarare un pathfinder universale.
 - Passeggeri nell'anteprima GUI; ulteriori dettagli visivi maschio/femmina,
   animazioni secondarie/attacchi, ulteriori suoni e particelle ancora mancanti.
-- Configurazioni originali non ancora esposte e ulteriori dettagli del combattimento. DragonForge di fuoco: manuale47, automatismo/comparatore48 e costruzione/scaglie49 implementati; restano prove dedicate di riavvio durante produzione.
+- Configurazioni originali non ancora esposte e ulteriori dettagli del combattimento. DragonForge di fuoco: manuale47, automatismo/comparatore48 e costruzione/scaglie49 implementati; riavvio reale durante produzione verificato nella0.1.52, con limiti in TEST-0.1.52.md.
 - Difetto delle punte grigie ancora aperto: non è stato risolto né modificato
   alla cieca. Continuare con confronto equivalente all'originale.
 - Collaudo in gioco di camera, seduta, attacchi, armature e volo ai vari stadi;
