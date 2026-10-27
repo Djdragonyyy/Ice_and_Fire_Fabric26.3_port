@@ -1,3 +1,41 @@
+## Checkpoint 0.1.49 - 27 ottobre 2026 - costruzione della DragonForge
+
+Portati quattro blocchi di scaglie di fuoco, compressione/decompressione,
+ricette originali di ossa/mattoni/nucleo/apertura e dodici advancement per
+ricettario. La forgia ora si costruisce con i materiali originali, senza
+necessita di creativo/comandi per ottenere i suoi blocchi. Vecchio risultato
+core_disabled adattato all'ID unico CORE con ACTIVE; tag comuni c: nativi.
+Proprieta30/500, strumenti, protezione drago, loot e tooltip colore originali;
+stati/modelli/texture byte-identici. Nessuna modifica al motore del drago.
+
+Full pulito phase49-final-2.log PASS in 11m 29s:99JUnit,162GameTest mod
++baseline163server,16client e47PNG correnti; XML senza errori/failure.
+Quattro nuove prove native: tutti4colori tramite CraftingMenu/ResultSlot e
+consumo/trasferimento, costo e output delle ricette forgia, proprieta/tag/loot,
+sblocco di tutte12ricette dai cambi inventario del giocatore. Decompressione
+usa il blocco effettivamente prodotto. JUnit confronta16risorse originali.
+Probes99JUnit/3GT/16client verdi2m47s, quartoGT ricettario/loot verde24s poi
+incluso nel full. PNG finali icone e quattro blocchi piazzati aperte e riviste.
+
+Revisione ha rilevato/corretto lettura Python cp1252 delle vecchie traduzioni:
+104valori per lingua ripristinati da HEAD, aggiunte sole nuove chiavi e UTF8
+esplicito. Aggiunto anche il parent tag c:storage_blocks per scaglie e ossa
+come nel datagen originale; nuove asserzioni native. Full2 ripete il collaudo
+dopo tale aggiunta, senza riciclare il primo full pre-tag. Prima tavola9icone aveva etichette sovrapposte: ora2righe5+4,
+verificata visivamente dopo il full. Nessun rilievo residuo. Test esclusi JAR.
+
+Tappa1/port NON conclusi: restano audit configurazioni/interazioni/temporizzazioni,
+casi complessi di navigazione, passeggeri anteprima GUI e diagnosi punte grigie.
+Nessuna nuova certificazione dedicata di restartForge o account autenticati.
+Ricerca prossima50 SOLO in appunti privati; nessuna implementazione50.
+Precedente48:a9eacd2c3. TEST-0.1.49.md descrive costi e limiti.
+
+Ultima istruzione utente27ottobre: continuare fino al5%residuo, poi salvare
+ancheWIP/finire test/checkpoint/push e spegnere ordinatamente senza forzare app.
+Soglia95%USATO sostituisce esaurimento100%. Quota ogni50minuti, niente reset o
+consumo artificiale. Dopo shutdown automazione in pausa fino nuova autorizzazione.
+Email annullate. Stessa chat e solo ramo port/fabric-26.3.
+
 ## Checkpoint 0.1.48 - 27 ottobre 2026 - DragonForge autonoma e comparatore
 
 Il nucleo richiama un drago di fuoco addomesticato, sveglio, a terra, stage2+,

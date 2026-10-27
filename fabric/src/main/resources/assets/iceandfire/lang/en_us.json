@@ -102,5 +102,14 @@
   "block.iceandfire.dragonforge_fire_input": "Dragonforge Fire Aperture",
   "block.iceandfire.dragonforge_fire_brick": "Dragonforge Fire Brick",
   "item.iceandfire.dragonsteel_fire_ingot": "Fire Dragonsteel Ingot",
-  "container.dragonforge_fire": "Fire Dragon Forge"
+  "container.dragonforge_fire": "Fire Dragon Forge",
+  "block.iceandfire.dragonscale_red": "Block of Dragon Scales",
+  "dragon.red": "Red",
+  "block.iceandfire.dragonscale_green": "Block of Dragon Scales",
+  "dragon.green": "Emerald",
+  "block.iceandfire.dragonscale_bronze": "Block of Dragon Scales",
+  "dragon.bronze": "Bronze",
+  "block.iceandfire.dragonscale_gray": "Block of Dragon Scales",
+  "dragon.gray": "Gray",
+  "tag.item.c.storage_blocks.scales.dragon.fire": "Fire dragon scale blocks"
 }

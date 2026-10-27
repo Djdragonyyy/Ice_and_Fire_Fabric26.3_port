@@ -37,6 +37,7 @@ public class DragonForgeClientTest implements FabricClientGameTest {
                     p.level().setBlockAndUpdate(base.offset(x, y, z), (y == 0 && x == 0 && z == 0 ? IafDragonForge.CORE
                             : y != 0 && x != 0 && z != 0 ? IafDragonForge.BONE : IafDragonForge.BRICK).defaultBlockState());
                 p.level().setBlockAndUpdate(base.north(), IafDragonForge.INPUT.defaultBlockState());
+                for (int i = 0; i < 4; i++) p.level().setBlockAndUpdate(base.offset(-3 + 2 * i, -1, 3), IafDragonScales.BLOCKS.get(i).defaultBlockState());
                 var core = (DragonForgeCore) p.level().getBlockEntity(base);
                 core.setItem(0, new ItemStack(Items.COPPER_INGOT, 2)); core.setItem(1, new ItemStack(IafContent.FIRE_DRAGON_BLOOD, 2));
                 // Deterministic inventory/progress fixture; actual flame processing is tested on the native server.
@@ -57,7 +58,7 @@ public class DragonForgeClientTest implements FabricClientGameTest {
                 }
             });
             context.setScreen(Icons::new); context.waitTicks(10);
-            context.takeScreenshot("dragonforge-fire-original-icons-0.1.47"); context.setScreen(() -> null);
+            context.takeScreenshot("dragonforge-fire-materials-original-icons-0.1.49"); context.setScreen(() -> null);
             world.getServer().runOnServer(server -> {
                 var p = world.getConnection().getServerPlayer(); p.getAbilities().flying = true; p.onUpdateAbilities();
                 p.teleportTo(pos.getX() - 4, pos.getY() + 1.5, pos.getZ() - 4);
@@ -116,15 +117,24 @@ public class DragonForgeClientTest implements FabricClientGameTest {
                     && c.gui.screen() == null && c.gui.overlay() == null);
             context.runOnClient(c -> { c.player.setYRot(-84.3F); c.player.setXRot(22); }); context.waitTicks(12);
             context.takeScreenshot("dragonforge-autonomous-dragon-stream-0.1.48");
+            world.getServer().runOnServer(server -> world.getConnection().getServerPlayer().teleportTo(pos.getX() - 5, pos.getY() + 2, pos.getZ() + 7));
+            context.waitFor(c -> c.player.distanceToSqr(pos.getX() - 5, pos.getY() + 2, pos.getZ() + 7) < 0.1);
+            context.runOnClient(c -> { c.player.setYRot(-128.7F); c.player.setXRot(25); }); context.waitTicks(12);
+            context.takeScreenshot("dragonforge-four-original-scale-blocks-0.1.49");
         }
     }
-    private static Item[] icons() { return new Item[]{IafDragonForge.BONE.asItem(), IafDragonForge.BRICK.asItem(), IafDragonForge.CORE.asItem(), IafDragonForge.INPUT.asItem(), IafDragonForge.INGOT}; }
+    private static Item[] icons() { return java.util.stream.Stream.concat(java.util.stream.Stream.of(IafDragonForge.BONE.asItem(), IafDragonForge.BRICK.asItem(), IafDragonForge.CORE.asItem(), IafDragonForge.INPUT.asItem(), IafDragonForge.INGOT), IafDragonScales.ITEMS.stream()).toArray(Item[]::new); }
     private static final class Icons extends Screen {
         Icons() { super(Component.literal("Original fire forge assets")); }
         @Override public void extractRenderState(GuiGraphicsExtractor g, int mx, int my, float delta) {
             g.fill(0, 0, width, height, 0xff17202a);
-            String[] labels = {"Bone block", "Brick", "Core", "Aperture", "Ingot"}; var items = icons();
-            for (int i = 0; i < items.length; i++) { int x = (2 * i + 1) * width / 10; g.item(new ItemStack(items[i]), x - 8, height / 2 - 8); g.centeredText(font, Component.literal(labels[i]), x, height / 2 + 22, 0xffffffff); }
+            String[] labels = {"Bone block", "Brick", "Core", "Aperture", "Ingot", "Red scales", "Green scales", "Bronze scales", "Gray scales"}; var items = icons();
+            for (int i = 0; i < items.length; i++) {
+                int row = i < 5 ? 0 : 1, column = row == 0 ? i : i - 5, columns = row == 0 ? 5 : 4;
+                int x = (2 * column + 1) * width / (2 * columns), y = height / 2 + (row == 0 ? -36 : 36);
+                g.item(new ItemStack(items[i]), x - 8, y - 8);
+                g.centeredText(font, Component.literal(labels[i]), x, y + 22, 0xffffffff);
+            }
         }
     }
 }

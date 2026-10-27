@@ -12,6 +12,10 @@
     "iceandfire:dragon_bone_block",
     "iceandfire:dragonforge_fire_core",
     "iceandfire:dragonforge_fire_input",
-    "iceandfire:dragonforge_fire_brick"
+    "iceandfire:dragonforge_fire_brick",
+    "iceandfire:dragonscale_red",
+    "iceandfire:dragonscale_green",
+    "iceandfire:dragonscale_bronze",
+    "iceandfire:dragonscale_gray"
   ]
 }

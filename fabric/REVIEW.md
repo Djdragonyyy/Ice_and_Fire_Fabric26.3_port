@@ -1,3 +1,19 @@
+## Revisione 0.1.49 - 27 ottobre 2026
+
+No findings.
+
+Diff completo e nuovi file letti in sola lettura: registrazione/proprieta dei
+blocchi, tooltip, creativi, tutte12ricette e12advancement, tag comuni/protezione,
+loot, risorse, localizzazioni e test. Confrontati costi/pattern con datagen
+originale; adattati esclusivamente codec26.3/tagc e unicoIDcore esistente.
+NativeCraftingMenu conferma risultato, consumo e inventario; inventario reale
+sblocca tutte12ricette. Byte di16risorse originali verificati in JUnit.
+Correzioni fuori revisione: UTF8 esplicito e conservazione104traduzioni per
+lingua; tavola di prova su2righe per etichette leggibili. Full pulito verde
+11m 29s:99JUnit/163server/16client47PNG, immagini finali riviste. Nessun
+nuovo DedicatedServer restart durante produzione; catene/altri draghi e
+successive tappe non dichiarati portati. Tappa1 ancora aperta.
+
 ## Revisione 0.1.48 - 27 ottobre 2026
 
 No findings.

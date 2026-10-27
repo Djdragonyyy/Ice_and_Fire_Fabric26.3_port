@@ -1,3 +1,41 @@
+## Checkpoint 0.1.49 - 27 ottobre 2026 - costruzione della DragonForge
+
+Portati quattro blocchi di scaglie di fuoco, compressione/decompressione,
+ricette originali di ossa/mattoni/nucleo/apertura e dodici advancement per
+ricettario. La forgia ora si costruisce con i materiali originali, senza
+necessita di creativo/comandi per ottenere i suoi blocchi. Vecchio risultato
+core_disabled adattato all'ID unico CORE con ACTIVE; tag comuni c: nativi.
+Proprieta30/500, strumenti, protezione drago, loot e tooltip colore originali;
+stati/modelli/texture byte-identici. Nessuna modifica al motore del drago.
+
+Full pulito phase49-final-2.log PASS in 11m 29s:99JUnit,162GameTest mod
++baseline163server,16client e47PNG correnti; XML senza errori/failure.
+Quattro nuove prove native: tutti4colori tramite CraftingMenu/ResultSlot e
+consumo/trasferimento, costo e output delle ricette forgia, proprieta/tag/loot,
+sblocco di tutte12ricette dai cambi inventario del giocatore. Decompressione
+usa il blocco effettivamente prodotto. JUnit confronta16risorse originali.
+Probes99JUnit/3GT/16client verdi2m47s, quartoGT ricettario/loot verde24s poi
+incluso nel full. PNG finali icone e quattro blocchi piazzati aperte e riviste.
+
+Revisione ha rilevato/corretto lettura Python cp1252 delle vecchie traduzioni:
+104valori per lingua ripristinati da HEAD, aggiunte sole nuove chiavi e UTF8
+esplicito. Aggiunto anche il parent tag c:storage_blocks per scaglie e ossa
+come nel datagen originale; nuove asserzioni native. Full2 ripete il collaudo
+dopo tale aggiunta, senza riciclare il primo full pre-tag. Prima tavola9icone aveva etichette sovrapposte: ora2righe5+4,
+verificata visivamente dopo il full. Nessun rilievo residuo. Test esclusi JAR.
+
+Tappa1/port NON conclusi: restano audit configurazioni/interazioni/temporizzazioni,
+casi complessi di navigazione, passeggeri anteprima GUI e diagnosi punte grigie.
+Nessuna nuova certificazione dedicata di restartForge o account autenticati.
+Ricerca prossima50 SOLO in appunti privati; nessuna implementazione50.
+Precedente48:a9eacd2c3. TEST-0.1.49.md descrive costi e limiti.
+
+Ultima istruzione utente27ottobre: continuare fino al5%residuo, poi salvare
+ancheWIP/finire test/checkpoint/push e spegnere ordinatamente senza forzare app.
+Soglia95%USATO sostituisce esaurimento100%. Quota ogni50minuti, niente reset o
+consumo artificiale. Dopo shutdown automazione in pausa fino nuova autorizzazione.
+Email annullate. Stessa chat e solo ramo port/fabric-26.3.
+
 ## Checkpoint 0.1.48 - 27 ottobre 2026 - DragonForge autonoma e comparatore
 
 Il nucleo richiama un drago di fuoco addomesticato, sveglio, a terra, stage2+,
@@ -803,7 +841,7 @@ Multipart completato nella0.1.41 e esplosioni opzionali native nella0.1.42; caso
   assetti stretti restano da collaudare, senza dichiarare un pathfinder universale.
 - Passeggeri nell'anteprima GUI; ulteriori dettagli visivi maschio/femmina,
   animazioni secondarie/attacchi, ulteriori suoni e particelle ancora mancanti.
-- Configurazioni originali non ancora esposte; alimentazione autonoma, comparatore e ricette di costruzione della DragonForge (prima parte manuale nella0.1.47); ulteriori dettagli del combattimento.
+- Configurazioni originali non ancora esposte e ulteriori dettagli del combattimento. DragonForge di fuoco: manuale47, automatismo/comparatore48 e costruzione/scaglie49 implementati; restano prove dedicate di riavvio durante produzione.
 - Difetto delle punte grigie ancora aperto: non è stato risolto né modificato
   alla cieca. Continuare con confronto equivalente all'originale.
 - Collaudo in gioco di camera, seduta, attacchi, armature e volo ai vari stadi;
@@ -814,4 +852,4 @@ progressione completa, ricette, strutture e generazione naturale: appartengono
 alle tappe successive. Non iniziarle prima del completamento e del riscontro
 sulla tappa 1. La 0.1.13 è confermata; collaudare le novità successive, ora fino alla0.1.44. L'utente ha autorizzato il proseguimento autonomo; il riscontro non impone una nuova pausa.
 
-Nota operativa25ottobre: ultima richiesta continua fino a esaurimento quota, poi spegni il PC dopo checkpoint sicuro. Controllo automatico50min, non5. Superati i vecchi divieti storici; proseguimento del port autorizzato.
+Nota operativa27ottobre: ultima richiesta continua fino al5%residuo, poi spegni il PC dopo checkpoint sicuro. Controllo automatico50min, non5. Superate le precedenti soglie e i vecchi divieti storici; proseguimento del port autorizzato.

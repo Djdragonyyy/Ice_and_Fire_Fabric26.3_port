@@ -1,10 +1,12 @@
 # Ice and Fire: port Fabric 26.3 in sviluppo
 
-Verificati 98 JUnit, 158 GameTest della mod (159 con baseline vanilla), 16 prove client e46immagini nella0.1.48. DragonForge alimentata autonomamente dal drago, comparatore e priorita IA. Ricette di costruzione ancora aperte. Dettagli in TEST-0.1.48.md.
+Verificati 99 JUnit, 162 GameTest della mod (163 con baseline vanilla), 16 prove client e47immagini nella0.1.49. Costruzione originale della DragonForge, quattro blocchi di scaglie e ricettario nativo. Dettagli in TEST-0.1.49.md.
 
 **Checkpoint di sviluppo: la tappa 1 e il port completo restano aperti.**
 
-Versione corrente: **0.1.48-stage1-dev**. Alimentazione autonoma della DragonForge e comparatore. [TEST-0.1.48.md](TEST-0.1.48.md). Tappa1 incompleta.
+Versione corrente: **0.1.49-stage1-dev**. Costruzione della DragonForge e blocchi di scaglie. [TEST-0.1.49.md](TEST-0.1.49.md). Tappa1 incompleta.
+
+Versione precedente: **0.1.48-stage1-dev**. Alimentazione autonoma e comparatore. [TEST-0.1.48.md](TEST-0.1.48.md).
 
 Versione precedente: **0.1.47-stage1-dev**. Prima DragonForge manuale, GUI e inventario. [TEST-0.1.47.md](TEST-0.1.47.md).
 

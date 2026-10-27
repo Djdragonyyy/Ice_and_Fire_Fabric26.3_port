@@ -31,7 +31,7 @@ loom {
         gametest {
             server()
             source sourceSets.gametest
-            runDir 'run/0.1.48-gametest'
+            runDir 'run/0.1.49-gametest'
             vmArg '-Dfabric-api.gametest'
             vmArg "-Dfabric-api.gametest.report-file=${file('build/gametest-results.xml').absolutePath}"
         }
@@ -83,6 +83,10 @@ processResources {
         include 'assets/iceandfire/models/item/dragon_bone_block.json', 'assets/iceandfire/models/item/dragonforge_fire*.json'
         include 'assets/iceandfire/models/item/dragonsteel_fire_ingot.json', 'assets/iceandfire/textures/item/dragonsteel_fire_ingot.png'
         include 'assets/iceandfire/textures/block/dragon_bone_block*.png', 'assets/iceandfire/textures/block/dragonforge_fire*'
+        include 'assets/iceandfire/blockstates/dragonscale_red.json', 'assets/iceandfire/models/block/dragonscale_red.json', 'assets/iceandfire/models/item/dragonscale_red.json', 'assets/iceandfire/textures/block/dragonscale_red.png'
+        include 'assets/iceandfire/blockstates/dragonscale_green.json', 'assets/iceandfire/models/block/dragonscale_green.json', 'assets/iceandfire/models/item/dragonscale_green.json', 'assets/iceandfire/textures/block/dragonscale_green.png'
+        include 'assets/iceandfire/blockstates/dragonscale_bronze.json', 'assets/iceandfire/models/block/dragonscale_bronze.json', 'assets/iceandfire/models/item/dragonscale_bronze.json', 'assets/iceandfire/textures/block/dragonscale_bronze.png'
+        include 'assets/iceandfire/blockstates/dragonscale_gray.json', 'assets/iceandfire/models/block/dragonscale_gray.json', 'assets/iceandfire/models/item/dragonscale_gray.json', 'assets/iceandfire/textures/block/dragonscale_gray.png'
         include 'assets/iceandfire/models/item/dragonbone.json', 'assets/iceandfire/textures/item/dragonbone.png'
         include 'assets/iceandfire/models/item/dragonscales_red.json', 'assets/iceandfire/textures/item/scales_red.png'
         include 'assets/iceandfire/models/item/dragonscales_green.json', 'assets/iceandfire/textures/item/scales_green.png'
@@ -132,7 +136,7 @@ loom {
         clientGametest {
             client()
             source sourceSets.clientGametest
-            runDir 'run/0.1.48-client-gametest'
+            runDir 'run/0.1.49-client-gametest'
             vmArg '-Dfabric.client.gametest'
         }
     }
@@ -231,7 +235,7 @@ if (providers.gradleProperty('iafDedicatedWorldTest').isPresent()) {
             dedicatedWorldServerTest {
                 server()
                 source sourceSets.dedicatedWorldTest
-                runDir 'run/0.1.48-dedicated-server'
+                runDir 'run/0.1.49-dedicated-server'
                 vmArg '-Xmx1G'
                 vmArg "-Diaf.network.dir=${sessionDirectory}"
                 programArg '--nogui'
@@ -239,7 +243,7 @@ if (providers.gradleProperty('iafDedicatedWorldTest').isPresent()) {
             dedicatedWorldOwnerTest {
                 client()
                 source sourceSets.dedicatedWorldClientTest
-                runDir 'run/0.1.48-dedicated-owner'
+                runDir 'run/0.1.49-dedicated-owner'
                 vmArg '-Xmx2G'
                 vmArg '-Dfabric.client.gametest'
                 vmArg '-Diaf.network.role=owner'
@@ -251,7 +255,7 @@ if (providers.gradleProperty('iafDedicatedWorldTest').isPresent()) {
             dedicatedWorldGuestTest {
                 client()
                 source sourceSets.dedicatedWorldClientTest
-                runDir 'run/0.1.48-dedicated-guest'
+                runDir 'run/0.1.49-dedicated-guest'
                 vmArg '-Xmx2G'
                 vmArg '-Dfabric.client.gametest'
                 vmArg '-Diaf.network.role=guest'

@@ -178,6 +178,7 @@ public final class IafContent {
                 Identifier.withDefaultNamespace("building_blocks"))).register(output -> {
                     IafTerrain.ITEMS.forEach(output::accept);
                     com.github.alexthe666.iceandfire.fabric.forge.IafDragonForge.ITEMS.forEach(output::accept);
+                    com.github.alexthe666.iceandfire.fabric.forge.IafDragonScales.ITEMS.forEach(output::accept);
                 });
         CreativeModeTabEvents.modifyOutputEvent(ResourceKey.create(Registries.CREATIVE_MODE_TAB,
                 Identifier.withDefaultNamespace("combat"))).register(output -> com.github.alexthe666.iceandfire.fabric.dragon.DragonArmorItem.ITEMS.forEach(output::accept));

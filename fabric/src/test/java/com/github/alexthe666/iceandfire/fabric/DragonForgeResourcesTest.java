@@ -5,6 +5,19 @@ import java.nio.file.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DragonForgeResourcesTest {
+    @Test void fourFireScaleBlockModelsStatesAndTexturesRemainOriginal() throws Exception {
+        Path legacy = Path.of(System.getProperty("iceandfire.legacyResources"));
+        for (String color : new String[]{"red", "green", "bronze", "gray"}) {
+            String name = "dragonscale_" + color;
+            for (String suffix : new String[]{"blockstates/" + name + ".json", "models/block/" + name + ".json",
+                    "models/item/" + name + ".json", "textures/block/" + name + ".png"}) {
+                String path = "assets/iceandfire/" + suffix;
+                try (var input = getClass().getClassLoader().getResourceAsStream(path)) {
+                    assertNotNull(input, path); assertArrayEquals(Files.readAllBytes(legacy.resolve(path)), input.readAllBytes(), path);
+                }
+            }
+        }
+    }
     @Test void originalForgeModelsTexturesAndGuiArePackagedUnchanged() throws Exception {
         Path legacy = Path.of(System.getProperty("iceandfire.legacyResources")); int checked = 0;
         try (var files = Files.walk(legacy.resolve("assets/iceandfire"))) {

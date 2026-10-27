@@ -102,5 +102,14 @@
   "block.iceandfire.dragonforge_fire_brick": "Mattoni della forgia di fuoco",
   "block.iceandfire.dragonforge_fire_core": "Nucleo della forgia di fuoco",
   "block.iceandfire.dragonforge_fire_input": "Bocca della forgia di fuoco",
-  "item.iceandfire.dragonsteel_fire_ingot": "Lingotto di acciaio di drago di fuoco"
+  "item.iceandfire.dragonsteel_fire_ingot": "Lingotto di acciaio di drago di fuoco",
+  "block.iceandfire.dragonscale_red": "Blocco di scaglie di drago",
+  "dragon.red": "Rosso",
+  "block.iceandfire.dragonscale_green": "Blocco di scaglie di drago",
+  "dragon.green": "Verde",
+  "block.iceandfire.dragonscale_bronze": "Blocco di scaglie di drago",
+  "dragon.bronze": "Bronzo",
+  "block.iceandfire.dragonscale_gray": "Blocco di scaglie di drago",
+  "dragon.gray": "Grigio",
+  "tag.item.c.storage_blocks.scales.dragon.fire": "Blocchi di scaglie di drago di fuoco"
 }
