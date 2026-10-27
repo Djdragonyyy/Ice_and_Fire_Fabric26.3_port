@@ -111,5 +111,6 @@
   "dragon.bronze": "Bronzo",
   "block.iceandfire.dragonscale_gray": "Blocco di scaglie di drago",
   "dragon.gray": "Grigio",
-  "tag.item.c.storage_blocks.scales.dragon.fire": "Blocchi di scaglie di drago di fuoco"
+  "tag.item.c.storage_blocks.scales.dragon.fire": "Blocchi di scaglie di drago di fuoco",
+  "key.iceandfire.dragon_change_view": "Drago: distanza della visuale"
 }

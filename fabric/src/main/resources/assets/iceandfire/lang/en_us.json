@@ -111,5 +111,6 @@
   "dragon.bronze": "Bronze",
   "block.iceandfire.dragonscale_gray": "Block of Dragon Scales",
   "dragon.gray": "Gray",
-  "tag.item.c.storage_blocks.scales.dragon.fire": "Fire dragon scale blocks"
+  "tag.item.c.storage_blocks.scales.dragon.fire": "Fire dragon scale blocks",
+  "key.iceandfire.dragon_change_view": "Change Dragon Camera"
 }

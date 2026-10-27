@@ -1,10 +1,12 @@
 # Ice and Fire: port Fabric 26.3 in sviluppo
 
-Verificati 99 JUnit, 162 GameTest della mod (163 con baseline vanilla), 17 prove client e48immagini nella0.1.50. Opzione originale della visuale automatica durante monta/discesa e disconnessione. Dettagli in TEST-0.1.50.md.
+Verificati 99 JUnit, 162 GameTest della mod (163 con baseline vanilla), 18 prove client e54immagini nella0.1.51. Quattro distanze originali F7, taglia del drago e collisioni native. Esiti separati server/client e limiti in TEST-0.1.51.md.
 
 **Checkpoint di sviluppo: la tappa 1 e il port completo restano aperti.**
 
-Versione corrente: **0.1.50-stage1-dev**. Visuale automatica del pilota configurabile. [TEST-0.1.50.md](TEST-0.1.50.md). Tappa1 incompleta.
+Versione corrente: **0.1.51-stage1-dev**. Distanze originali della camera e F7. [TEST-0.1.51.md](TEST-0.1.51.md). Tappa1 incompleta.
+
+Versione precedente: **0.1.50-stage1-dev**. Prospettiva automatica configurabile. [TEST-0.1.50.md](TEST-0.1.50.md).
 
 Versione precedente: **0.1.49-stage1-dev**. Costruzione della DragonForge e blocchi di scaglie. [TEST-0.1.49.md](TEST-0.1.49.md).
 

@@ -15,6 +15,7 @@ public final class IceAndFireFabricClient implements ClientModInitializer {
         DragonClientConfig.load();
         DragonRiderCamera.initialize();
         DragonKeyMappings.initialize();
+        DragonCameraView.initialize();
         DragonFlameParticle.initialize();
         net.minecraft.client.gui.screens.MenuScreens.register(IafContent.DRAGON_MENU, DragonScreen::new);
         net.minecraft.client.gui.screens.MenuScreens.register(com.github.alexthe666.iceandfire.fabric.forge.IafDragonForge.MENU, DragonForgeScreen::new);

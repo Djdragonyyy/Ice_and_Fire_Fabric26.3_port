@@ -1,3 +1,41 @@
+## Checkpoint 0.1.51 - 27 ottobre 2026 - distanze camera originali e F7
+
+Portate quattro distanze originali0/1.2/3/5*(renderSize/3), con resetmedio2
+alla monta del proprio drago addomesticato. F7rimappabile/nativeSDL, una
+pressione per avanzamento; F5continua a scegliere la prospettiva. Distanza
+extra dalla taglia visiva uncapped, prima persona e fuori cavalcata native.
+Camera26.3 giausa CAMERA_DISTANCE e scalegiocatore/veicolo: valore mantenuto,
+extraoriginale aggiunto prima del getMaxZoom tramite piccolaMixin client.
+Una sola collisione nativa copre l'intera distanza, senza passare nei muri.
+Nessuna modifica a geometria/texture/seduta/SCALE/attributi o rete/server.
+
+Verifiche distinte: phase51-final.log fullverde 11m 38s con99JUnit/163server/
+18client; successiva guardiaproprieta SOLOclient ricompilata e tutti18client
+ripetuti in phase51-client-final-2.log verde 2m 48s.99JUnit restano verdi;
+163server valgono sulle stesse classi comuni, non sono una nuova esecuzione
+del secondo comando. Logcombinato phase51-verified.log conserva entrambe.
+54PNG correnti,6nuovefinali aperte/riviste: media50/75/100/125giorni, frontale
+125 e collisione muro. Prove F7/inputhold20tick, distanza effettiva camera,
+quattro modi, crescita, clip/recupero, prima persona e discesa senza extra.
+
+Primo probe falliva ultima verifica dopo discesa per scelta vista prima del
+listenerdi ripristino; attesa10tick, asserzione uguale, probe2verde2m45s.
+Fixture finale usa6chunk SOLOnel mondo di prova, comunica richiesta al server
+con broadcastOptions, controlla clientInformation e chunkcamera caricato;
+opzioni iniziali ripristinate. Non cambia la distanza grafica del gioco.
+JAR50/51:116classi identiche,2precedenti modificate SOLOclient e2nuoveclient;
+nessuna classe comune cambiata, nessun test incluso. Revisione senza rilievi
+residui dopo resetmedio limitato all'owner come nell'originale.
+
+Tappa1/port NON conclusi: auditconfig/ciclo vitale, navigazionecomplessa,
+anteprima passeggeri e puntegrigie ancora aperti. Prossima52: ricerca test
+DedicatedForgePersistence, nessuna implementazione o certificazione attuale.
+Precedente50:aba673f5a, opzione prospettiva automatica. TEST-0.1.51.md.
+Ultima istruzione: finoal5%residuo/95%usato poi salvare/testcleanup/checkpoint/
+push e shutdownordinato senza forzareapp. Quotaogni50min, noreset/consumo
+artificiale, dopo shutdown controllo inpausa fino nuovaautorizzazione.
+Emailannullate, stessa chat/ramo port/fabric-26.3.
+
 ## Checkpoint 0.1.50 - 27 ottobre 2026 - visuale automatica del pilota
 
 Portata opzione client originale dragonAuto3rdPerson, defaulttrue, nel nuovo

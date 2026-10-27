@@ -1,3 +1,21 @@
+## Revisione 0.1.51 - 27 ottobre 2026
+
+No findings.
+
+Letto diff completo e nuovi file: zoom originale, input, singolo ModifyArg
+alla chiamata getMaxZoom in Camera.alignWithEntity, registrazione/lang e test.
+Extra dalla taglia visiva, baseline nativa preservata e clip unico; nessuna
+modifica attributi/entity/server. Resetmedio soltanto owner/tame come nella
+sorgente; keySDL F7 namespaced, pressione singola, fuori drago/firstperson
+nessuna distanza extra. Prova camera reale con4modi/4eta/muro/crescita/uscita.
+Fixture attende listenerdi dismount, trasmette realmenteviewdistance6 e attende
+chunkcamera, poi ripristinaopzioni. Nessuna asserzione di distanza indebolita.
+Full 11m 38s:99JUnit/163server/18client, poi finalclient 2m 48s:18client/54PNG
+e99JUnit verdi dopo guardiaclient.116classi identiche,2modificate+2nuove SOLO
+client confermano applicabilita serverregression precedente. Sei nuovePNG
+finali riviste. Nessuna presa selvaggia/nuovoDedicatedServer/graytips dichiarati
+certificati. Vedere TEST-0.1.51.md; tappa1aperta.
+
 ## Revisione 0.1.50 - 27 ottobre 2026
 
 No findings.

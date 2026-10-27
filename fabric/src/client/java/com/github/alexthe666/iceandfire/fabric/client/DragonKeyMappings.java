@@ -17,6 +17,10 @@ final class DragonKeyMappings {
 
     record Bindings(KeyMapping fire, KeyMapping strike, KeyMapping down, KeyMapping takeoff) {}
 
+    static KeyMapping createViewBinding() {
+        return new KeyMapping("key.iceandfire.dragon_change_view", InputConstants.KEY_F7, CATEGORY);
+    }
+
     static Bindings createBindings() {
         // 26.3 uses SDL scancodes, not the GLFW key codes used by 1.20.1.
         // Namespaced IDs also avoid reloading the incorrect defaults saved by checkpoint 01.
