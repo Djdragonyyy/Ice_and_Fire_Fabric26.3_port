@@ -142,14 +142,22 @@ public class DragonConfigGameTests {
             require(d.flying() && d.flightManager.target() != null, "Escort route remains valid at zero modifier");
             require(d.getDeltaMovement().lengthSqr() < 1.0E-8, "Zero modifier contributes no cruise or climb acceleration");
             Vec3 firstTarget = d.flightManager.target();
+            // Test acceleration, not the first turning frame: a perpendicular heading has
+            // zero X acceleration and vanilla legitimately removes sub-.003 axis motion.
+            d.setYRot(-90); d.yBodyRot = d.yHeadRot = -90;
+            float headingBefore = d.getYRot();
+            Vec3 predictedAcceleration = DragonFlightSteering.towardsWaypoint(firstTarget.subtract(d.position()), headingBefore, 0.6, false, 1).acceleration();
+            require(predictedAcceleration.x > 0.003, "Speed fixture faces its eastward route above the native dead zone");
             cfg.dragonFlightSpeedMod = 1; d.tick();
+            require(firstTarget.equals(d.flightManager.target()), "Changing speed preserves the same escort destination");
             require(d.getFlightSpeedModifier() == 1 && d.getDeltaMovement().horizontalDistance() > 1.0E-5,
                     "Same escort route resumes actual horizontal acceleration when server restores speed: pos=" + d.position()
                             + " velocity=" + d.getDeltaMovement() + " modifier=" + d.getFlightSpeedModifier()
                             + " targetBefore=" + firstTarget + " targetAfter=" + d.flightManager.target()
                             + " flying=" + d.flying() + " hovering=" + d.hovering() + " collision=" + d.horizontalCollision
                             + " owner=" + owner.position() + " ownerVelocity=" + owner.getDeltaMovement()
-                            + " directClear=" + (firstTarget != null && DragonFlightClearance.clear(d, d.position(), firstTarget)));
+                            + " directClear=" + (firstTarget != null && DragonFlightClearance.clear(d, d.position(), firstTarget))
+                            + " headingBefore=" + headingBefore + " predictedAcceleration=" + predictedAcceleration);
         } finally { DragonCombatConfig.current = old; }
         h.succeed();
     }

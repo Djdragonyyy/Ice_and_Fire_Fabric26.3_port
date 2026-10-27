@@ -1,10 +1,12 @@
 # Ice and Fire: port Fabric 26.3 in sviluppo
 
-Verificati 95 JUnit, 145 GameTest della mod (146 con baseline vanilla), 15 prove client e 42 immagini nella 0.1.45. Incubazione in lava/fuoco, movimento originale e schiusa con proprietario verificati. Il collaudo DedicatedServer montato resta nella precedente 0.1.44. Limiti in TEST-0.1.45.md.
+Verificati 95 JUnit, 147 GameTest della mod (148 con baseline vanilla), 15 prove client e 42 immagini nella 0.1.46. Richiamo originale con stufato di fuoco: camminata e interruzione verificate nel selettore nativo. Limiti in TEST-0.1.46.md; DedicatedServer44 resta prova precedente.
 
 **Checkpoint di sviluppo: la tappa 1 e il port completo restano aperti.**
 
-Versione corrente: **0.1.45-stage1-dev**. Incubazione, movimento e schiusa originali delle uova. [TEST-0.1.45.md](TEST-0.1.45.md). Tappa1 incompleta.
+Versione corrente: **0.1.46-stage1-dev**. Richiamo con stufato di fuoco e priorita IA. [TEST-0.1.46.md](TEST-0.1.46.md). Tappa1 incompleta.
+
+Versione precedente: **0.1.45-stage1-dev**. Incubazione, movimento e schiusa originali delle uova. [TEST-0.1.45.md](TEST-0.1.45.md). Tappa1 incompleta.
 
 Versione precedente: **0.1.44-stage1-dev**. Logout in sella, RootVehicle, riavvio e rientro in volo verificati; produzione invariata dalla 0.1.43. [TEST-0.1.44.md](TEST-0.1.44.md). Tappa1 incompleta.
 

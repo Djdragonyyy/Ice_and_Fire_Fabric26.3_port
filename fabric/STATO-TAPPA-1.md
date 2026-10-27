@@ -1,3 +1,40 @@
+## Checkpoint 0.1.46 - 27 ottobre 2026 - richiamo con stufato di fuoco
+
+Portato TemptGoal originale con tag tempt_dragon: solo fire_stew, velocita 1,
+raggio 10 nativo e controllo di entrambe le mani. Il drago libero a terra si
+avvicina senza consumare o entrare in riproduzione. Difesa, comandi, sonno/NoAI,
+pilota/spalla, volo, corteggiamento e cibo riservato mantengono precedenza.
+Il decollo casuale non interrompe il richiamo attivo.
+
+Full phase46-final-2.log verde in 10m52s: 95 JUnit, 147 GameTest mod + baseline
+= 148 server, 15 client, 42 PNG correnti. XML senza errori/failure. Due nuove
+prove native passate anche in focus28s: camminata tramite selettore reale e
+interruzione alla rimozione dello stufato; tag, mani e condizioni di precedenza.
+Nessuna nuova risorsa grafica/audio o prova visiva dedicata al richiamo.
+
+Primo full falliva il test preesistente del cambio velocita in volo. Isolato
+passava; riprodotto il caso controllato con yaw4: il giro ancora perpendicolare
+alla rotta produce accelerazione X circa3e-18, azzerata dal cutoff nativo0.003.
+Corretto SOLO fixture: orientamento lungo la rotta prima del cambio velocita,
+asserzioni di moto mantenute, controllo aggiunto su destinazione identica.
+Focus allineato verde22s, poi intero full ripetuto. Logica di volo invariata.
+Vedere TEST-0.1.46.md e REVIEW.md. Due PNG uova/piccolo correnti ricontrollate;
+etichette della tavola uova a contatto gia dichiarate nella45.
+
+DragonForge ancora da implementare. Ricognizione originale/API in lavoro privato
+work/phase46-preparation/DRAGONFORGE-NEXT.md: multiblocco, inventario/ricette,
+soffio, menu, persistenza e prove end-to-end. Non e una forge funzionante.
+Restano altre parita/configurazioni/interazioni/ciclo vitale, navigazione
+complessa, anteprima passeggeri e punte grigie. Tappa1 e port NON conclusi.
+Precedente45 commit693d2d32b e relativo pacchetto verificati. DedicatedServer44
+resta prova precedente, non nuova certificazione46.
+
+Ripresa27ottobre autorizzata. Stessa chat/ramo, controllo quota ogni50minuti,
+nessuna email o credito di reset. Continuare lavoro utile fino a esaurimento
+residuo, poi salvare/checkpoint/push e spegnere ordinatamente senza forzare app
+con dati non salvati. Dopo tale spegnimento pausa del controllo fino a nuova
+autorizzazione. Fine sessione non equivale a completamento del port.
+
 ## Checkpoint 0.1.45 - 27 ottobre 2026 - incubazione e schiusa
 
 Completata la verifica avviata il 26 ottobre: phase45-final.log termina BUILD

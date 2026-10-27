@@ -1,3 +1,24 @@
+## Revisione 0.1.46 - 27 ottobre 2026
+
+No findings.
+
+Diff completo e nuovi file letti in sola lettura. Tag originale limitato a
+fire_stew, TemptGoal vanilla con raggio10 e velocita1, classi test escluse dalJAR.
+Condizioni di movimento comuni coprono morte/NoAI/sonno/pilota/spalla; esclusioni
+esplicite per comandi, bersaglio difensivo, cibo riservato e corteggiamento.
+Ordine goal mantiene priorita di difesa e comandi e precede il wandering.
+Guardia nel ramo del decollo autonomo conserva la precedenza del combattimento.
+Nessuna scorciatoia che consumi oggetti, assegni proprieta o attivi amore.
+
+Due nuove prove native passate in28s, inclusa camminata del selettore reale e
+interruzione dopo rimozione oggetto. Full finale phase46-final-2.log verde10m52s:95JUnit/148server/15client/42PNG.
+Nessuna nuova prova visiva del richiamo a tutti gli stadi o su server autenticato.
+DragonForge assente e tappa1 aperta; ricognizione successiva distinta dal codice.
+
+
+Fixture velocita orientata alla meta dopo riproduzione controllata del giro perpendicolare. Asserzioni di moto mantenute e identita della rotta aggiunta. Nessuna modifica produttiva alla sterzata. Due pannelli GPU correnti uova/piccolo ricontrollati, etichette della tavola a contatto gia dichiarate.
+
+
 ## Revisione 0.1.45 - 27 ottobre 2026
 
 No findings.

@@ -76,6 +76,7 @@ public final class FireDragon extends TamableAnimal {
     private int speakingTicks;
     private int roarAnimation, roarTicks;
     boolean seekingFood;
+    private DragonTemptGoal temptGoal;
     private DragonFoodGoal foodGoal;
     private LivingEntity previousAutonomousTarget;
     private boolean rangedChargePending, autonomousCharging;
@@ -177,6 +178,7 @@ public final class FireDragon extends TamableAnimal {
                 .add(Attributes.ATTACK_DAMAGE, 1)
                 .add(Attributes.MOVEMENT_SPEED, 0.15F)
                 .add(Attributes.FOLLOW_RANGE, 128)
+                .add(Attributes.TEMPT_RANGE, 10)
                 .add(Attributes.CAMERA_DISTANCE, 4)
                 .add(Attributes.ARMOR, 1);
     }
@@ -222,6 +224,8 @@ public final class FireDragon extends TamableAnimal {
         goalSelector.addGoal(5, new DragonMeleeGoal(this));
         foodGoal = new DragonFoodGoal(this);
         goalSelector.addGoal(6, foodGoal);
+        temptGoal = new DragonTemptGoal(this);
+        goalSelector.addGoal(6, temptGoal);
         goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1) {
             { setInterval(20); }
             @Override public boolean canUse() { return canMoveOnGround() && command() != 2 && (level().isBrightOutside() || !hasHome()) && !flightManager.wantsRoost() && super.canUse(); }
@@ -288,6 +292,7 @@ public final class FireDragon extends TamableAnimal {
         return canMoveAutonomously() && !flying();
     }
     boolean hasPriorityFood() { return foodGoal != null && foodGoal.canUse(); }
+    boolean isTempted() { return temptGoal != null && temptGoal.isRunning(); }
     public boolean canMoveAutonomously() {
         return autonomousControlsAllowed() && !dragonSleeping() && attackAnimation() != DragonCombatState.SHAKE;
     }
