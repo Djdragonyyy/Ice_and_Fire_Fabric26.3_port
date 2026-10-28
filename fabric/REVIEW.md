@@ -1,3 +1,29 @@
+## Revisione 0.1.57 - 28 ottobre 2026
+
+Nessun difetto residuo rilevato nel percorso ordinario portato. Confrontati
+EntityDragonBase.breakBlocks/breakBlock/calculateDownY e reset del contatore
+in IafDragonLogic. Native26 isSolid restituisce legacySolid, adattando il
+vecchio blocksMotion. Nessun caricamento forzato di chunk. Blacklist copre
+i blocchi IDragonProof gia portati; non aggiunta immunita generica dei BE.
+Le vecchie callback Forge GenericGriefEvent non sono un'API Fabric; i tag
+e i controlli nativi costituiscono il filtro disponibile nel port.
+
+La revisione ha corretto il caso cooldown0 con un timer gia avviato; prova
+dedicata alla transizione5->0. Veri drop nativi e limiti durezza/resistenza,
+gamerule e pilota montato verificati. La prova di inseguimento campiona
+il passaggio con bersaglio attivo, senza confonderlo con lo stato della
+presa della preda successiva. Traccia registra percorso/target/presa/volo.
+Primo focus runtime falliva l'asserzione sul solo stato finale; i log sono
+conservati, non dichiarati verdi. Errore API e parentesi nella traccia
+corretti prima del focus8 verde47s,100JUnit e5GT.
+
+Full pulito 13m 15s,100JUnit/183server/19client/56PNG. Confronto JAR:
+123classi byteidentiche56, FireDragon modificata e BodyBreaking aggiunta;
+FireDragon$6 switchmap differisce solo nella riga debug1287->1294, codice
+e struttura javap identici. Nessun test/probe.
+Resta da portare il pianificatore avanzato e lo scavo forzato; non sono
+certificati labirinti o riavvi dedicati nuovi. Tappa1/port restano aperti.
+
 ## Revisione 0.1.56 - 28 ottobre 2026
 
 Nessun difetto residuo rilevato nella modifica. Confrontato il requisito

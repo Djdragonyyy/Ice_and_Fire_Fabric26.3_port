@@ -1,3 +1,36 @@
+## Checkpoint 0.1.57 - 28 ottobre 2026 - rottura attorno al corpo
+
+Portato il percorso ordinario EntityDragonBase.breakBlocks(false) nel
+customServerAiStep nativo. Cooldown originale, zero immediato anche con timer
+pendente, stadio3+, movimento consentito o pilota; rispettati sonno/posa,
+comandi senza pilota, NoAI, mobGriefing e opzione draghi addomesticati.
+Bounds originali XZ+1, minY+1 o-1 seguendo un nodo in discesa, maxY+2 o
+maxY durante volo con bersaglio. Solo chunk caricati; solidita legacy,
+forma, fluidi, durezza2(stadio3/grief1) o5, resistenza<1200 e blacklist.
+Distruzione nativa, rallentamentoXZ0.6 per blocco, dropchance originale.
+Tag no-drop originale: terra/pietra/cobblestone/ambiente del drago/erba,
+non foglie. Ambiente comprende i sei blocchi carbonizzati gia portati.
+
+Focus8 PASS47s:100JUnit e5nuoveGameTest(+baseline). Drop reale plank1,
+no-drop terra/pietra, floor/fluid/chest/resistenza1200 preservati, stadio4
+grief1 contro grief0, stage2 e opzioni negative, timer5 e zero, vero pilota
+montato con command1 e gamerule, AI nativa supera la sporgenza di terra
+con tetto bedrock e pavimento intatti. Registra il bersaglio durante il
+passaggio: una successiva presa della preda puo azzerarlo legittimamente.
+Nessun seed o movimento imposto alla prova. Tracce conservate nei log.
+
+Full pulito phase57-final.log PASS13m 15s:100JUnit,183server
+(182mod+baseline),19client e56PNG correnti, XML senza errori. JAR56->57:
+123 classi con byte identici, FireDragon modificata e nuova DragonBodyBreaking. La
+classe switchmap FireDragon$6 cambia solo LineNumberTable1287->1294,
+bytecode/struttura javap identici. Nessun
+harness privato o test. Geometria/rendering/rete non modificati.
+
+Non e il nuovo pianificatore esplicitamente passabile ne lo scavo forzato
+quando bloccato. Navigazione complessa, configurazioni/ciclo vitale,
+GUI passeggeri e punte grigie ancora aperti. Tappa1 e port incompleti.
+Riavvio Forge52 prova distinta; nessun nuovo riavvio certificato in57.
+
 ## Checkpoint 0.1.56 - 28 ottobre 2026 - movimento durante il risveglio
 
 Ripristinata la condizione originale EntityDragonBase.canMove: il drago

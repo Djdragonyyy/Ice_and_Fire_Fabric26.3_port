@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:dirt",
+    {
+      "id": "#c:stones",
+      "required": false
+    },
+    {
+      "id": "#c:cobblestones",
+      "required": false
+    },
+    "#iceandfire:dragon_environment_blocks",
+    "minecraft:grass_block"
+  ]
+}

@@ -1,10 +1,12 @@
 # Ice and Fire: port Fabric 26.3 in sviluppo
 
-Verificati 100 JUnit, 177 GameTest della mod (178 con baseline vanilla), 19 prove client e 56 immagini nella 0.1.56. Il movimento autonomo attende il recupero completo della posa di sonno, mentre le minacce svegliano subito il drago. Condizioni e limiti in TEST-0.1.56.md.
+Verificati 100 JUnit, 182 GameTest della mod (183 con baseline vanilla), 19 prove client e 56 immagini nella 0.1.57. Il drago rompe gli ostacoli consentiti attorno al corpo secondo stadio, durezza e opzioni di griefing. Condizioni e limiti in TEST-0.1.57.md.
 
 **Checkpoint di sviluppo: la tappa 1 e il port completo restano aperti.**
 
-Versione corrente: **0.1.56-stage1-dev**. Movimento durante il risveglio. [TEST-0.1.56.md](TEST-0.1.56.md). Tappa1 incompleta.
+Versione corrente: **0.1.57-stage1-dev**. Rottura ordinaria attorno al corpo. [TEST-0.1.57.md](TEST-0.1.57.md). Tappa1 incompleta.
+
+Versione precedente: **0.1.56-stage1-dev**. Movimento durante il risveglio. [TEST-0.1.56.md](TEST-0.1.56.md). Tappa1 incompleta.
 
 Versione precedente: **0.1.55-stage1-dev**. Pile di tesori originali e interazioni. [TEST-0.1.55.md](TEST-0.1.55.md). Tappa1 incompleta.
 

@@ -411,6 +411,13 @@ public final class FireDragon extends TamableAnimal {
         getAttribute(Attributes.CAMERA_DISTANCE).setBaseValue(DragonRiderLayout.cameraDistance(appliedAge));
     }
 
+    private final DragonBodyBreaking bodyBreaking = new DragonBodyBreaking();
+
+    @Override protected void customServerAiStep(ServerLevel level) {
+        super.customServerAiStep(level);
+        bodyBreaking.tick(this, level);
+    }
+
     @Override public void tick() {
         if (corpse()) {
             prevModelDeadProgress = modelDeadProgress;
