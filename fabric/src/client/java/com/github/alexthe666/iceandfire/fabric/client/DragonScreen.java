@@ -25,12 +25,14 @@ final class DragonScreen extends AbstractContainerScreen<DragonMenu> {
                         leftPos + 150, topPos + 70, 23,
                         0.0625F, mouseX, mouseY, dragon);
             } finally { graphics.disableScissor(); }
-            graphics.centeredText(font, dragon.getDisplayName(), leftPos + 88, topPos + 75, 0xffffffff);
-            graphics.centeredText(font, Component.translatable("gui.iceandfire.health", (int) dragon.getHealth(), (int) dragon.getMaxHealth()), leftPos + 88, topPos + 84, 0xffffffff);
-            graphics.centeredText(font, Component.translatable(dragon.male() ? "gui.iceandfire.male" : "gui.iceandfire.female"), leftPos + 88, topPos + 93, 0xffffffff);
+            var name = dragon.getCustomName() == null ? Component.translatable("dragon.unnamed")
+                    : Component.translatable("gui.iceandfire.name", dragon.getCustomName());
+            graphics.centeredText(font, name, leftPos + 88, topPos + 75, 0xffffffff);
+            graphics.centeredText(font, Component.translatable("gui.iceandfire.health", (int) Math.min(dragon.getHealth(), dragon.getMaxHealth()), (int) dragon.getMaxHealth()), leftPos + 88, topPos + 84, 0xffffffff);
+            graphics.centeredText(font, Component.translatable("gui.iceandfire.gender", Component.translatable(dragon.male() ? "gui.iceandfire.male" : "gui.iceandfire.female")), leftPos + 88, topPos + 93, 0xffffffff);
             graphics.centeredText(font, Component.translatable("gui.iceandfire.hunger", dragon.hunger()), leftPos + 88, topPos + 102, 0xffffffff);
             graphics.centeredText(font, Component.translatable("gui.iceandfire.stage", dragon.stage(), dragon.ageDays()), leftPos + 88, topPos + 111, 0xffffffff);
-            graphics.centeredText(font, dragon.getOwner() != null ? dragon.getOwner().getDisplayName() : Component.translatable("gui.iceandfire.untamed"), leftPos + 88, topPos + 120, 0xffffffff);
+            graphics.centeredText(font, dragon.getOwner() != null ? Component.translatable("gui.iceandfire.owner", dragon.getOwner().getName()) : Component.translatable("gui.iceandfire.untamed"), leftPos + 88, topPos + 120, 0xffffffff);
         }
         super.extractContents(graphics, mouseX, mouseY, partialTick);
     }

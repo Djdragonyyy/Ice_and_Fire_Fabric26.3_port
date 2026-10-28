@@ -68,10 +68,16 @@ public class DragonInventoryClientTest implements FabricClientGameTest {
             context.waitForScreen(DragonScreen.class);
             context.waitFor(client -> client.gui.overlay() == null && lastDragon == id && lastPassenger == client.player.getId());
             context.runOnClient(client -> snapshot(false));
-            context.takeScreenshot("dragon-inventory-owner-pilot-0.1.58");
+            context.takeScreenshot("dragon-inventory-owner-pilot-0.1.59");
             world.getServer().runOnServer(server -> { require(owner.getVehicle() == owner.level().getEntity(id), "Preview preserves actual riding"); owner.stopRiding(); });
             context.waitFor(client -> client.player.getVehicle() == null && lastDragon == id && lastPassenger == -1 && last.inventoryPassengers.isEmpty());
-            context.takeScreenshot("dragon-inventory-after-dismount-0.1.58");
+            context.takeScreenshot("dragon-inventory-after-dismount-0.1.59");
+            world.getServer().runOnServer(server -> owner.level().getEntity(id).setCustomName(null));
+            context.waitFor(client -> client.level.getEntity(id).getCustomName() == null);
+            context.waitTicks(3);
+            context.takeScreenshot("dragon-inventory-unnamed-0.1.59");
+            world.getServer().runOnServer(server -> owner.level().getEntity(id).setCustomName(Component.literal("Ember")));
+            context.waitFor(client -> client.level.getEntity(id).getCustomName() != null);
             world.getServer().runOnServer(server -> { var d = (FireDragon) owner.level().getEntity(id); while (d.ageDays() < 75) d.growOneDay(); d.refreshDimensions(); });
             java.util.List<net.minecraft.world.entity.EntityType<? extends Mob>> types = java.util.List.of(EntityTypes.ZOMBIE, EntityTypes.COW, EntityTypes.HORSE);
             String[] labels = {"upright", "quadruped", "horse"};
@@ -93,13 +99,13 @@ public class DragonInventoryClientTest implements FabricClientGameTest {
                     var renderer = (FireDragonRenderer) (Object) client.getEntityRenderDispatcher().getRenderer(d);
                     require(renderer.createRenderState(d, 1).inventoryPassengers.isEmpty(), "World prey rendering stays separate");
                 });
-                context.takeScreenshot("dragon-inventory-prey-" + labels[index] + "-0.1.58");
+                context.takeScreenshot("dragon-inventory-prey-" + labels[index] + "-0.1.59");
                 if (index == types.size() - 1) {
                     var dragon = context.computeOnClient(client -> (FireDragon) client.level.getEntity(id));
                     context.setScreen(() -> new AttachmentPreview(dragon));
                     context.waitFor(client -> client.gui.screen() instanceof AttachmentPreview && client.gui.overlay() == null && !client.isPaused());
                     context.waitTicks(3);
-                    context.takeScreenshot("dragon-inventory-prey-horse-expanded-proof-0.1.58");
+                    context.takeScreenshot("dragon-inventory-prey-horse-expanded-proof-0.1.59");
                 }
                 world.getServer().runOnServer(server -> { var d = (FireDragon) owner.level().getEntity(id); d.setNoAi(true); d.setCommand(1); });
                 context.waitFor(client -> ((FireDragon) client.level.getEntity(id)).grippedPrey() == null && lastPassenger == -1);

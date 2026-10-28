@@ -1,3 +1,34 @@
+## Checkpoint 0.1.59 - 28 ottobre 2026 - etichette dell'inventario e riferimento originale
+
+Ripristinate le etichette Nome/Sesso/Proprietario del GuiDragon originale,
+con traduzioni inglesi e italiane; il drago senza nome mostra la dicitura
+gia localizzata, invece del nome generico del tipo di entita. La salute
+mostrata e limitata al massimo corrente. Nessun cambiamento a geometria,
+UV, texture, AI, crescita, relazioni di veicolo o messaggi di rete.
+Prova reale del menu estesa con rimozione e ripristino del nome sul server,
+propagazione al client e nuova PNG del ritratto senza nome. Immagini finali
+con nome/proprietario e senza nome aperte e riviste.
+
+Full pulito phase59-final.log PASS13m 51s:100JUnit/183server
+(182mod+baseline)/20client/63PNG, XML senza errori. Client prima del server.
+Confronto JAR58->59:128classi identiche, solo DragonScreen differente;
+nessuna classe aggiunta/rimossa, tutte le classi comuni identiche. Nessun
+harness privato, observer o bridge di test nel JAR.
+
+Avviato realmente anche il ramo originale1.20.1/NeoForge47.1.79/Citadel5075402
+su Java17 separato: trenta coppie di pose rosse, cinque stadi, femmina/maschio
+fermi e quattro istanti del feeding. Corpo/ali coincidono nei campioni;
+le punte grigie esistono nell'originale. Sono prove visive isolate, non nuovi
+test di feeding tramite giocatore. Conservato il recupero intenzionale
+della mandibola entro20tick, distinto dal reset brusco del ramo originale.
+Dettagli e limiti in VISUAL-REFERENCE-0.1.58.md. Resta aperta la differenza
+della sovrapposizione maschile sul neonato: il filtro originale isSkeletal
+la esclude a eta zero anche se vivo. Non e stata modificata in questa fase.
+
+Tappa1/port incompleti: navigazione avanzata/scavo forzato, configurazioni,
+ciclo vitale e altri dettagli visivi restano da completare. Nessuna nuova
+prova di riavvio dedicato o client autenticati.
+
 ## Checkpoint 0.1.58 - 28 ottobre 2026 - passeggeri nell'anteprima GUI
 
 Pilota e prede sono ora presenti nel ritratto dell'inventario, come nel

@@ -1,3 +1,25 @@
+## Revisione 0.1.59 - 28 ottobre 2026
+
+Nessun difetto residuo rilevato nelle etichette modificate. Componenti
+localizzati con argomenti per conservare il nome personalizzato e il nome
+del proprietario; ramo senza nome e testo di sesso espliciti. Non cambia
+la posizione dei sei testi o la logica del ritratto introdotta nella58.
+Il menu reale mostra Name: Ember, Gender: Female, Owner: Player e poi
+Unnamed dopo la sincronizzazione del nome nullo. Nuova PNG rivista.
+
+Full pulito 13m 51s:100JUnit/183server/20client/63PNG. Delta binario
+limitato a DragonScreen; classi comuni identiche, nessun test nel JAR.
+Le traduzioni sono presenti in entrambe le lingue portate. Il clamp della
+salute segue il controllo minimo col massimo del ramo originale.
+
+La ricerca visiva esegue il renderer originale reale e quello Fabric,
+con attori non registrati nel mondo: trenta coppie di pose, non nuove
+prove di gameplay. Corretti soltanto i fixture NoAI/orientamento della
+testa/origine del viewport. Corpo e ali corrispondono nei campioni, ma non
+si dichiara identita pixel o parita di tutte le pose. Rilevato il caso
+maschio a eta zero escluso dall'overlay originale, ancora aperto. Il test
+di riferimento privato e escluso dalla build pulita e dal JAR distribuito.
+
 ## Revisione 0.1.58 - 28 ottobre 2026
 
 Nessun difetto residuo rilevato nella modifica. La Mixin usa il descrittore
