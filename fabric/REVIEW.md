@@ -1,3 +1,29 @@
+## Revisione 0.1.56 - 28 ottobre 2026
+
+Nessun difetto residuo rilevato nella modifica. Confrontato il requisito
+sleepProgress == 0 di EntityDragonBase.canMove originale con il port.
+La condizione e applicata solo a canMoveAutonomously: bersagli difensivi
+ancora acquisiti durante il recupero della posa. DragonFlightManager usa
+gia questo metodo per decollo/atterraggio autonomi; nessun nuovo gate sul
+pilota, su canAttack o su setTarget. Geometria e rendering invariati.
+
+La prova notturna usa un drago con AI reale fino al sonno completo, poi un
+bersaglio reale. Verifica posa parziale, assenza di scivolamento/decollo e
+rilascio del movimento al completamento. Il caso flag fresco di giorno
+verifica la diversa sequenza nativa tickSleep prima dell'avanzamento posa.
+Il primo focus non e verde: aspettativa errata di quest'ultimo test,
+corretta senza cambiare ulteriormente la produzione. Focus2 verde28s.
+
+Primo full fallito: morso mancato dopo contraccolpo, secondo attacco appena
+iniziato prima della scadenza50tick. Solo la prova attende ora120tick,
+mantenendo danno reale, bersaglio e risveglio. Tutti178server passano in9m35s
+nel comando successivo, non solo il focus richiesto (filtro non inoltrato).
+Build/client finale 3m 16s,19client/56PNG. JUnit100 verdi nel clean
+iniziale e invariati; phase56-verified.log distingue le due prove finali. JAR:
+124classi identiche alla55, solo FireDragon differente, nessun harness.
+La correzione non certifica la navigazione in grotte o labirinti, ne chiude
+la tappa1. Il riavvio dedicato della Forge resta la prova52.
+
 ## Revisione 0.1.55 - 27 ottobre 2026
 
 No findings residui.

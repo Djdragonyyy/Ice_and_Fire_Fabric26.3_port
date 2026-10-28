@@ -1,3 +1,36 @@
+## Checkpoint 0.1.56 - 28 ottobre 2026 - movimento durante il risveglio
+
+Ripristinata la condizione originale EntityDragonBase.canMove: il drago
+attende sleepProgress == 0 prima di camminare o decollare autonomamente.
+La minaccia continua a svegliarlo e a essere acquisita immediatamente;
+il recupero della posa impedisce lo scivolamento del corpo ancora ripiegato.
+Nessun cambiamento a geometria, texture, controllo del pilota o rete.
+
+Prova nativa notturna con AI attiva: a tick45 sonno reale e posa20; bersaglio
+Zombie reale acquisito subito; a tick65 posa parziale, nessun decollo e
+spostamento orizzontale inferiore a0.05; a tick90 posa0 e movimento abilitato.
+Un semplice flag impostato di giorno viene invece rimosso prima che la posa
+avanzi: mantiene correttamente il movimento immediato. Il primo focus
+falliva questa vecchia fixture modificata erroneamente; corretta solo
+l'aspettativa del test. Focus2 verde28s,100JUnit e8GameTest del sonno.
+
+Prima regressione completa fallita: ritorsione controllata a50tick dopo un
+primo morso mancato per contraccolpo. La traccia mostra il secondo attacco
+iniziato a41tick, non ancora al punto di danno. Solo il test attende ora120
+tick entro il limite130, mantenendo danno reale e bersaglio; produzione invariata.
+Regressione server finale phase56-focused-3.log PASS9m35s: il nome focused
+e storico, testClass non inoltrato, eseguiti tutti178server(177mod+baseline).
+Build/client phase56-client-final.log PASS3m 16s,19client e56PNG.
+100JUnit verdi nel clean iniziale, sorgenti JUnit invariati; log combinato
+phase56-verified.log distingue le prove, senza dichiarare un solo full verde.
+Confronto JAR55->56:
+124classi identiche, solo FireDragon modificata, nessuna aggiunta/rimozione
+o classe di test. Revisione senza difetti residui nella modifica.
+
+Tappa1 e port ancora incompleti. Navigazione complessa/rottura del corpo,
+audit delle configurazioni e del ciclo vitale, GUI passeggeri e punte grigie
+restano aperti. Prova dedicata Forge52 distinta, non rieseguita in56.
+
 ## Checkpoint 0.1.55 - 27 ottobre 2026 - pile di tesori originali
 
 Tre MetalPileBlock oro/argento/rame,8livelli con altezza2L/16 e collisione

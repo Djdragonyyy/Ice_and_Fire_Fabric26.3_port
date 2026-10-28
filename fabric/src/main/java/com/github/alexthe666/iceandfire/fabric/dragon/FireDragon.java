@@ -297,7 +297,7 @@ public final class FireDragon extends TamableAnimal {
     boolean hasPriorityFood() { return foodGoal != null && foodGoal.canUse(); }
     boolean isTempted() { return temptGoal != null && temptGoal.isRunning(); }
     public boolean canMoveAutonomously() {
-        return autonomousControlsAllowed() && !dragonSleeping() && !fuelingForge() && attackAnimation() != DragonCombatState.SHAKE;
+        return autonomousControlsAllowed() && !dragonSleeping() && sleepProgress == 0 && !fuelingForge() && attackAnimation() != DragonCombatState.SHAKE;
     }
     private boolean forgeActorAvailable() {
         return isAlive() && !corpse() && isTame() && stage() >= 2 && !isNoAi() && !dragonSleeping() && !isInWater()

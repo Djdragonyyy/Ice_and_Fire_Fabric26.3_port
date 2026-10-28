@@ -55,11 +55,12 @@ public class DragonSleepGameTests {
         h.getLevel().addFreshEntity(attacker);
         h.getLevel().addFreshEntity(d);        var trace = new StringBuilder();
         h.onEachTick(() -> {
-            if (!attacker.isRemoved() && d.tickCount <= 50) trace.append("\n").append(d.tickCount)
+            if (!attacker.isRemoved() && d.tickCount <= 120) trace.append("\n").append(d.tickCount)
                     .append(" atk=").append(d.attackAnimation()).append('/').append(d.attackAnimationTick())
                     .append(" dst=").append(d.distanceTo(attacker)).append(" reach=").append(d.withinBiteReach(attacker))
                     .append(" los=").append(d.hasLineOfSight(attacker)).append(" can=").append(d.canAttack(attacker))
                     .append(" flying=").append(d.flying()).append(" water=").append(d.isInWater())
+                    .append(" sleepPose=").append(d.sleepProgress)
                     .append(" hp=").append(attacker.getHealth());
         });
         h.runAfterDelay(5, () -> {
@@ -67,8 +68,9 @@ public class DragonSleepGameTests {
             require(d.hurtServer(h.getLevel(), d.damageSources().mobAttack(attacker), 1), "Actual attack on sleeping dragon");
             require(!d.dragonSleeping(), "Damage wakes immediately");
         });
-        h.runAfterDelay(50, () -> {
-            require(!d.dragonSleeping() && d.getTarget() == attacker && attacker.getHealth() < 200, "Awakened dragon actually retaliates: sleeping=" + d.dragonSleeping() + ", target=" + (d.getTarget() == attacker) + ", health=" + attacker.getHealth() + ", distance=" + d.distanceTo(attacker) + ", removed=" + attacker.isRemoved() + ", damage=" + d.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE) + ", weakness=" + d.hasEffect(net.minecraft.world.effect.MobEffects.WEAKNESS) + trace);
+        // A first native attack can miss after knockback; include subsequent animation cycles.
+        h.runAfterDelay(120, () -> {
+            h.assertTrue(!d.dragonSleeping() && d.getTarget() == attacker && attacker.getHealth() < 200, "Awakened dragon actually retaliates: sleeping=" + d.dragonSleeping() + ", target=" + (d.getTarget() == attacker) + ", health=" + attacker.getHealth() + ", distance=" + d.distanceTo(attacker) + ", removed=" + attacker.isRemoved() + ", damage=" + d.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE) + ", weakness=" + d.hasEffect(net.minecraft.world.effect.MobEffects.WEAKNESS) + trace);
             h.succeed();
         });
     }
@@ -99,7 +101,7 @@ public class DragonSleepGameTests {
         d.setDragonSleeping(true);
         require(!d.canAttack(owner), "Sleeping dragon cannot target owner");
         d.tick();
-        require(!d.dragonSleeping() && d.canMoveAutonomously(), "Daylight wakes tamed dragon");
+        h.assertTrue(!d.dragonSleeping() && d.sleepProgress == 0 && d.canMoveAutonomously(), "Daylight clears a fresh sleep flag before any pose advances");
         h.succeed();
     }
 
@@ -160,4 +162,28 @@ public class DragonSleepGameTests {
         require(!d.dragonSleeping(), "Clearing target preserves original twenty-tick sleep delay");
         h.succeed();
     }
+    @GameTest(environment = "iceandfire:night", structure = "iceandfire:flight_arena", maxTicks = 120, padding = 100)
+    public void actualFullSleepPoseMustRecoverBeforeGroundOrAutonomousFlightMovement(GameTestHelper h) {
+        var d = dragon(h); d.setTame(true, false); d.setHunger(100); h.getLevel().addFreshEntity(d);
+        Vec3[] start = {null};
+        h.runAtTickTime(45, () -> {
+            h.assertTrue(d.dragonSleeping() && d.sleepProgress == 20 && !d.isNoAi(), "Real AI reaches full original sleep pose");
+            var enemy = EntityTypes.ZOMBIE.create(h.getLevel(), EntitySpawnReason.TRIGGERED);
+            enemy.setNoAi(true); enemy.setPersistenceRequired(); enemy.setPos(d.position().add(8, 0, 0));
+            enemy.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH).setBaseValue(500); enemy.setHealth(500);
+            h.getLevel().addFreshEntity(enemy);
+            h.assertTrue(d.canAttack(enemy), "Pose recovery cannot reject defensive target acquisition");
+            d.setTarget(enemy); start[0] = d.position();
+            h.assertTrue(!d.dragonSleeping() && d.getTarget() == enemy && !d.canMoveAutonomously(), "Threat wakes immediately, but full sleep pose still gates movement");
+        });
+        h.runAtTickTime(65, () -> {
+            h.assertTrue(d.sleepProgress > 0 && d.sleepProgress < 20 && !d.canMoveAutonomously() && !d.flying(), "Actual partial wake pose blocks movement and autonomous takeoff");
+            h.assertTrue(d.position().subtract(start[0]).horizontalDistance() < 0.05, "Real AI cannot slide away while the sleep pose is recovering");
+        });
+        h.runAtTickTime(90, () -> {
+            h.assertTrue(d.sleepProgress == 0 && !d.dragonSleeping() && d.canMoveAutonomously(), "Original pose completion releases native movement again");
+            h.succeed();
+        });
+    }
+
 }
