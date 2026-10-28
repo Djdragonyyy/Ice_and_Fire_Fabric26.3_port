@@ -44,6 +44,8 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
         boolean firstPersonPilot;
         int armor;
         float bannerDragonScale;
+        float inventoryDragonScale;
+        java.util.List<DragonInventoryPassengers.Passenger> inventoryPassengers = java.util.List.of();
         final net.minecraft.client.renderer.item.ItemStackRenderState banner = new net.minecraft.client.renderer.item.ItemStackRenderState();
     }
 
@@ -58,6 +60,7 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
 
     @Override public void extractRenderState(FireDragon dragon, State state, float partialTick) {
         super.extractRenderState(dragon, state, partialTick);
+        state.inventoryPassengers = java.util.List.of();
         state.variant = dragon.variant();
         state.armor = dragon.armorParts();
         Minecraft.getInstance().getItemModelResolver().updateForLiving(state.banner, dragon.dragonBanner(),
@@ -113,6 +116,12 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
 
     static float viewPitch(float flightPitch, boolean firstPersonRider) {
         return firstPersonRider ? 0 : flightPitch;
+    }
+
+    @Override public void submit(State state, PoseStack stack, net.minecraft.client.renderer.SubmitNodeCollector collector,
+                                 net.minecraft.client.renderer.state.level.CameraRenderState camera) {
+        super.submit(state, stack, collector, camera);
+        DragonInventoryPassengers.submit(state, (FireDragonPoseModel) getModel(), stack, collector, camera);
     }
 
     @Override public Identifier getTextureLocation(State state) {

@@ -2,6 +2,14 @@
   "required": true,
   "package": "com.github.alexthe666.iceandfire.fabric.client.mixin",
   "compatibilityLevel": "JAVA_25",
-  "client": ["DragonRiderRenderMixin", "DragonPreyStateMixin", "DragonPreyRotationMixin", "DragonCameraZoomMixin"],
-  "injectors": {"defaultRequire": 1}
+  "client": [
+    "DragonRiderRenderMixin",
+    "DragonPreyStateMixin",
+    "DragonPreyRotationMixin",
+    "DragonCameraZoomMixin",
+    "DragonInventoryPreviewMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }

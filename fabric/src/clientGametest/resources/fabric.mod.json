@@ -23,11 +23,15 @@
       "com.github.alexthe666.iceandfire.fabric.client.DragonForgeClientTest",
       "com.github.alexthe666.iceandfire.fabric.client.DragonCameraClientTest",
       "com.github.alexthe666.iceandfire.fabric.client.DragonCameraZoomClientTest",
-      "com.github.alexthe666.iceandfire.fabric.client.MetalPileClientTest"
+      "com.github.alexthe666.iceandfire.fabric.client.MetalPileClientTest",
+      "com.github.alexthe666.iceandfire.fabric.client.DragonInventoryClientTest"
     ]
   },
   "depends": {
     "iceandfire": "*",
     "fabric-client-gametest-api-v1": "*"
-  }
+  },
+  "mixins": [
+    "iceandfire-inventory-preview-test.mixins.json"
+  ]
 }

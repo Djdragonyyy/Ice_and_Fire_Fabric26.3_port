@@ -9,7 +9,10 @@ final class DragonPreyAttachment {
     private DragonPreyAttachment() {}
     static Matrix4f transform(FireDragonPoseModel model, FireDragonRenderer.State state,
                               float width, float height, float preyYaw, boolean upright, boolean horse) {
-        float scale = state.scale;
+        return transform(model, state, width, height, preyYaw, upright, horse, state.scale);
+    }
+    static Matrix4f transform(FireDragonPoseModel model, FireDragonRenderer.State state,
+                              float width, float height, float preyYaw, boolean upright, boolean horse, float scale) {
         PoseStack stack = new PoseStack();
         stack.scale(scale, scale, scale);
         rotate(stack, Axis.YP, 180 - state.bodyRot);

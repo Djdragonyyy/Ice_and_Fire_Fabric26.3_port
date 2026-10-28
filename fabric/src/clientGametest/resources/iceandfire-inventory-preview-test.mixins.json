@@ -1,0 +1,7 @@
+{
+  "required": true,
+  "package": "com.github.alexthe666.iceandfire.fabric.client.testmixin",
+  "compatibilityLevel": "JAVA_25",
+  "client": ["InventorySnapshotTestMixin"],
+  "injectors": {"defaultRequire": 1}
+}

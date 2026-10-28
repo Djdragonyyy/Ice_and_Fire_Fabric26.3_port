@@ -1,3 +1,31 @@
+## Revisione 0.1.58 - 28 ottobre 2026
+
+Nessun difetto residuo rilevato nella modifica. La Mixin usa il descrittore
+completo del metodo statico privato InventoryScreen.extractRenderState:
+il primo avvio falliva per overload ambiguo, corretto prima del focus verde.
+Il JAR Minecraft conferma che createRenderState alloca una nuova istanza.
+Lo snapshot GUI e quindi indipendente da quelli estratti per il mondo;
+la lista passeggeri viene azzerata in ogni estrazione normale del drago.
+
+La submit del drago condivide il collector 3D e la profondita con pilota e
+prede. Normalizzazione unica delle scale, ancore esistenti, rimozione di
+ombre/nomi/outline/offset del mondo. Le trasformazioni delle prede accettano
+la scala reale esplicita senza modificare temporaneamente lo stato padre;
+la chiamata usata dal mondo conserva gli stessi argomenti e risultati.
+Il ramo prima persona resta nel mondo, escluso nel ritratto completo.
+
+Prova nella GUI vera con observer di test: invarianti di posizione/rotazioni/
+BB/veicolo/eta/fame durante l'estrazione, proprietario reale montato e
+smontato, prese native e rilascio di tre modelli. La vista ingrandita e solo
+una fixture: il suo Screen metteva in pausa il server nel focus3 e bloccava
+il rilascio; corretto soltanto il test con isPauseScreenfalse. Focus4 verde
+36s, sei immagini riviste. Nessuna API produttiva allargata per i test.
+
+Full pulito 13m 2s:100JUnit/183server/20client/62PNG. Tutte le classi
+comuni identiche57; delta solo client, record PreyRenderPose codice javap
+identico. Nessun test/observer nel JAR. Nessuna nuova certificazione di
+riavvio o client autenticati; tappa1 e port restano aperti.
+
 ## Revisione 0.1.57 - 28 ottobre 2026
 
 Nessun difetto residuo rilevato nel percorso ordinario portato. Confrontati

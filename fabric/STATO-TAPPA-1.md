@@ -1,3 +1,33 @@
+## Checkpoint 0.1.58 - 28 ottobre 2026 - passeggeri nell'anteprima GUI
+
+Pilota e prede sono ora presenti nel ritratto dell'inventario, come nel
+ramo originale LayerDragonRider. L'estrazione nativa crea snapshot nuovi:
+nessuna modifica a posizione, rotazioni, bounding box o veicoli reali.
+Si usano le ancore visive del collo e della bocca gia presenti nel port,
+normalizzando una sola volta la scala del passeggero rispetto al drago.
+La GUI mostra il drago completo anche con camera in prima persona;
+il rendering del mondo mantiene la propria logica e non aggiunge copie.
+
+Prova client aggiunta: vero proprietario montato, menu nativo, smontaggio,
+prese native di zombie/mucca/cavallo, tre varianti di modello e rilascio.
+Observer di test sulle estrazioni reali verifica invarianti delle entita,
+snapshot GUI e mondo separati, scale e assenza di vecchi passeggeri.
+Sei nuove PNG, inclusa vista ingrandita di test del cavallo alla bocca.
+Focus4 PASS36s:100JUnit e nuova prova client, immagini aperte e riviste.
+
+Full pulito phase58-final.log PASS13m 2s:100JUnit,20client,62PNG,
+183server(182mod+baseline), XML senza errori. Verifiche client eseguite
+prima del server. Nessuna nuova prova di riavvio dedicato o autenticazione.
+JAR57->58:122classi identiche,4differenti/3nuove tutte client; il record
+PreyRenderPose ha codice/struttura javap identici, differiscono metadati.
+Tutte le classi comuni identiche; nessun observer o bridge di test nel JAR.
+
+Geometria, UV, texture, rete e comportamento server invariati. Tappa1 e
+port ancora incompleti: navigazione avanzata/scavo forzato, audit delle
+configurazioni e del ciclo vitale e confronto equivalente delle punte grigie
+restano aperti. Java17 originale preparato privatamente, non e una prova
+del renderer Forge e non dimostra risolto il difetto delle punte grigie.
+
 ## Checkpoint 0.1.57 - 28 ottobre 2026 - rottura attorno al corpo
 
 Portato il percorso ordinario EntityDragonBase.breakBlocks(false) nel
@@ -1094,7 +1124,7 @@ Multipart completato nella0.1.41 e esplosioni opzionali native nella0.1.42; caso
 - Comportamento completo in acqua/lava e ulteriori casi complessi di navigazione.
   La0.1.30 include corpo completo e deviazioni locali; labirinti/grotte e
   assetti stretti restano da collaudare, senza dichiarare un pathfinder universale.
-- Passeggeri nell'anteprima GUI; ulteriori dettagli visivi maschio/femmina,
+- Passeggeri pilota/prede nell'anteprima GUI completati nella0.1.58; ulteriori dettagli visivi maschio/femmina,
   animazioni secondarie/attacchi, ulteriori suoni e particelle ancora mancanti.
 - Configurazioni originali non ancora esposte e ulteriori dettagli del combattimento. DragonForge di fuoco: manuale47, automatismo/comparatore48 e costruzione/scaglie49 implementati; riavvio reale durante produzione verificato nella0.1.52, con limiti in TEST-0.1.52.md.
 - Difetto delle punte grigie ancora aperto: non è stato risolto né modificato
@@ -1105,6 +1135,6 @@ Multipart completato nella0.1.41 e esplosioni opzionali native nella0.1.42; caso
 Restano fuori da questa consegna draghi di ghiaccio/fulmine, altre creature,
 progressione completa, ricette, strutture e generazione naturale: appartengono
 alle tappe successive. Non iniziarle prima del completamento e del riscontro
-sulla tappa 1. La 0.1.13 è confermata; collaudare le novità successive, ora fino alla0.1.57. L'utente ha autorizzato il proseguimento autonomo; il riscontro non impone una nuova pausa.
+sulla tappa 1. La 0.1.13 è confermata; collaudare le novità successive, ora fino alla0.1.58. L'utente ha autorizzato il proseguimento autonomo; il riscontro non impone una nuova pausa.
 
-Nota operativa27ottobre: ultima richiesta continua fino al5%residuo, poi spegni il PC dopo checkpoint sicuro. Controllo automatico50min, non5. Superate le precedenti soglie e i vecchi divieti storici; proseguimento del port autorizzato.
+Le istruzioni operative aggiornate della sessione sono conservate nel controllo privato; non costituiscono requisiti del port.

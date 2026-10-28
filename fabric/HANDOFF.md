@@ -1,3 +1,33 @@
+## Checkpoint 0.1.58 - 28 ottobre 2026 - passeggeri nell'anteprima GUI
+
+Pilota e prede sono ora presenti nel ritratto dell'inventario, come nel
+ramo originale LayerDragonRider. L'estrazione nativa crea snapshot nuovi:
+nessuna modifica a posizione, rotazioni, bounding box o veicoli reali.
+Si usano le ancore visive del collo e della bocca gia presenti nel port,
+normalizzando una sola volta la scala del passeggero rispetto al drago.
+La GUI mostra il drago completo anche con camera in prima persona;
+il rendering del mondo mantiene la propria logica e non aggiunge copie.
+
+Prova client aggiunta: vero proprietario montato, menu nativo, smontaggio,
+prese native di zombie/mucca/cavallo, tre varianti di modello e rilascio.
+Observer di test sulle estrazioni reali verifica invarianti delle entita,
+snapshot GUI e mondo separati, scale e assenza di vecchi passeggeri.
+Sei nuove PNG, inclusa vista ingrandita di test del cavallo alla bocca.
+Focus4 PASS36s:100JUnit e nuova prova client, immagini aperte e riviste.
+
+Full pulito phase58-final.log PASS13m 2s:100JUnit,20client,62PNG,
+183server(182mod+baseline), XML senza errori. Verifiche client eseguite
+prima del server. Nessuna nuova prova di riavvio dedicato o autenticazione.
+JAR57->58:122classi identiche,4differenti/3nuove tutte client; il record
+PreyRenderPose ha codice/struttura javap identici, differiscono metadati.
+Tutte le classi comuni identiche; nessun observer o bridge di test nel JAR.
+
+Geometria, UV, texture, rete e comportamento server invariati. Tappa1 e
+port ancora incompleti: navigazione avanzata/scavo forzato, audit delle
+configurazioni e del ciclo vitale e confronto equivalente delle punte grigie
+restano aperti. Java17 originale preparato privatamente, non e una prova
+del renderer Forge e non dimostra risolto il difetto delle punte grigie.
+
 ## Checkpoint 0.1.57 - 28 ottobre 2026 - rottura attorno al corpo
 
 Portato il percorso ordinario EntityDragonBase.breakBlocks(false) nel
