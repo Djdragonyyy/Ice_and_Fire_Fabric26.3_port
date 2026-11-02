@@ -1,5 +1,9 @@
 # Confronto col renderer originale - 28 ottobre 2026
 
+Aggiornamento: il caso del maschio neonato indicato qui come aperto e stato
+corretto e verificato nella [0.1.60](VISUAL-REFERENCE-0.1.60.md).
+Il resto di questo documento conserva il rapporto storico della 0.1.58.
+
 Il confronto riguarda il modello di fuoco della 0.1.58. Non modifica geometria,
 UV o texture e non sostituisce le prove di gameplay della release.
 

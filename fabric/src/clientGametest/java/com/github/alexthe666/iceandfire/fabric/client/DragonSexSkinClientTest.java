@@ -41,6 +41,37 @@ public class DragonSexSkinClientTest implements FabricClientGameTest {
         try (var world = context.worldBuilder().create()) {
             context.waitFor(client -> client.player != null && client.level != null);
             var player = world.getServer().computeOnServer(server -> world.getConnection().getServerPlayer());
+            int newbornId = world.getServer().computeOnServer(server -> {
+                var d = IafContent.FIRE_DRAGON.create(player.level(), EntitySpawnReason.TRIGGERED);
+                d.setOwner(player); d.setTame(true, false); d.setNoAi(true); d.setMale(true);
+                d.setPos(player.position().add(4, 0, 0)); player.level().addFreshEntity(d);
+                return d.getId();
+            });
+            context.waitFor(client -> client.level.getEntity(newbornId) instanceof FireDragon d && d.male() && d.ageDays() == 0);
+            world.getServer().runOnServer(server -> DragonMenu.open(player, (FireDragon) player.level().getEntity(newbornId)));
+            context.waitForScreen(DragonScreen.class);
+            context.waitFor(client -> client.gui.overlay() == null);
+            for (int days : new int[]{0, 9, 10}) {
+                world.getServer().runOnServer(server -> {
+                    var d = (FireDragon) player.level().getEntity(newbornId);
+                    while (d.ageDays() < days) d.growOneDay();
+                });
+                context.waitFor(client -> ((FireDragon) client.level.getEntity(newbornId)).ageDays() == days);
+                context.runOnClient(client -> {
+                    var d = (FireDragon) client.level.getEntity(newbornId);
+                    var renderer = (FireDragonRenderer) (Object) client.getEntityRenderDispatcher().getRenderer(d);
+                    var state = renderer.createRenderState(d, 0);
+                    require(d.isAlive() && !d.corpse() && !d.skeletal() && !state.corpse && !state.skeletal,
+                            "The newborn skin filter must not turn the living dragon into a corpse or skeleton");
+                    if (days < 10) require(renderer.getTextureLocation(state).equals(IafContent.id("textures/models/firedragon/red_1.png")),
+                            "Original live male has no overlay before day10");
+                    else assertMaleTexture(client, d);
+                });
+                context.waitTicks(5);
+                context.takeScreenshot("dragon-male-skin-day" + days + "-0.1.60");
+            }
+            context.setScreen(() -> null);
+            world.getServer().runOnServer(server -> player.level().getEntity(newbornId).discard());
             int id = world.getServer().computeOnServer(server -> {
                 var d = IafContent.FIRE_DRAGON.create(player.level(), EntitySpawnReason.TRIGGERED);
                 for (int day = 0; day < 50; day++) d.growOneDay();

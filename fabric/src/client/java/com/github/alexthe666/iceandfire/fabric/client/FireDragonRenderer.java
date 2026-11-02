@@ -3,6 +3,7 @@ package com.github.alexthe666.iceandfire.fabric.client;
 import com.github.alexthe666.iceandfire.fabric.IafContent;
 import com.github.alexthe666.iceandfire.fabric.dragon.FireDragon;
 import com.github.alexthe666.iceandfire.fabric.dragon.DragonGrowth;
+import com.github.alexthe666.iceandfire.fabric.dragon.DragonCorpseRules;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -24,6 +25,7 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
         int stage;
         boolean flying;
         boolean male;
+        boolean suppressMaleOverlay;
         int walkCycle;
         int flightCycle;
         float flyProgress;
@@ -68,6 +70,9 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
         state.stage = dragon.stage();
         state.flying = dragon.flying();
         state.male = dragon.male();
+        // RenderDragonBase used the original age/death-stage threshold for the skin too,
+        // even on a living newborn. Keep that visual filter separate from corpse state.
+        state.suppressMaleOverlay = DragonCorpseRules.skeletal(dragon.ageDays(), dragon.deathStage());
         state.walkCycle = dragon.walkCycle;
         state.flightCycle = dragon.flightCycle;
         state.flyProgress = dragon.prevFlyProgress + (dragon.flyProgress - dragon.prevFlyProgress) * partialTick;
@@ -128,7 +133,7 @@ public final class FireDragonRenderer extends MobRenderer<FireDragon, FireDragon
         if (state.corpse && state.skeletal) return DragonSkullRenderer.texture(state.stage);
         String suffix = state.corpse || state.sleeping || state.blinking ? "_sleeping" : "";
         Identifier base = texture(state, suffix);
-        if (!state.male) return base;
+        if (!state.male || state.suppressMaleOverlay) return base;
         Identifier key = IafContent.id("dragon_texture/" + COLORS[state.variant] + "_" + state.stage + suffix + "_male");
         if (maleSkins.add(key)) Minecraft.getInstance().getTextureManager().registerAndLoad(key,
                 new DragonSkinTexture(base, IafContent.id("textures/models/firedragon/male_" + COLORS[state.variant] + ".png")));

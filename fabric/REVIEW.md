@@ -1,3 +1,24 @@
+## Revisione 0.1.60 - 3 novembre 2026
+
+Nessun difetto residuo rilevato nella modifica. Il filtro riguarda soltanto
+la selezione della pelle maschile: il flag viene aggiornato in ogni estrazione,
+senza modificare state.male o i flag corporei. La geometria e le pose maschili
+restano presenti anche quando il colore usa la base. Le carcasse scheletriche
+mantengono il precedente ramo texture; nessun cambiamento di stato server.
+La chiave della composizione maschile resta riutilizzabile dal giorno10,
+anche se il renderer ha gia disegnato lo stesso drago prima della soglia.
+
+Prova nativa0/9/10, menu reale, tre immagini e mantenimento del percorso
+adulto/reload. Focus1m21s verde; riferimento privato30pose1m03s verde.
+Nel caso neonato maschio la sovrapposizione delle sagome supera99.97%; la
+differenza RGB media scende da circa3.83 a0.90 nel campione rosso, confermando
+la correzione osservata e non l'identita di tutti i pixel o di altre pose.
+
+Full pulito 13m 30s:100JUnit183server20client66PNG. Delta limitato
+al renderer e stato client; record PreyRenderPose codice/struttura identici.
+Classi comuni identiche59 e nessun test nel JAR. Le catture private non
+sono nuove prove di gameplay e non vengono sommate ai conteggi pubblici.
+
 ## Revisione 0.1.59 - 28 ottobre 2026
 
 Nessun difetto residuo rilevato nelle etichette modificate. Componenti

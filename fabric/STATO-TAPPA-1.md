@@ -1,3 +1,30 @@
+## Checkpoint 0.1.60 - 3 novembre 2026 - pelle dei maschi neonati
+
+Riallineato il filtro visivo della sovrapposizione maschile all'originale:
+nessun dettaglio cromatico maschile prima del giorno10, applicato dal giorno10.
+Il predicato originale di eta/DeathStage viene conservato in un flag separato
+del render-state client. Un neonato vivo rimane vivo, non carcassa o scheletro.
+Geometria, UV, texture sorgenti, pose, AI, crescita, rete e server invariati.
+
+Prova client esistente estesa: vero maschio posseduto, menu nativo e crescita
+sul server ai giorni0/9/10, sincronizzazione al client, scelta texture e
+tre nuove PNG. Verificati stato vivo/noncarcassa/nonscheletrico a ogni eta.
+Restano le prove del maschio adulto e del ricaricamento delle risorse.
+Focus verde1m21s con100JUnit e la prova client. Immagini preservate prima
+della build finale. Confronto privato30pose verde1m03s: ora anche il maschio
+a eta zero coincide con la cattura originale; dettagli in VISUAL-REFERENCE-0.1.60.md.
+
+Full pulito phase60-final.log PASS13m 30s:100JUnit/183server
+(182mod+baseline)/20client/66PNG, XML senza errori. Client prima del server,
+nessun init privato. JAR59->60:126classi identiche,3differenti tutte client;
+PreyRenderPose ha codice/struttura javap identici, differiscono metadati.
+Nessuna classe aggiunta/rimossa, tutte le classi comuni identiche, nessun
+observer/bridge/harness di test nel JAR. Nessun nuovo riavvio dedicato.
+
+Tappa1 e port incompleti: navigazione avanzata/scavo forzato, configurazioni,
+ciclo vitale e ulteriori dettagli visivi restano aperti. Non e una verifica
+di tutti i colori, di tutte le pose o di client autenticati.
+
 ## Checkpoint 0.1.59 - 28 ottobre 2026 - etichette dell'inventario e riferimento originale
 
 Ripristinate le etichette Nome/Sesso/Proprietario del GuiDragon originale,
