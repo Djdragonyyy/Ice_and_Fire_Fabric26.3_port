@@ -13,6 +13,7 @@ class DragonCombatConfigTest {
         assertEquals(256, config.maxDragonFlight); assertEquals(40, config.dragonWanderFromHomeDistance);
         assertEquals(4, config.dragonFluteDistance);
         assertEquals(30, config.dragonGoldSearchLength);
+        assertEquals(5000, config.maxDragonPathingNodes);
         assertEquals(4, config.dragonFlapNoiseDistance);
         assertTrue(config.chunkLoadSummonCrystal);
         assertTrue(config.animalsFearDragons); assertTrue(config.villagersFearDragons);
@@ -46,6 +47,16 @@ class DragonCombatConfigTest {
         config.dragonGoldSearchLength = 10000; assertTrue(config.validValues());
         config.dragonGoldSearchLength = -1; assertFalse(config.validValues());
         config.dragonGoldSearchLength = 10001; assertFalse(config.validValues());
+    }
+
+    @Test void originalPathBudgetAcceptsPositiveIntLimits() {
+        var config = new DragonCombatConfig();
+        for (int value : new int[]{1, 5000, Integer.MAX_VALUE}) {
+            config.maxDragonPathingNodes = value; assertTrue(config.validValues());
+        }
+        for (int value : new int[]{0, -1, Integer.MIN_VALUE}) {
+            config.maxDragonPathingNodes = value; assertFalse(config.validValues());
+        }
     }
 
 }

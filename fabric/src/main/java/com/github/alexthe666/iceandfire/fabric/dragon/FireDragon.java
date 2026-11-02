@@ -29,6 +29,10 @@ import net.minecraft.world.phys.HitResult;
 
 /** Initial migration of lifecycle and ownership; combat and rendering are migrated separately. */
 public final class FireDragon extends TamableAnimal {
+    @Override protected net.minecraft.world.entity.ai.navigation.PathNavigation createNavigation(Level level) {
+        return new DragonGroundNavigation(this, level);
+    }
+
     private static final EntityDataAccessor<Integer> AGE_TICKS = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> HUNGER = SynchedEntityData.defineId(FireDragon.class, EntityDataSerializers.INT);

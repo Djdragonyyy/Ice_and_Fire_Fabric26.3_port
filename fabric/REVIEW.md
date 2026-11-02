@@ -1,3 +1,27 @@
+## Revisione 0.1.61 - 3 novembre 2026
+
+Nessun difetto residuo rilevato nel limite implementato. L'adattatore
+conserva il PathFinder restituito dalla factory nativa, senza inizializzatore
+che possa cancellarlo dopo il costruttore della superclasse. Il limite viene
+applicato nell'overload protetto comune di ricerca col raggio effettivo;
+gli aggiornamenti di attributi non lo sostituiscono col budget vanilla.
+Rimane la cache dei percorsi esistenti, senza invalidazioni forzate.
+Retry minori conservati, maggiori limitati; range al quadrato e clamp
+positivo evitano overflow del massimo configurabile. Nessuna riflessione,
+Mixin o modifica ai navigatori di altri mob.
+
+Prove native di pianificazione sulla stessa entita e destinazione, cap1/5000,
+callback e moltiplicatori, massimo intero e target inizialmente non caricato.
+Global config ripristinata prima della fine dei test sincroni. Nessuna
+immunita o contatore produttivo aggiunto per far superare le prove.
+Il fixture NoAI non viene presentato come un nuovo inseguimento reale.
+
+Full pulito 13m 10s:101JUnit185server20client66PNG. Client interamente
+identico60; sei anonimi comuni con codice/struttura identici, sola differenza
+di metadati. Nessun test nel JAR. Le precedenti prove di inseguimento,
+collisione e corpo fanno parte della regressione completa. Scavo forzato,
+planner avanzato/asincrono e ulteriori parita restano aperti.
+
 ## Revisione 0.1.60 - 3 novembre 2026
 
 Nessun difetto residuo rilevato nella modifica. Il filtro riguarda soltanto

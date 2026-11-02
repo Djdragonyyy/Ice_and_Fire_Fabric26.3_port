@@ -1,3 +1,37 @@
+## Checkpoint 0.1.61 - 3 novembre 2026 - limite della ricerca terrestre
+
+Portata l'opzione originale maxDragonPathingNodes, default5000 e interi
+positivi. I JSON precedenti conservano automaticamente il default.
+Solo la navigazione del drago usa un adattatore GroundPathNavigation:
+mantiene valutazione, collisioni e ricerca native, limitando i nodi a
+min(configurazione,raggio effettivo al quadrato), come il secondo limite
+del percorso originale. Gli aggiornamenti nativi mantengono il parametro;
+i moltiplicatori di retry possono ridurlo, non superare il massimo.
+Nessun nuovo thread, Mixin, dato sincronizzato o caricamento di destinazioni.
+
+Due nuove prove server osservano il risultato del vero PathFinder nativo:
+budget1 produce percorso assente/parziale,5000 raggiunge lo stesso target;
+la stessa navigazione rispetta cambiamenti successivi, callback nativi e
+retry16. Il massimo intero e utilizzabile; un target lontano non caricato
+resta tale e restituisce null. NoAI e onGround isolano la pianificazione:
+non sono nuove prove di inseguimento. Configurazione ripristinata in finally.
+Focus PASS53s:101JUnit e9server(8mod+baseline), compresi i vecchi casi config.
+
+Full pulito phase61-final.log PASS13m 10s:101JUnit/185server
+(184mod+baseline)/20client/66PNG, XML senza errori, client prima del server.
+JAR60->61:121classi identiche,8differenti e1nuova GroundNavigation.
+Sei classi anonime hanno codice/struttura javap identici e metadati diversi;
+le modifiche funzionali riguardano config, creazione della navigazione del
+drago e nuovo adattatore. Tutte le classi client identiche60, nessun test
+o harness nel JAR. Nessuna nuova prova di riavvio dedicato o autenticazione.
+
+Tappa1/port incompleti: restano navigazione avanzata/scavo forzato,
+configurazioni/ciclo vitale e altri dettagli. Il volo conserva le deviazioni
+locali esistenti; il limite riguarda le ricerche a nodi terrestri e non
+certifica la parita completa del navigatore Raycoms originale.
+Sessione chiusa su richiesta umana dopo questo checkpoint; ripresa solo
+con una nuova autorizzazione, istruzioni operative nel controllo privato.
+
 ## Checkpoint 0.1.60 - 3 novembre 2026 - pelle dei maschi neonati
 
 Riallineato il filtro visivo della sovrapposizione maschile all'originale:

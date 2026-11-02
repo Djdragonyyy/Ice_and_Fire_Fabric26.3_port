@@ -15,6 +15,64 @@ import net.minecraft.world.phys.Vec3;
 
 public class DragonConfigGameTests {
     private static void require(boolean ok, String message) { if (!ok) throw new AssertionError(message); }
+
+    private static FireDragon groundSearchDragon(GameTestHelper h) {
+        for (int x = 1; x <= 31; x++) for (int z = 1; z <= 31; z++) {
+            h.setBlock(new BlockPos(x, 1, z), Blocks.STONE);
+            for (int y = 2; y <= 6; y++) h.setBlock(new BlockPos(x, y, z), Blocks.AIR);
+        }
+        var d = IafContent.FIRE_DRAGON.create(h.getLevel(), EntitySpawnReason.TRIGGERED);
+        d.setNoAi(true);
+        for (int day = 0; day < 50; day++) d.growOneDay();
+        d.refreshDimensions(); d.setPos(h.absoluteVec(new Vec3(10.5, 2, 10.5)));
+        h.getLevel().addFreshEntity(d); d.setOnGround(true);
+        return d;
+    }
+
+    @GameTest(structure = "iceandfire:flight_arena", padding = 100)
+    public void configuredGroundBudgetChangesActualNativeSearch(GameTestHelper h) {
+        var old = DragonCombatConfig.current;
+        try {
+            var config = new DragonCombatConfig(); config.maxDragonPathingNodes = 1;
+            DragonCombatConfig.current = config;
+            var d = groundSearchDragon(h); var navigation = d.getNavigation();
+            var target = h.absolutePos(new BlockPos(10, 2, 25));
+            var limited = navigation.createPath(target, 0);
+            require(limited == null || !limited.canReach(), "One visited node cannot reach the distant target");
+            config.maxDragonPathingNodes = 5000; navigation.stop();
+            var complete = navigation.createPath(target, 0);
+            require(complete != null && complete.canReach() && complete.getTarget().equals(target),
+                    "The configured original budget reaches the same actual native target");
+            config.maxDragonPathingNodes = 1; navigation.stop();
+            var reduced = navigation.createPath(target, 0);
+            require(reduced == null || !reduced.canReach(), "The same navigation honors the changed budget on a new search");
+        } finally { DragonCombatConfig.current = old; }
+        h.succeed();
+    }
+
+    @GameTest(structure = "iceandfire:flight_arena", padding = 100)
+    public void groundBudgetSurvivesNativeUpdatesWithoutLoadingFarTarget(GameTestHelper h) {
+        var old = DragonCombatConfig.current;
+        try {
+            var config = new DragonCombatConfig(); DragonCombatConfig.current = config;
+            var d = groundSearchDragon(h); var navigation = d.getNavigation();
+            var target = h.absolutePos(new BlockPos(10, 2, 25));
+            config.maxDragonPathingNodes = 1;
+            navigation.setRequiredPathLength(64); navigation.setMaxVisitedNodesMultiplier(16);
+            var limited = navigation.createPath(target, 0);
+            require(limited == null || !limited.canReach(), "Native range updates and retries cannot bypass the cap");
+            config.maxDragonPathingNodes = Integer.MAX_VALUE;
+            navigation.stop(); navigation.resetMaxVisitedNodesMultiplier(); navigation.setRequiredPathLength(16);
+            var complete = navigation.createPath(target, 0);
+            require(complete != null && complete.canReach(), "Maximum configured integer remains usable with bounded range");
+            var far = target.offset(8192, 0, 8192);
+            require(!h.getLevel().hasChunkAt(far), "Far target starts unloaded");
+            navigation.stop();
+            require(navigation.createPath(far, 0) == null && !h.getLevel().hasChunkAt(far),
+                    "Native unloaded-target guard remains in place");
+        } finally { DragonCombatConfig.current = old; }
+        h.succeed();
+    }
     @GameTest
     public void configuredHomeRadiusAndFlightCeilingRespectWorldBounds(GameTestHelper h) {
         var old = DragonCombatConfig.current;
