@@ -1,3 +1,22 @@
+## Revisione 0.1.63 - 3 novembre 2026
+
+Confrontato EntityDragonBase.hurt originale, righe1660..1691. Le protezioni
+sono presenti esplicitamente nel sorgente e mancavano nel corpo del port;
+non sono state dedotte da un fallimento occasionale di navigazione. Tre
+nuovi test sul codice62 hanno riprodotto precisamente soffocamento del corpo,
+colpo del pilota e freccia contro il cucciolo trasportato. I medesimi test
+passano dopo la correzione, compresi i controlli negativi. ANVIL rimane
+separato da FALLING_BLOCK. Le relazioni di pilota e spalla sono reali.
+
+Il guard delle carcasse precede i nuovi rami, preservando /kill e le prove
+precedenti. Nessun flag di invulnerabilita, timer dopo dismount, modifica di
+movimento, network o rendering. Native hurtServer conserva gestione normale
+degli altri danni. Multipart continua a inoltrare al genitore. NoAI solo nei
+fixture per isolare danno e relazioni; nessun nuovo seed o hook produttivo.
+Binary review128identiche/2changed, FireDragon$6 metadata only. Regressione
+completa101JUnit189server20client66PNG. Nessun difetto residuo rilevato in
+questo ambito; navigazione avanzata e altre parita restano aperte.
+
 ## Revisione 0.1.62 - 3 novembre 2026
 
 Il ramo originale accetta lo stufato quando shouldDropLoot (stadio4+), poi

@@ -342,6 +342,16 @@ public final class FireDragon extends TamableAnimal {
             if (!isRemoved() && source.is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY)) { discard(); return true; }
             return false;
         }
+        // Original EntityDragonBase.hurt protections also apply to the main body.
+        if (source.is(net.minecraft.world.damagesource.DamageTypes.IN_WALL)
+                || source.is(net.minecraft.world.damagesource.DamageTypes.FALLING_BLOCK)
+                || source.is(net.minecraft.world.damagesource.DamageTypes.CRAMMING)) return false;
+        var attacker = source.getEntity();
+        if (attacker != null && attacker == getControllingPassenger()) return false;
+        // Shoulder babies use an independent world entity instead of a native passenger.
+        Entity carrier = shoulderCarrier() != null ? shoulderCarrier() : getVehicle();
+        if (carrier != null && (source.type().msgId().contains("arrow")
+                || attacker != null && attacker.is(carrier))) return false;
         boolean hurt = super.hurtServer(server, source, damage);
         if (hurt && !corpse()) {
             setDragonSleeping(false); sleepNotBefore = level().getGameTime() + 20;
