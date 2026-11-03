@@ -37,8 +37,8 @@ public class DragonBreedingGameTests {
         require(d.isInLove() && player.getMainHandItem().getCount() == 1, "One fire stew starts love");
     }
 
-    @GameTest(structure = "iceandfire:flight_arena", maxTicks = 130, padding = 200)
-    public void adultPairCourtsCreatesOneEggAndNestAndPersistsCooldown(GameTestHelper h) {
+    @GameTest(structure = "iceandfire:flight_arena", maxTicks = 225, padding = 200)
+    public void adultPairCourtsPersistsCooldownAndCanBeFedForASecondEgg(GameTestHelper h) {
         floor(h);
         var player = h.makeMockPlayer(GameType.SURVIVAL);
         var male = dragon(h, 75, true, 12.5);
@@ -68,9 +68,57 @@ public class DragonBreedingGameTests {
             require(restored.getAge() == male.getAge() && !restored.isInLove() && restored.stage() == 4, "Breeding cooldown survives save without changing dragon growth stage");
             player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(IafContent.FIRE_STEW));
             male.mobInteract(player, InteractionHand.MAIN_HAND);
-            require(player.getMainHandItem().getCount() == 1 && !male.isInLove(), "Fire stew cannot erase cooldown");
+            require(player.getMainHandItem().isEmpty() && male.isInLove() && male.getAge() == 0,
+                    "Original stew explicitly clears cooldown and renews love");
+            feed(female, player);
+        });
+        h.runAfterDelay(120, () -> require(h.getLevel().getEntitiesOfClass(FireDragonEgg.class, h.getBounds()).size() == 1,
+                "Renewed courtship still waits sixty ticks instead of spawning immediately"));
+        h.runAfterDelay(205, () -> {
+            require(h.getLevel().getEntitiesOfClass(FireDragonEgg.class, h.getBounds()).size() == 2,
+                    "Same actual AI pair creates exactly one additional egg after renewed courtship");
+            require(!male.isInLove() && !female.isInLove() && male.getAge() > 5800 && female.getAge() > 5800,
+                    "Both parents enter a fresh cooldown after their second egg");
             h.succeed();
         });
+    }
+
+    @GameTest(structure = "iceandfire:flight_arena", padding = 200)
+    public void stewRenewsPersistedAdultLoveInEitherHandWithoutChangingGrowthOrHealth(GameTestHelper h) {
+        var player = h.makeMockPlayer(GameType.SURVIVAL);
+        var d = dragon(h, 75, true, 12.5);
+        d.setAge(6000); d.setHealth(10); d.setHunger(20);
+        var output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, h.getLevel().registryAccess());
+        d.saveWithoutId(output);
+        var restored = dragon(h, 0, true, 12.5);
+        restored.load(TagValueInput.create(ProblemReporter.DISCARDING, h.getLevel().registryAccess(), output.buildResult()));
+        require(restored.getAge() == 6000 && restored.stage() == 4, "Real persisted breeding cooldown remains separate from growth");
+        for (var hand : InteractionHand.values()) {
+            player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+            player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
+            player.setItemInHand(hand, new ItemStack(IafContent.FIRE_STEW, 2));
+            restored.setInLoveTime(10);
+            restored.mobInteract(player, hand);
+            require(player.getItemInHand(hand).getCount() == 1 && restored.getAge() == 0 && restored.getInLoveTime() == 600,
+                    "Stew renews the original love timer and consumes the selected hand");
+            require(restored.ageDays() == 75 && restored.getHealth() == 10 && restored.hunger() == 20,
+                    "Renewing love does not grow, heal or feed the dragon");
+        }
+        var creative = h.makeMockPlayer(GameType.CREATIVE);
+        creative.getAbilities().instabuild = true;
+        creative.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(IafContent.FIRE_STEW));
+        restored.setAge(6000); restored.resetLove();
+        restored.mobInteract(creative, InteractionHand.OFF_HAND);
+        require(creative.getOffhandItem().getCount() == 1 && restored.isInLove() && restored.getAge() == 0,
+                "Creative stew renews cooldown without consuming the item");
+        var young = dragon(h, 50, false, 20.5);
+        for (var hand : InteractionHand.values()) {
+            player.setItemInHand(hand, new ItemStack(IafContent.FIRE_STEW));
+            young.mobInteract(player, hand);
+            require(player.getItemInHand(hand).getCount() == 1 && !young.isInLove() && young.ageDays() == 50,
+                    "Stage three still cannot consume stew or enter love in either hand");
+        }
+        h.succeed();
     }
 
     @GameTest(structure = "iceandfire:flight_arena", padding = 200)

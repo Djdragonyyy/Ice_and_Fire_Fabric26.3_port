@@ -1052,10 +1052,12 @@ public final class FireDragon extends TamableAnimal {
             return InteractionResult.SUCCESS;
         }
         if (stack.is(IafContent.FIRE_STEW)) {
-            if (stage() < 4 || getAge() != 0 || !canFallInLove() || isInLove()) return InteractionResult.FAIL;
+            if (stage() < 4) return InteractionResult.FAIL;
             if (!level().isClientSide()) {
                 setDragonSleeping(false);
                 sleepNotBefore = level().getGameTime() + 20;
+                // Original fire stew explicitly clears the breeding cooldown and renews love.
+                setAge(0);
                 setInLove(player);
                 stack.consume(1, player);
             }

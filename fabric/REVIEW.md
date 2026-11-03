@@ -1,3 +1,20 @@
+## Revisione 0.1.62 - 3 novembre 2026
+
+Il ramo originale accetta lo stufato quando shouldDropLoot (stadio4+), poi
+chiama setAge(0) e setInLove: non impone canFallInLove, Age=0 preventivo o
+assenza di amore. Il vecchio test del port vietava erroneamente il rinnovo;
+ora osserva il cooldown salvato prima del nuovo stufato e un secondo uovo
+prodotto realmente dagli stessi goal. Restano i test di sesso, controlli,
+partner non nutrito, terreno protetto e schiusa. Nessuna semplificazione
+dell'AI per questa correzione. La fixture storica mantiene il suo seed gia
+esistente; non sono stati aggiunti nuovi seed per ottenere il secondo uovo.
+
+Nuova prova separata osserva timer nativo, consumo e dati persistiti. La
+modifica produttiva e solo nel ramo stufato di FireDragon; non cambia il
+navigatore, i pacchetti, il renderer o il comportamento delle altre specie.
+Binary review:128identiche, FireDragon funzionale e FireDragon$6 solo metadata.
+Full101JUnit186server20client66PNG, tutti verdi. Tappa1 ancora incompleta.
+
 ## Revisione 0.1.61 - 3 novembre 2026
 
 Nessun difetto residuo rilevato nel limite implementato. L'adattatore
