@@ -1,3 +1,25 @@
+## Revisione 0.1.64 - 3 novembre 2026
+
+Verificato finalizeSpawn di EntityDragonBase originale, righe1645..1658.
+Il port non lo implementava: i percorsi nativi di spawn restavano a eta0.
+Le due nuove prove falliscono su63 esattamente per questa omissione e
+passano dopo la correzione, senza cambiare i fixture. Il sesso e il colore
+usano il generatore dell'entita; non si impone una sequenza casuale identica
+all'originale, che creava un secondo Random per il colore.
+
+La logica non va nel costruttore e non viene chiamata durante il load:
+NBT espliciti e neonati schiusi conservano i dati. La normalizzazione Age=0
+nel callback evita la seconda scala vanilla; non cambia AgeTicks o il
+cooldown delle entita ricaricate. growDays e privato, conserva saturazione
+intera e blocco della crescita; growOneDay delega con1. Nessun nuovo campo
+sincronizzato, pacchetto, renderer o generazione naturale. Le prove native
+comprendono il gruppo baby forzato e le opzioni server ripristinate in finally.
+
+Binary review124identiche,6changed,5anonimi metadata only. Full101JUnit,
+191server,20client66PNG, inclusa la schiusa precedente. Nessun difetto residuo
+rilevato in questo ambito. Non e parita completa del ciclo vitale o delle
+API baby; navigazione avanzata e altre verifiche restano aperte.
+
 ## Revisione 0.1.63 - 3 novembre 2026
 
 Confrontato EntityDragonBase.hurt originale, righe1660..1691. Le protezioni

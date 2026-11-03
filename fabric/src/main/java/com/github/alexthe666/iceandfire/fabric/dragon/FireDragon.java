@@ -118,6 +118,20 @@ public final class FireDragon extends TamableAnimal {
         setPathfindingMalus(net.minecraft.world.level.pathfinder.PathType.LAVA, 8);
     }
 
+    @Override public SpawnGroupData finalizeSpawn(net.minecraft.world.level.ServerLevelAccessor level,
+            net.minecraft.world.DifficultyInstance difficulty, EntitySpawnReason reason, SpawnGroupData data) {
+        data = super.finalizeSpawn(level, difficulty, reason, data);
+        setMale(random.nextBoolean());
+        growDays(random.nextInt(80) + 1);
+        setVariant(random.nextInt(4));
+        // Growth is stored in AGE_TICKS; vanilla Age is only the breeding cooldown.
+        setAge(0);
+        setCommand(0);
+        setHealth(getMaxHealth());
+        setHunger(50);
+        return data;
+    }
+
     @Override public boolean isInWater() {
         return super.isInWater() && getFluidHeight(net.minecraft.tags.FluidTags.WATER) > stage() / 2;
     }
@@ -405,9 +419,11 @@ public final class FireDragon extends TamableAnimal {
     }
     private boolean control(int flag) { return (riderControls & flag) != 0; }
 
-    public void growOneDay() {
+    public void growOneDay() { growDays(1); }
+
+    private void growDays(int days) {
         if (entityData.get(AGING_DISABLED)) return;
-        long next = (long) (ageDays() + 1) * DragonGrowth.TICKS_PER_DAY;
+        long next = (long) (ageDays() + days) * DragonGrowth.TICKS_PER_DAY;
         entityData.set(AGE_TICKS, (int) Math.min(Integer.MAX_VALUE, next));
         updateGrowth();
     }

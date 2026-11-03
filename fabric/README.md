@@ -1,10 +1,12 @@
 # Ice and Fire: port Fabric 26.3 in sviluppo
 
-Verificati 101 JUnit, 188 GameTest della mod (189 con baseline vanilla), 20 prove client e 66 immagini nella 0.1.63. Ripristinate le protezioni originali del corpo, del pilota e dei cuccioli trasportati. [TEST-0.1.63.md](TEST-0.1.63.md).
+Verificati 101 JUnit, 190 GameTest della mod (191 con baseline vanilla), 20 prove client e 66 immagini nella 0.1.64. Lo spawn inizializzato usa eta, sesso, variante e statistiche originali, preservando neonati e NBT espliciti. [TEST-0.1.64.md](TEST-0.1.64.md).
 
 **Checkpoint di sviluppo: la tappa 1 e il port completo restano aperti.**
 
-Versione corrente: **0.1.63-stage1-dev**. Protezioni originali dai danni. [TEST-0.1.63.md](TEST-0.1.63.md). Tappa1 incompleta.
+Versione corrente: **0.1.64-stage1-dev**. Spawn originale. [TEST-0.1.64.md](TEST-0.1.64.md). Tappa1 incompleta.
+
+Versione precedente: **0.1.63-stage1-dev**. Protezioni originali dai danni. [TEST-0.1.63.md](TEST-0.1.63.md). Tappa1 incompleta.
 
 Versione precedente: **0.1.62-stage1-dev**. Rinnovo del corteggiamento. [TEST-0.1.62.md](TEST-0.1.62.md). Tappa1 incompleta.
 
